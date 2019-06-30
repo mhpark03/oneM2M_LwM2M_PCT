@@ -36,6 +36,12 @@ namespace WindowsFormsApp2
             tSCBoxReceive.Text = "All";
             tSCBoxTrans.Text = "Both";
             tSCBoxPosition.Text = "BOTTOM";
+
+            groupBox3.Width = panel1.Width - 230;
+            groupBox3.Height = panel1.Height - 55;
+
+            tBoxDataIN.Height = groupBox3.Height - 54;
+            groupBox3.Enabled = false;
         }
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -50,11 +56,13 @@ namespace WindowsFormsApp2
 
                 serialPort1.Open();
                 progressBar1.Value = 100;
+                groupBox3.Enabled = true;
             }
 
             catch (Exception err)
             {
                 MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                groupBox3.Enabled = false;
             }
         }
 
@@ -65,7 +73,40 @@ namespace WindowsFormsApp2
             {
                 serialPort1.Close();
                 progressBar1.Value = 0;
+                groupBox3.Enabled = false;
             }
+        }
+
+        private void ProgressBar1_Click(object sender, EventArgs e)
+        {
+            if (serialPort1.IsOpen)
+            {
+                serialPort1.Close();
+                progressBar1.Value = 0;
+                groupBox3.Enabled = false;
+            }
+            else
+            {
+                try
+                {
+                    serialPort1.PortName = cBoxCOMPORT.Text;
+                    serialPort1.BaudRate = Convert.ToInt32(cBoxBaudRate.Text);
+                    serialPort1.DataBits = Convert.ToInt32(cBoxDataBits.Text);
+                    serialPort1.StopBits = (StopBits)Enum.Parse(typeof(StopBits), cBoxStopBits.Text);
+                    serialPort1.Parity = (Parity)Enum.Parse(typeof(Parity), cBoxParityBits.Text);
+
+                    serialPort1.Open();
+                    progressBar1.Value = 100;
+                    groupBox3.Enabled = true;
+                }
+
+                catch (Exception err)
+                {
+                    MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    groupBox3.Enabled = false;
+                }
+            }
+
         }
 
         private void BtnSendData_Click(object sender, EventArgs e)
@@ -230,5 +271,14 @@ namespace WindowsFormsApp2
         {
             Application.Exit();
         }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            groupBox3.Width = panel1.Width - 230;
+            groupBox3.Height = panel1.Height - 55;
+
+            tBoxDataIN.Height = groupBox3.Height - 54;
+        }
+
     }
 }
