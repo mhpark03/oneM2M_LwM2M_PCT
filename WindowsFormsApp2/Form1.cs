@@ -14,8 +14,10 @@ namespace WindowsFormsApp2
     public partial class Form1 : Form
     {
         string dataOUT;
-                string sendWith;
+        string sendWith;
         string dataIN;
+        string RxDisplayRule;
+        string RxDispOrder;
 
         public Form1()
         {
@@ -25,24 +27,20 @@ namespace WindowsFormsApp2
         private void Form1_Load(object sender, EventArgs e)
         {
             string[] ports = SerialPort.GetPortNames();
+            //foreach()
+            //ToolStripItem[] items = ports;
             cBoxCOMPORT.Items.AddRange(ports);
+            tSCBoxComPort.Items.AddRange(ports);
+            //comportTSMenu.DropDownItems.AddRange(ports);
 
             chBoxDtrEnable.Checked = false;
             serialPort1.DtrEnable = false;
             chBoxRTSEnable.Checked = false;
             serialPort1.RtsEnable = false;
-            btnSendData.Enabled = true;
-
-            tSCBoxDataBits.Text = "8";
-            tSCBoxStopBits.Text = "One";
-            tSCBoxParityBits.Text = "None";
-            tSCBoxDtrEnable.Text = "OFF";
-            tSCBoxRtsEnable.Text = "OFF";
 
             sendWith = "Both";
-            tSCBoxReceive.Text = "All";
-            tSCBoxTrans.Text = "Both";
-            tSCBoxPosition.Text = "BOTTOM";
+            RxDisplayRule = "All";
+            RxDispOrder = "BOTTOM";
 
             groupBox3.Width = panel1.Width - 230;
             groupBox3.Height = panel1.Height - 55;
@@ -52,6 +50,11 @@ namespace WindowsFormsApp2
         }
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.doOpenComPort();
+        }
+
+        private void doOpenComPort()
         {
             try
             {
@@ -73,45 +76,30 @@ namespace WindowsFormsApp2
             }
         }
 
-
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (serialPort1.IsOpen)
             {
-                serialPort1.Close();
-                progressBar1.Value = 0;
-                groupBox3.Enabled = false;
+                this.doCloseComPort();
             }
+        }
+
+        private void doCloseComPort()
+        {
+            serialPort1.Close();
+            progressBar1.Value = 0;
+            groupBox3.Enabled = false;
         }
 
         private void ProgressBar1_Click(object sender, EventArgs e)
         {
             if (serialPort1.IsOpen)
             {
-                serialPort1.Close();
-                progressBar1.Value = 0;
-                groupBox3.Enabled = false;
+                this.doCloseComPort();
             }
             else
             {
-                try
-                {
-                    serialPort1.PortName = cBoxCOMPORT.Text;
-                    serialPort1.BaudRate = Convert.ToInt32(cBoxBaudRate.Text);
-                    serialPort1.DataBits = Convert.ToInt32(cBoxDataBits.Text);
-                    serialPort1.StopBits = (StopBits)Enum.Parse(typeof(StopBits), cBoxStopBits.Text);
-                    serialPort1.Parity = (Parity)Enum.Parse(typeof(Parity), cBoxParityBits.Text);
-
-                    serialPort1.Open();
-                    progressBar1.Value = 100;
-                    groupBox3.Enabled = true;
-                }
-
-                catch (Exception err)
-                {
-                    MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    groupBox3.Enabled = false;
-                }
+                this.doOpenComPort();
             }
 
         }
@@ -137,31 +125,6 @@ namespace WindowsFormsApp2
                 {
                     serialPort1.Write(dataOUT+"\n");
                 }
-            }
-        }
-
-        private void TSCBoxTrans_DropDownClosed(object sender, EventArgs e)
-        {
-            //None
-            //Both
-            //LF
-            //CR
-
-            if (tSCBoxTrans.Text == "None")
-            {
-                sendWith = "None";
-            }
-            else if (tSCBoxTrans.Text == "Both")
-            {
-                sendWith = "Both";
-            }
-            else if (tSCBoxTrans.Text == "LF")
-            {
-                sendWith = "LF";
-            }
-            else if (tSCBoxTrans.Text == "CR")
-            {
-                sendWith = "CR";
             }
         }
 
@@ -244,13 +207,13 @@ namespace WindowsFormsApp2
             int dataINLength = dataIN.Length;
             lblDataInLength.Text = string.Format("{0:00}", dataINLength);
 
-            if (tSCBoxReceive.Text == "Update")
+            if (RxDisplayRule == "Update")
             {
                 tBoxDataIN.Text = dataIN;
             }
-            else if (tSCBoxReceive.Text == "All")
+            else if (RxDisplayRule == "All")
             {
-                if(tSCBoxPosition.Text == "TOP")
+                if(RxDispOrder == "TOP")
                 {
                     tBoxDataIN.Text = tBoxDataIN.Text.Insert(0, dataIN);
                 }
@@ -287,5 +250,145 @@ namespace WindowsFormsApp2
             tBoxDataIN.Height = groupBox3.Height - 54;
         }
 
+        private void TSMenu6bits_Click(object sender, EventArgs e)
+        {
+            cBoxDataBits.Text = "6";
+        }
+
+        private void TSMenu7bits_Click(object sender, EventArgs e)
+        {
+            cBoxDataBits.Text = "7";
+        }
+
+        private void TSMenu8bits_Click(object sender, EventArgs e)
+        {
+            cBoxDataBits.Text = "8";
+        }
+
+        private void TSMenuStopOne_Click(object sender, EventArgs e)
+        {
+            cBoxStopBits.Text = "One";
+        }
+
+        private void TSMenuStopTwo_Click(object sender, EventArgs e)
+        {
+            cBoxStopBits.Text = "Two";
+        }
+
+        private void TSMenuParityNone_Click(object sender, EventArgs e)
+        {
+            cBoxParityBits.Text = "None";
+        }
+
+        private void TSMenuParityOdd_Click(object sender, EventArgs e)
+        {
+            cBoxParityBits.Text = "Odd";
+        }
+
+        private void TSMenuParityEven_Click(object sender, EventArgs e)
+        {
+            cBoxParityBits.Text = "Even";
+        }
+
+        private void TSMenuBaudRate24_Click(object sender, EventArgs e)
+        {
+            cBoxBaudRate.Text = "2400";
+        }
+
+        private void TSMenuBaudRate48_Click(object sender, EventArgs e)
+        {
+            cBoxBaudRate.Text = "4800";
+        }
+
+        private void TSMenuBaudRate96_Click(object sender, EventArgs e)
+        {
+            cBoxBaudRate.Text = "9600";
+        }
+
+        private void TSMenuBaudRate384_Click(object sender, EventArgs e)
+        {
+            cBoxBaudRate.Text = "38400";
+        }
+
+        private void TSMenuBaudRate768_Click(object sender, EventArgs e)
+        {
+            cBoxBaudRate.Text = "76800";
+        }
+
+        private void TSMenuBaudRate1152_Click(object sender, EventArgs e)
+        {
+            cBoxBaudRate.Text = "115200";
+        }
+
+        private void TSMenuDTRDisable_Click(object sender, EventArgs e)
+        {
+            chBoxDtrEnable.Checked = false;
+        }
+
+        private void TSMenuDTREnable_Click(object sender, EventArgs e)
+        {
+            chBoxDtrEnable.Checked = true;
+        }
+
+        private void TSMenuRTSDisable_Click(object sender, EventArgs e)
+        {
+            chBoxRTSEnable.Checked = false;
+        }
+
+        private void TSMenuRTSEnable_Click(object sender, EventArgs e)
+        {
+            chBoxRTSEnable.Checked = true;
+        }
+
+        private void TSCBoxComPort_TextChanged(object sender, EventArgs e)
+        {
+            cBoxCOMPORT.Text = tSCBoxComPort.Text;
+        }
+
+        private void CBoxCOMPORT_TextChanged(object sender, EventArgs e)
+        {
+            tSCBoxComPort.Text = cBoxCOMPORT.Text;
+        }
+
+        private void TSMenuEndLineNone_Click(object sender, EventArgs e)
+        {
+            sendWith = "None";
+        }
+
+        private void TSMenuEndLineBoth_Click(object sender, EventArgs e)
+        {
+            sendWith = "Both";
+        }
+
+        private void TSMenuEndLineLF_Click(object sender, EventArgs e)
+        {
+            sendWith = "LF";
+
+        }
+
+        private void TSMenuEndLineCR_Click(object sender, EventArgs e)
+        {
+            sendWith = "CR";
+        }
+
+        private void TSMenuRxUpdate_Click(object sender, EventArgs e)
+        {
+            RxDisplayRule = "Update";
+        }
+
+        private void TSMenuRxAll_Click(object sender, EventArgs e)
+        {
+            RxDisplayRule = "All";
+        }
+
+        private void TSMenuTop_Click(object sender, EventArgs e)
+        {
+            RxDispOrder = "TOP";
+        }
+
+        private void TSMenuDown_Click(object sender, EventArgs e)
+        {
+            RxDispOrder = "BOTTOM";
+        }
     }
 }
