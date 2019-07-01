@@ -40,13 +40,19 @@ namespace WindowsFormsApp2
 
             sendWith = "Both";
             RxDisplayRule = "All";
-            RxDispOrder = "BOTTOM";
+            RxDispOrder = "TOP";
 
+            this.setWindowLayOut();
+            groupBox3.Enabled = false;
+        }
+
+        private void setWindowLayOut()
+        {
             groupBox3.Width = panel1.Width - 230;
             groupBox3.Height = panel1.Height - 55;
 
             tBoxDataIN.Height = groupBox3.Height - 54;
-            groupBox3.Enabled = false;
+            tBoxDataOut.Width = groupBox3.Width - 72;
         }
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -222,6 +228,55 @@ namespace WindowsFormsApp2
                     tBoxDataIN.Text += dataIN;
                 }
             }
+
+            this.parseRXData();
+        }
+
+        private void parseRXData()
+        {
+            string[] sentences =
+            {
+                "methods",
+                "have",
+                "count"
+            };
+
+            foreach (string s in sentences)
+            {
+                tBoxDataIN.Text += "\r\n";
+                tBoxDataIN.Text += s;
+
+                if (System.Text.RegularExpressions.Regex.IsMatch(dataIN, s, System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                {
+                    tBoxDataIN.Text += "\r\nThere is matching data.\r\n";
+
+                    //string factMessage = "Extension methods have all the capabilities of regular static methods.";
+                    string factMessage = dataIN;
+
+                    // This search returns the substring between two strings, so 
+                    // the first index is moved to the character just after the first string.
+                    int first = factMessage.IndexOf(s) + s.Length;
+                    int last = factMessage.LastIndexOf(s);
+                    if(last > first)
+                    {
+                        string str2 = factMessage.Substring(first, last - first);
+                        tBoxDataIN.Text += "\r\n";
+                        tBoxDataIN.Text += str2;
+                    }
+                    else
+                    {
+                        string str2 = factMessage.Substring(first, factMessage.Length - first);
+                        tBoxDataIN.Text += "\r\n";
+                        tBoxDataIN.Text += str2;
+
+                    }
+                }
+                else
+                {
+                    tBoxDataIN.Text += "\r\nThere is not matching data.";
+                }
+            }
+
         }
 
         private void ClearRXToolStripMenuItem_Click(object sender, EventArgs e)
@@ -244,10 +299,7 @@ namespace WindowsFormsApp2
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            groupBox3.Width = panel1.Width - 230;
-            groupBox3.Height = panel1.Height - 55;
-
-            tBoxDataIN.Height = groupBox3.Height - 54;
+            this.setWindowLayOut();
         }
 
         private void TSMenu6bits_Click(object sender, EventArgs e)

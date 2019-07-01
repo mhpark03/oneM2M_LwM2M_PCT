@@ -88,6 +88,8 @@
             this.tSMenuRxUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.tSMenuRxAll = new System.Windows.Forms.ToolStripMenuItem();
             this.CursorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tSMenuTop = new System.Windows.Forms.ToolStripMenuItem();
+            this.tSMenuDown = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -112,8 +114,6 @@
             this.lblModel = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.tSMenuTop = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuDown = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -282,11 +282,11 @@
             // 
             // tBoxDataOut
             // 
-            this.tBoxDataOut.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tBoxDataOut.Dock = System.Windows.Forms.DockStyle.Left;
             this.tBoxDataOut.Location = new System.Drawing.Point(0, 0);
             this.tBoxDataOut.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
             this.tBoxDataOut.Name = "tBoxDataOut";
-            this.tBoxDataOut.Size = new System.Drawing.Size(446, 25);
+            this.tBoxDataOut.Size = new System.Drawing.Size(371, 25);
             this.tBoxDataOut.TabIndex = 3;
             this.tBoxDataOut.TextChanged += new System.EventHandler(this.TBoxDataOut_TextChanged);
             this.tBoxDataOut.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TBoxDataOut_KeyDown);
@@ -303,7 +303,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(715, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(715, 25);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -312,7 +312,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ExitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
             this.fileToolStripMenuItem.Text = "파일";
             // 
             // ExitToolStripMenuItem
@@ -335,7 +335,7 @@
             this.dTREnableToolStripMenuItem,
             this.rTPControlToolStripMenuItem});
             this.COMCTRLToolStripMenuItem.Name = "COMCTRLToolStripMenuItem";
-            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
+            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
             this.COMCTRLToolStripMenuItem.Text = "설정";
             // 
             // OpenToolStripMenuItem
@@ -558,7 +558,7 @@
             this.ClearToolStripMenuItem,
             this.writeToolStripMenuItem});
             this.송신ToolStripMenuItem.Name = "송신ToolStripMenuItem";
-            this.송신ToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
+            this.송신ToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
             this.송신ToolStripMenuItem.Text = "송신";
             // 
             // ClearToolStripMenuItem
@@ -614,13 +614,13 @@
             this.표시방법ToolStripMenuItem,
             this.CursorToolStripMenuItem});
             this.수ToolStripMenuItem.Name = "수ToolStripMenuItem";
-            this.수ToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
+            this.수ToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
             this.수ToolStripMenuItem.Text = "수신";
             // 
             // ClearRXToolStripMenuItem
             // 
             this.ClearRXToolStripMenuItem.Name = "ClearRXToolStripMenuItem";
-            this.ClearRXToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.ClearRXToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
             this.ClearRXToolStripMenuItem.Text = "내용 지우기";
             this.ClearRXToolStripMenuItem.Click += new System.EventHandler(this.ClearRXToolStripMenuItem_Click);
             // 
@@ -630,7 +630,7 @@
             this.tSMenuRxUpdate,
             this.tSMenuRxAll});
             this.표시방법ToolStripMenuItem.Name = "표시방법ToolStripMenuItem";
-            this.표시방법ToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.표시방법ToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
             this.표시방법ToolStripMenuItem.Text = "표시방법";
             // 
             // tSMenuRxUpdate
@@ -653,13 +653,27 @@
             this.tSMenuTop,
             this.tSMenuDown});
             this.CursorToolStripMenuItem.Name = "CursorToolStripMenuItem";
-            this.CursorToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.CursorToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
             this.CursorToolStripMenuItem.Text = "표시위치";
+            // 
+            // tSMenuTop
+            // 
+            this.tSMenuTop.Name = "tSMenuTop";
+            this.tSMenuTop.Size = new System.Drawing.Size(153, 26);
+            this.tSMenuTop.Text = "위로";
+            this.tSMenuTop.Click += new System.EventHandler(this.TSMenuTop_Click);
+            // 
+            // tSMenuDown
+            // 
+            this.tSMenuDown.Name = "tSMenuDown";
+            this.tSMenuDown.Size = new System.Drawing.Size(153, 26);
+            this.tSMenuDown.Text = "아래로";
+            this.tSMenuDown.Click += new System.EventHandler(this.TSMenuDown_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(76, 21);
             this.aboutToolStripMenuItem.Text = "도움말";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
@@ -715,10 +729,10 @@
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.groupBox3);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 28);
+            this.panel1.Location = new System.Drawing.Point(0, 25);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(715, 332);
+            this.panel1.Size = new System.Drawing.Size(715, 335);
             this.panel1.TabIndex = 10;
             // 
             // groupBox1
@@ -886,7 +900,7 @@
             this.panel2.Controls.Add(this.cBoxParityBits);
             this.panel2.Controls.Add(this.cBoxStopBits);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 284);
+            this.panel2.Location = new System.Drawing.Point(0, 287);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
@@ -907,20 +921,6 @@
             this.groupBox2.Size = new System.Drawing.Size(179, 46);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
-            // 
-            // tSMenuTop
-            // 
-            this.tSMenuTop.Name = "tSMenuTop";
-            this.tSMenuTop.Size = new System.Drawing.Size(224, 26);
-            this.tSMenuTop.Text = "위로";
-            this.tSMenuTop.Click += new System.EventHandler(this.TSMenuTop_Click);
-            // 
-            // tSMenuDown
-            // 
-            this.tSMenuDown.Name = "tSMenuDown";
-            this.tSMenuDown.Size = new System.Drawing.Size(224, 26);
-            this.tSMenuDown.Text = "아래로";
-            this.tSMenuDown.Click += new System.EventHandler(this.TSMenuDown_Click);
             // 
             // Form1
             // 
