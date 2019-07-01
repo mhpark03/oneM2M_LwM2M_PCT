@@ -32,6 +32,13 @@ namespace WindowsFormsApp2
             chBoxRTSEnable.Checked = false;
             serialPort1.RtsEnable = false;
             btnSendData.Enabled = true;
+
+            tSCBoxDataBits.Text = "8";
+            tSCBoxStopBits.Text = "One";
+            tSCBoxParityBits.Text = "None";
+            tSCBoxDtrEnable.Text = "OFF";
+            tSCBoxRtsEnable.Text = "OFF";
+
             sendWith = "Both";
             tSCBoxReceive.Text = "All";
             tSCBoxTrans.Text = "Both";
