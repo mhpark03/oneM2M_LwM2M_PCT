@@ -71,13 +71,19 @@ namespace WindowsFormsApp2
 
                 serialPort1.Open();
                 progressBar1.Value = 100;
+                groupBox1.Enabled = true;
                 groupBox3.Enabled = true;
+                logPrintInTextBox("COM PORT가 연결 되었습니다.");
+
             }
 
             catch (Exception err)
             {
                 MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                groupBox1.Enabled = false;
                 groupBox3.Enabled = false;
+                logPrintInTextBox("COM PORT 연결이 실패하였습니다.");
+
             }
         }
 
@@ -93,7 +99,10 @@ namespace WindowsFormsApp2
         {
             serialPort1.Close();
             progressBar1.Value = 0;
+            groupBox1.Enabled = false;
             groupBox3.Enabled = false;
+            logPrintInTextBox("COM PORT가 해제 되었습니다.");
+
         }
 
         private void ProgressBar1_Click(object sender, EventArgs e)
@@ -511,11 +520,33 @@ namespace WindowsFormsApp2
                 tBoxIMSI.Text = str1;
                 tBoxActionState.Text = "Idle";
             }
+            else if (tBoxActionState.Text == "AUTO INFO IMSI")
+            {
+                tBoxIMSI.Text = str1;
+                tBoxActionState.Text = "Idle";
+                
+                timer1.Stop();
+            }
             else if (tBoxActionState.Text == "GET IMEI")
             {
                 tBoxIMEI.Text = str1;
                 tBoxActionState.Text = "Idle";
             }
+        }
+
+        private void InitinfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut("AT+CIMI");
+            tBoxActionState.Text = "AUTO INFO IMSI";
+
+            timer1.Start();
+
+            //this.sendDataOut("AT+QCCID");
+            //tBoxActionState.Text = "AUTO INFO ICCID";
+
+            //this.sendDataOut("AT+GSN");
+            //tBoxActionState.Text = "AUTO INFO IMEI";
+
         }
 
         private void Button5_Click(object sender, EventArgs e)
@@ -527,6 +558,15 @@ namespace WindowsFormsApp2
         {
             this.sendDataOut("AT+GSN");
             tBoxActionState.Text = "GET IMEI";
+        }
+
+        private void Timer1_Tick(object sender, EventArgs e)
+        {
+            timer1.Enabled = false;
+            logPrintInTextBox("타이머가 종료 되었습니다.");
+            MessageBox.Show("타이머가 종료되었습니다.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            tBoxActionState.Text = "Idle";
         }
     }
 }
