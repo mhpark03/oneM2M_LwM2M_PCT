@@ -13,11 +13,24 @@ namespace WindowsFormsApp2
 {
     public partial class Form1 : Form
     {
+        private enum states
+        {
+            idle,
+            getimsi,
+            getimei,
+            geticcid,
+            autogetimsi,
+            autogetimei,
+            autogeticcid
+        }
+
         string sendWith;
         string dataIN;
         string RxDisplayRule;
         string RxDispOrder;
-
+        //Dictionary<string, string> commands = new Dictionary<string, string>();
+        //commands.Add("UserID", "test");
+        // string userIDFromDictionaryByKey = dict["UserID"];
         public Form1()
         {
             InitializeComponent();
@@ -394,7 +407,7 @@ namespace WindowsFormsApp2
         private void Button2_Click(object sender, EventArgs e)
         {
             this.sendDataOut("AT+CIMI");
-            tBoxActionState.Text = "GET IMSI";
+            tBoxActionState.Text = states.getimsi.ToString();
         }
 
         private void SerialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -497,67 +510,72 @@ namespace WindowsFormsApp2
         {
             if (s == "OK" || s == "ERROR")
             {
-                tBoxActionState.Text = "Idle";
+                tBoxActionState.Text = states.idle.ToString();
             }
             else if (s == "AT+CIMI")
             {
-                tBoxActionState.Text = "GET IMSI";
+                tBoxActionState.Text = states.getimsi.ToString();
             }
             else if(s == "+QCCID:")
             {
                 tBoxIccid.Text = str2.Substring(0, 20);
+                tBoxActionState.Text = states.geticcid.ToString();
             }
             else if(s == "AT+GSN")
             {
-                tBoxActionState.Text = "GET IMEI";
+                tBoxActionState.Text = states.getimei.ToString();
             }
         }
 
         private void parseNoPrefixData(string str1)
         {
-            if (tBoxActionState.Text == "GET IMSI")
+            states state = (states)Enum.Parse(typeof(states), tBoxActionState.Text);
+            switch(state)
             {
-                tBoxIMSI.Text = str1;
-                tBoxActionState.Text = "Idle";
-            }
-            else if (tBoxActionState.Text == "AUTO INFO IMSI")
-            {
-                tBoxIMSI.Text = str1;
-                tBoxActionState.Text = "Idle";
-                
-                timer1.Stop();
-            }
-            else if (tBoxActionState.Text == "GET IMEI")
-            {
-                tBoxIMEI.Text = str1;
-                tBoxActionState.Text = "Idle";
+                case states.getimsi:
+                    tBoxIMSI.Text = str1;
+                    tBoxActionState.Text = states.idle.ToString();
+                    break;
+                case states.autogetimsi:
+                    tBoxIMSI.Text = str1;
+                    tBoxActionState.Text = states.idle.ToString();
+
+                    timer1.Stop();
+                    break;
+                case states.autogetimei:
+                    tBoxIMEI.Text = str1;
+                    tBoxActionState.Text = states.idle.ToString();
+                    break;
+                default:
+                    break;
             }
         }
 
         private void InitinfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.sendDataOut("AT+CIMI");
-            tBoxActionState.Text = "AUTO INFO IMSI";
+            tBoxActionState.Text = states.autogetimsi.ToString();
 
             timer1.Start();
 
             //this.sendDataOut("AT+QCCID");
-            //tBoxActionState.Text = "AUTO INFO ICCID";
+            //tBoxActionState.Text = states.autogeticcid.ToString();
 
             //this.sendDataOut("AT+GSN");
-            //tBoxActionState.Text = "AUTO INFO IMEI";
+            //tBoxActionState.Text = states.autogetimei.ToString();
 
         }
 
         private void Button5_Click(object sender, EventArgs e)
         {
             this.sendDataOut("AT+QCCID");
+            tBoxActionState.Text = states.geticcid.ToString();
         }
 
         private void Button3_Click(object sender, EventArgs e)
         {
             this.sendDataOut("AT+GSN");
-            tBoxActionState.Text = "GET IMEI";
+            tBoxActionState.Text = states.getimei.ToString();
         }
 
         private void Timer1_Tick(object sender, EventArgs e)
@@ -566,7 +584,7 @@ namespace WindowsFormsApp2
             logPrintInTextBox("타이머가 종료 되었습니다.");
             MessageBox.Show("타이머가 종료되었습니다.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            tBoxActionState.Text = "Idle";
+            tBoxActionState.Text = states.idle.ToString();
         }
     }
 }

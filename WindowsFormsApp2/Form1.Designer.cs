@@ -311,7 +311,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ExitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
             this.fileToolStripMenuItem.Text = "파일";
             // 
             // ExitToolStripMenuItem
@@ -334,7 +334,7 @@
             this.dTREnableToolStripMenuItem,
             this.rTPControlToolStripMenuItem});
             this.COMCTRLToolStripMenuItem.Name = "COMCTRLToolStripMenuItem";
-            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
+            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
             this.COMCTRLToolStripMenuItem.Text = "설정";
             // 
             // OpenToolStripMenuItem
@@ -557,7 +557,7 @@
             this.ClearToolStripMenuItem,
             this.writeToolStripMenuItem});
             this.송신ToolStripMenuItem.Name = "송신ToolStripMenuItem";
-            this.송신ToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
+            this.송신ToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
             this.송신ToolStripMenuItem.Text = "송신";
             // 
             // ClearToolStripMenuItem
@@ -613,7 +613,7 @@
             this.표시방법ToolStripMenuItem,
             this.CursorToolStripMenuItem});
             this.수ToolStripMenuItem.Name = "수ToolStripMenuItem";
-            this.수ToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
+            this.수ToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
             this.수ToolStripMenuItem.Text = "수신";
             // 
             // ClearRXToolStripMenuItem
@@ -675,26 +675,26 @@
             this.initinfoToolStripMenuItem,
             this.provisionToolStripMenuItem});
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(76, 21);
             this.testToolStripMenuItem.Text = "테스트";
             // 
             // initinfoToolStripMenuItem
             // 
             this.initinfoToolStripMenuItem.Name = "initinfoToolStripMenuItem";
-            this.initinfoToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.initinfoToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
             this.initinfoToolStripMenuItem.Text = "단말정보 ";
             this.initinfoToolStripMenuItem.Click += new System.EventHandler(this.InitinfoToolStripMenuItem_Click);
             // 
             // provisionToolStripMenuItem
             // 
             this.provisionToolStripMenuItem.Name = "provisionToolStripMenuItem";
-            this.provisionToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.provisionToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
             this.provisionToolStripMenuItem.Text = "플랫폼 등록";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(76, 24);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(76, 21);
             this.aboutToolStripMenuItem.Text = "도움말";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
@@ -770,7 +770,7 @@
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.tBoxModel);
             this.groupBox1.Controls.Add(this.btnModel);
-            this.groupBox1.Location = new System.Drawing.Point(11, 12);
+            this.groupBox1.Location = new System.Drawing.Point(11, 15);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -950,9 +950,9 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MaximumSize = new System.Drawing.Size(1124, 707);
+            this.MaximumSize = new System.Drawing.Size(1124, 705);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(720, 405);
+            this.MinimumSize = new System.Drawing.Size(720, 403);
             this.Name = "Form1";
             this.Text = "LGU+ ATcommand TEST";
             this.Load += new System.EventHandler(this.Form1_Load);
