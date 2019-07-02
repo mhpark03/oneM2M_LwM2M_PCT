@@ -16,6 +16,8 @@ namespace WindowsFormsApp2
         private enum states
         {
             idle,
+            getmodel,
+            getmanufac,
             getimsi,
             getimei,
             geticcid,
@@ -28,9 +30,9 @@ namespace WindowsFormsApp2
         string dataIN;
         string RxDisplayRule;
         string RxDispOrder;
-        //Dictionary<string, string> commands = new Dictionary<string, string>();
-        //commands.Add("UserID", "test");
+        Dictionary<string, string> commands = new Dictionary<string, string>();
         // string userIDFromDictionaryByKey = dict["UserID"];
+
         public Form1()
         {
             InitializeComponent();
@@ -55,7 +57,14 @@ namespace WindowsFormsApp2
             RxDispOrder = "BOTTOM";
 
             this.setWindowLayOut();
+            groupBox1.Enabled = false;
             groupBox3.Enabled = false;
+
+            commands.Add("getimsi", "AT+CIMI");
+            commands.Add("geticcid", "AT+QCCID");
+            commands.Add("getimei", "AT+GSN");
+            commands.Add("getmodel", "AT+GSN");
+            commands.Add("getmanufac", "AT+GSN");
         }
 
         private void setWindowLayOut()
@@ -370,10 +379,6 @@ namespace WindowsFormsApp2
             RxDispOrder = "BOTTOM";
         }
 
-        private void BtnModel_Click(object sender, EventArgs e)
-        {
-
-        }
         private void logPrintInTextBox(string v)
         {
             string displayMsg = makeLogPrintLine(v);
@@ -402,12 +407,6 @@ namespace WindowsFormsApp2
             DateTime currenttime = DateTime.Now;
             msg_form = currenttime.ToString("hh:mm:ss.fff") + " : " + msg + "\r\n";
             return msg_form;
-        }
-
-        private void Button2_Click(object sender, EventArgs e)
-        {
-            this.sendDataOut("AT+CIMI");
-            tBoxActionState.Text = states.getimsi.ToString();
         }
 
         private void SerialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -553,29 +552,47 @@ namespace WindowsFormsApp2
 
         private void InitinfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.sendDataOut("AT+CIMI");
+            this.sendDataOut(commands["getimsi"]);
             tBoxActionState.Text = states.autogetimsi.ToString();
 
             timer1.Start();
 
-            //this.sendDataOut("AT+QCCID");
+            //this.sendDataOut(commands["geticcid"]);
             //tBoxActionState.Text = states.autogeticcid.ToString();
 
-            //this.sendDataOut("AT+GSN");
+            //this.sendDataOut(commands["getimei"]);
             //tBoxActionState.Text = states.autogetimei.ToString();
 
         }
 
-        private void Button5_Click(object sender, EventArgs e)
+        private void btnIMSI_Click(object sender, EventArgs e)
         {
-            this.sendDataOut("AT+QCCID");
+            this.sendDataOut(commands["getimsi"]);
+            tBoxActionState.Text = states.getimsi.ToString();
+        }
+
+        private void btnICCID_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut(commands["geticcid"]);
             tBoxActionState.Text = states.geticcid.ToString();
         }
 
-        private void Button3_Click(object sender, EventArgs e)
+        private void btnIMEI_Click(object sender, EventArgs e)
         {
-            this.sendDataOut("AT+GSN");
+            this.sendDataOut(commands["getimei"]);
             tBoxActionState.Text = states.getimei.ToString();
+        }
+
+        private void BtnModel_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut(commands["getmodel"]);
+            tBoxActionState.Text = states.getmodel.ToString();
+        }
+
+        private void btnManufac_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut(commands["getmanufac"]);
+            tBoxActionState.Text = states.getmanufac.ToString();
         }
 
         private void Timer1_Tick(object sender, EventArgs e)
@@ -586,5 +603,6 @@ namespace WindowsFormsApp2
 
             tBoxActionState.Text = states.idle.ToString();
         }
+
     }
 }

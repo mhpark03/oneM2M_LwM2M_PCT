@@ -101,15 +101,15 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tBoxIccid = new System.Windows.Forms.TextBox();
-            this.button5 = new System.Windows.Forms.Button();
+            this.btnICCID = new System.Windows.Forms.Button();
             this.tBoxActionState = new System.Windows.Forms.TextBox();
             this.button4 = new System.Windows.Forms.Button();
             this.tBoxIMEI = new System.Windows.Forms.TextBox();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btnIMEI = new System.Windows.Forms.Button();
             this.tBoxIMSI = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnIMSI = new System.Windows.Forms.Button();
             this.tBoxManu = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnManufac = new System.Windows.Forms.Button();
             this.tBoxModel = new System.Windows.Forms.TextBox();
             this.btnModel = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -759,15 +759,15 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.tBoxIccid);
-            this.groupBox1.Controls.Add(this.button5);
+            this.groupBox1.Controls.Add(this.btnICCID);
             this.groupBox1.Controls.Add(this.tBoxActionState);
             this.groupBox1.Controls.Add(this.button4);
             this.groupBox1.Controls.Add(this.tBoxIMEI);
-            this.groupBox1.Controls.Add(this.button3);
+            this.groupBox1.Controls.Add(this.btnIMEI);
             this.groupBox1.Controls.Add(this.tBoxIMSI);
-            this.groupBox1.Controls.Add(this.button2);
+            this.groupBox1.Controls.Add(this.btnIMSI);
             this.groupBox1.Controls.Add(this.tBoxManu);
-            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.btnManufac);
             this.groupBox1.Controls.Add(this.tBoxModel);
             this.groupBox1.Controls.Add(this.btnModel);
             this.groupBox1.Location = new System.Drawing.Point(11, 15);
@@ -788,16 +788,16 @@
             this.tBoxIccid.TabIndex = 15;
             this.tBoxIccid.Text = "알 수 없음";
             // 
-            // button5
+            // btnICCID
             // 
-            this.button5.Location = new System.Drawing.Point(7, 119);
-            this.button5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 30);
-            this.button5.TabIndex = 14;
-            this.button5.Text = "ICCID";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.Button5_Click);
+            this.btnICCID.Location = new System.Drawing.Point(7, 119);
+            this.btnICCID.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnICCID.Name = "btnICCID";
+            this.btnICCID.Size = new System.Drawing.Size(75, 30);
+            this.btnICCID.TabIndex = 14;
+            this.btnICCID.Text = "ICCID";
+            this.btnICCID.UseVisualStyleBackColor = true;
+            this.btnICCID.Click += new System.EventHandler(this.btnICCID_Click);
             // 
             // tBoxActionState
             // 
@@ -829,16 +829,16 @@
             this.tBoxIMEI.TabIndex = 11;
             this.tBoxIMEI.Text = "알 수 없음";
             // 
-            // button3
+            // btnIMEI
             // 
-            this.button3.Location = new System.Drawing.Point(7, 154);
-            this.button3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 30);
-            this.button3.TabIndex = 10;
-            this.button3.Text = "IMEI";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.Button3_Click);
+            this.btnIMEI.Location = new System.Drawing.Point(7, 154);
+            this.btnIMEI.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnIMEI.Name = "btnIMEI";
+            this.btnIMEI.Size = new System.Drawing.Size(75, 30);
+            this.btnIMEI.TabIndex = 10;
+            this.btnIMEI.Text = "IMEI";
+            this.btnIMEI.UseVisualStyleBackColor = true;
+            this.btnIMEI.Click += new System.EventHandler(this.btnIMEI_Click);
             // 
             // tBoxIMSI
             // 
@@ -850,16 +850,16 @@
             this.tBoxIMSI.TabIndex = 9;
             this.tBoxIMSI.Text = "알 수 없음";
             // 
-            // button2
+            // btnIMSI
             // 
-            this.button2.Location = new System.Drawing.Point(7, 86);
-            this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 30);
-            this.button2.TabIndex = 8;
-            this.button2.Text = "IMSI";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.Button2_Click);
+            this.btnIMSI.Location = new System.Drawing.Point(7, 86);
+            this.btnIMSI.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnIMSI.Name = "btnIMSI";
+            this.btnIMSI.Size = new System.Drawing.Size(75, 30);
+            this.btnIMSI.TabIndex = 8;
+            this.btnIMSI.Text = "IMSI";
+            this.btnIMSI.UseVisualStyleBackColor = true;
+            this.btnIMSI.Click += new System.EventHandler(this.btnIMSI_Click);
             // 
             // tBoxManu
             // 
@@ -871,15 +871,16 @@
             this.tBoxManu.TabIndex = 7;
             this.tBoxManu.Text = "알 수 없음";
             // 
-            // button1
+            // btnManufac
             // 
-            this.button1.Location = new System.Drawing.Point(7, 50);
-            this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 30);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "제조사";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnManufac.Location = new System.Drawing.Point(7, 50);
+            this.btnManufac.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnManufac.Name = "btnManufac";
+            this.btnManufac.Size = new System.Drawing.Size(75, 30);
+            this.btnManufac.TabIndex = 6;
+            this.btnManufac.Text = "제조사";
+            this.btnManufac.UseVisualStyleBackColor = true;
+            this.btnManufac.Click += new System.EventHandler(this.btnManufac_Click);
             // 
             // tBoxModel
             // 
@@ -1050,14 +1051,14 @@
         private System.Windows.Forms.TextBox tBoxActionState;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.TextBox tBoxIMEI;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnIMEI;
         private System.Windows.Forms.TextBox tBoxIMSI;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnIMSI;
         private System.Windows.Forms.TextBox tBoxManu;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnManufac;
         private System.Windows.Forms.TextBox tBoxModel;
         private System.Windows.Forms.TextBox tBoxIccid;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button btnICCID;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem initinfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem provisionToolStripMenuItem;
