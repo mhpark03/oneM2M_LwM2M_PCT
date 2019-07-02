@@ -13,7 +13,6 @@ namespace WindowsFormsApp2
 {
     public partial class Form1 : Form
     {
-        string dataOUT;
         string sendWith;
         string dataIN;
         string RxDisplayRule;
@@ -40,7 +39,7 @@ namespace WindowsFormsApp2
 
             sendWith = "Both";
             RxDisplayRule = "All";
-            RxDispOrder = "TOP";
+            RxDispOrder = "BOTTOM";
 
             this.setWindowLayOut();
             groupBox3.Enabled = false;
@@ -112,25 +111,9 @@ namespace WindowsFormsApp2
 
         private void BtnSendData_Click(object sender, EventArgs e)
         {
-            if (serialPort1.IsOpen)
+            if(tBoxDataOut.Text != "")
             {
-                dataOUT = tBoxDataOut.Text;
-                if (sendWith == "None")
-                {
-                    serialPort1.Write(dataOUT);
-                }
-                else if (sendWith == "Both")
-                {
-                    serialPort1.Write(dataOUT+"\r\n");
-                }
-                else if (sendWith == "LF")
-                {
-                    serialPort1.Write(dataOUT+"\r");
-                }
-                else if (sendWith == "CR")
-                {
-                    serialPort1.Write(dataOUT+"\n");
-                }
+                this.sendDataOut(tBoxDataOut.Text);
             }
         }
 
@@ -172,17 +155,16 @@ namespace WindowsFormsApp2
         {
             if (e.KeyCode == Keys.Enter)
             {
-                this.doSomething();
+                this.sendDataOut(tBoxDataOut.Text);
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
         }
 
-        private void doSomething()
+        private void sendDataOut(string dataOUT)
         {
             if (serialPort1.IsOpen)
             {
-                dataOUT = tBoxDataOut.Text;
                 if (sendWith == "None")
                 {
                     serialPort1.Write(dataOUT);
@@ -200,83 +182,6 @@ namespace WindowsFormsApp2
                     serialPort1.Write(dataOUT + "\n");
                 }
             }
-        }
-
-        private void SerialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            dataIN = serialPort1.ReadExisting();
-            this.Invoke(new EventHandler(ShowData));
-        }
-
-        private void ShowData(object sender, EventArgs e)
-        {
-            int dataINLength = dataIN.Length;
-            lblDataInLength.Text = string.Format("{0:00}", dataINLength);
-
-            if (RxDisplayRule == "Update")
-            {
-                tBoxDataIN.Text = dataIN;
-            }
-            else if (RxDisplayRule == "All")
-            {
-                if(RxDispOrder == "TOP")
-                {
-                    tBoxDataIN.Text = tBoxDataIN.Text.Insert(0, dataIN);
-                }
-                else
-                {
-                    tBoxDataIN.Text += dataIN;
-                }
-            }
-
-            this.parseRXData();
-        }
-
-        private void parseRXData()
-        {
-            string[] sentences =
-            {
-                "methods",
-                "have",
-                "count"
-            };
-
-            foreach (string s in sentences)
-            {
-                tBoxDataIN.Text += "\r\n";
-                tBoxDataIN.Text += s;
-
-                if (System.Text.RegularExpressions.Regex.IsMatch(dataIN, s, System.Text.RegularExpressions.RegexOptions.IgnoreCase))
-                {
-                    tBoxDataIN.Text += "\r\nThere is matching data.\r\n";
-
-                    //string factMessage = "Extension methods have all the capabilities of regular static methods.";
-                    string factMessage = dataIN;
-
-                    // This search returns the substring between two strings, so 
-                    // the first index is moved to the character just after the first string.
-                    int first = factMessage.IndexOf(s) + s.Length;
-                    int last = factMessage.LastIndexOf(s);
-                    if(last > first)
-                    {
-                        string str2 = factMessage.Substring(first, last - first);
-                        tBoxDataIN.Text += "\r\n";
-                        tBoxDataIN.Text += str2;
-                    }
-                    else
-                    {
-                        string str2 = factMessage.Substring(first, factMessage.Length - first);
-                        tBoxDataIN.Text += "\r\n";
-                        tBoxDataIN.Text += str2;
-
-                    }
-                }
-                else
-                {
-                    tBoxDataIN.Text += "\r\nThere is not matching data.";
-                }
-            }
-
         }
 
         private void ClearRXToolStripMenuItem_Click(object sender, EventArgs e)
@@ -441,6 +346,187 @@ namespace WindowsFormsApp2
         private void TSMenuDown_Click(object sender, EventArgs e)
         {
             RxDispOrder = "BOTTOM";
+        }
+
+        private void BtnModel_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void logPrintInTextBox(string v)
+        {
+            string displayMsg = makeLogPrintLine(v);
+
+            if (RxDisplayRule == "Update")
+            {
+                tBoxDataIN.Text = displayMsg;
+            }
+            else if (RxDisplayRule == "All")
+            {
+                if (RxDispOrder == "TOP")
+                {
+                    tBoxDataIN.Text = tBoxDataIN.Text.Insert(0, displayMsg);
+                }
+                else
+                {
+                    tBoxDataIN.Text += displayMsg;
+                }
+            }
+
+        }
+
+        private string makeLogPrintLine(string msg)
+        {
+            string msg_form;
+            DateTime currenttime = DateTime.Now;
+            msg_form = currenttime.ToString("hh:mm:ss.fff") + " : " + msg + "\r\n";
+            return msg_form;
+        }
+
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut("AT+CIMI");
+            tBoxActionState.Text = "GET IMSI";
+        }
+
+        private void SerialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            dataIN = serialPort1.ReadExisting();
+            this.Invoke(new EventHandler(ShowData));
+        }
+
+        private void ShowData(object sender, EventArgs e)
+        {
+            int dataINLength = dataIN.Length;
+            lblDataInLength.Text = string.Format("{0:00}", dataINLength);
+
+            //logPrintInTextBox(dataIN);
+
+            string[] words = dataIN.Split('\n');
+
+            foreach (var word in words)
+            {
+                string str1;
+
+                int lflength = word.IndexOf("\r");
+                if(lflength>1)
+                {
+                    str1 = word.Substring(0 , lflength);
+                }
+                else
+                {
+                    str1 = word;
+                }
+
+                if (str1 != "")
+                {
+                    this.parseRXData(str1);
+                }
+            }
+        }
+
+        private void parseRXData(string rxMsg)
+        {
+            string[] sentences =
+            {
+                "OK",
+                "ERROR",
+                "AT+CIMI",
+                "+QCCID:",
+                "AT+GSN:"
+            };
+
+            /* Debug를 위해 Hex로 문자열 표시*/
+            /*
+            char[] charValues = rxMsg.ToCharArray();
+            string hexOutput = "";
+            foreach (char _eachChar in charValues)
+            {
+                // Get the integral value of the character.
+                int value = Convert.ToInt32(_eachChar);
+                // Convert the decimal value to a hexadecimal value in string form.
+                hexOutput += String.Format("{0:X}", value);
+            }
+            logPrintInTextBox(hexOutput);
+            */
+
+            logPrintInTextBox(rxMsg);
+            bool find_msg = false;
+
+            foreach (string s in sentences)
+            {
+                //logPrintInTextBox(s);
+
+                //if (System.Text.RegularExpressions.Regex.IsMatch(rxMsg, s, System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                if (rxMsg.StartsWith(s, System.StringComparison.CurrentCultureIgnoreCase))
+                {
+                   logPrintInTextBox(s + " : There is matching data.");
+
+                    // This search returns the substring between two strings, so 
+                    // the first index is moved to the character just after the first string.
+                    int first = rxMsg.IndexOf(s) + s.Length;
+                    string str2 = "";
+                    str2 = rxMsg.Substring(first, rxMsg.Length - first);
+                    logPrintInTextBox("남은 문자열 : " + str2);
+
+                    this.parseReceiveData(s, str2);
+
+                    find_msg = true;
+                    break;
+                }
+            }
+
+            if (find_msg == false)
+            {
+                logPrintInTextBox("No Matching Data!!!");
+
+                this.parseNoPrefixData(rxMsg);
+            }
+
+        }
+
+        void parseReceiveData(string s, string str2)
+        {
+            if (s == "OK" || s == "ERROR")
+            {
+                tBoxActionState.Text = "Idle";
+            }
+            else if (s == "AT+CIMI")
+            {
+                tBoxActionState.Text = "GET IMSI";
+            }
+            else if(s == "+QCCID:")
+            {
+                tBoxIccid.Text = str2.Substring(0, 20);
+            }
+            else if(s == "AT+GSN")
+            {
+                tBoxActionState.Text = "GET IMEI";
+            }
+        }
+
+        private void parseNoPrefixData(string str1)
+        {
+            if (tBoxActionState.Text == "GET IMSI")
+            {
+                tBoxIMSI.Text = str1;
+                tBoxActionState.Text = "Idle";
+            }
+            else if (tBoxActionState.Text == "GET IMEI")
+            {
+                tBoxIMEI.Text = str1;
+                tBoxActionState.Text = "Idle";
+            }
+        }
+
+        private void Button5_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut("AT+QCCID");
+        }
+
+        private void Button3_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut("AT+GSN");
+            tBoxActionState.Text = "GET IMEI";
         }
     }
 }
