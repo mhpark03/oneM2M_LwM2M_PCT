@@ -22,9 +22,13 @@ namespace WindowsFormsApp2
             getimei,
             geticcid,
             autogetmodel,
+            autogetmodel_next,
             autogetmanufac,
+            autogetmanufac_next,
             autogetimsi,
+            autogetimsi_next,
             autogetimei,
+            autogetimei_next,
             autogeticcid
         }
 
@@ -548,25 +552,25 @@ namespace WindowsFormsApp2
                 states state = (states)Enum.Parse(typeof(states), tBoxActionState.Text);
                 switch (state)
                 {
-                    case states.autogetmodel:
+                    case states.autogetmodel_next:
                         this.sendDataOut(commands["getmanufac"]);
                         tBoxActionState.Text = states.autogetmanufac.ToString();
 
                         timer1.Start();
                         break;
-                    case states.autogetmanufac:
+                    case states.autogetmanufac_next:
                         this.sendDataOut(commands["getimsi"]);
                         tBoxActionState.Text = states.autogetimsi.ToString();
 
                         timer1.Start();
                         break;
-                    case states.autogetimsi:
+                    case states.autogetimsi_next:
                         this.sendDataOut(commands["getimei"]);
                         tBoxActionState.Text = states.autogetimei.ToString();
 
                         timer1.Start();
                         break;
-                    case states.autogetimei:
+                    case states.autogetimei_next:
                         this.sendDataOut(commands["geticcid"]);
                         tBoxActionState.Text = states.geticcid.ToString();
 
@@ -606,7 +610,7 @@ namespace WindowsFormsApp2
                     break;
                 case states.autogetimsi:
                     tBoxIMSI.Text = str1;
-                    tBoxIMSI.Refresh();
+                    tBoxActionState.Text = states.autogetimsi_next.ToString();
                     this.logPrintInTextBox("IMSI값이 저장되었습니다.");
                     break;
                 case states.getimei:
@@ -616,7 +620,7 @@ namespace WindowsFormsApp2
                     break;
                 case states.autogetimei:
                     tBoxIMEI.Text = str1;
-                    tBoxIMEI.Refresh();
+                    tBoxActionState.Text = states.autogetimei_next.ToString();
                     this.logPrintInTextBox("IMEI값이이 저장되었습니다.");
                     break;
                 case states.getmodel:
@@ -626,7 +630,7 @@ namespace WindowsFormsApp2
                     break;
                 case states.autogetmodel:
                     tBoxModel.Text = str1;
-                    tBoxModel.Refresh();
+                    tBoxActionState.Text = states.autogetmodel_next.ToString();
                     this.logPrintInTextBox("모델값이 저장되었습니다.");
                     break;
                 case states.getmanufac:
@@ -636,7 +640,7 @@ namespace WindowsFormsApp2
                     break;
                 case states.autogetmanufac:
                     tBoxManu.Text = str1;
-                    tBoxManu.Refresh();
+                    tBoxActionState.Text = states.autogetmanufac_next.ToString();
                     this.logPrintInTextBox("제조사값이 저장되었습니다.");
                     break;
                 default:
@@ -652,7 +656,7 @@ namespace WindowsFormsApp2
             timer1.Start();
 
             //this.sendDataOut(commands["getmanufac"]);
-            //tBoxActionState.Text = states.getmanufac.ToString();
+            //tBoxActionState.Text = states.autogetmanufac.ToString();
             
             //this.sendDataOut(commands["getimsi"]);
             //tBoxActionState.Text = states.autogetimsi.ToString();

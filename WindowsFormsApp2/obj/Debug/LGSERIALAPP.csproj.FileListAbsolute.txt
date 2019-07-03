@@ -28,3 +28,13 @@ C:\pmh\visualstudio\cshapsample\VisualStudio_serialcomm\WindowsFormsApp2\obj\Deb
 C:\pmh\visualstudio\cshapsample\VisualStudio_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.csproj.CoreCompileInputs.cache
 C:\pmh\visualstudio\cshapsample\VisualStudio_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.exe
 C:\pmh\visualstudio\cshapsample\VisualStudio_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.pdb
+C:\Users\Administrator\Documents\VisualStudio_serialcomm\WindowsFormsApp2\bin\Debug\LGSERIALAPP.exe.config
+C:\Users\Administrator\Documents\VisualStudio_serialcomm\WindowsFormsApp2\bin\Debug\LGSERIALAPP.exe
+C:\Users\Administrator\Documents\VisualStudio_serialcomm\WindowsFormsApp2\bin\Debug\LGSERIALAPP.pdb
+C:\Users\Administrator\Documents\VisualStudio_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.csprojAssemblyReference.cache
+C:\Users\Administrator\Documents\VisualStudio_serialcomm\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.Form1.resources
+C:\Users\Administrator\Documents\VisualStudio_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.Properties.Resources.resources
+C:\Users\Administrator\Documents\VisualStudio_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.csproj.GenerateResource.cache
+C:\Users\Administrator\Documents\VisualStudio_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Documents\VisualStudio_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.exe
+C:\Users\Administrator\Documents\VisualStudio_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.pdb
