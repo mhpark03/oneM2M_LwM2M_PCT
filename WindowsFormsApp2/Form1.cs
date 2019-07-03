@@ -63,8 +63,8 @@ namespace WindowsFormsApp2
             commands.Add("getimsi", "AT+CIMI");
             commands.Add("geticcid", "AT+QCCID");
             commands.Add("getimei", "AT+GSN");
-            commands.Add("getmodel", "AT+GSN");
-            commands.Add("getmanufac", "AT+GSN");
+            commands.Add("getmodel", "AT+CGMM");
+            commands.Add("getmanufac", "AT+CGMI");
         }
 
         private void setWindowLayOut()
@@ -211,6 +211,34 @@ namespace WindowsFormsApp2
                 else if (sendWith == "CR")
                 {
                     serialPort1.Write(dataOUT + "\n");
+                }
+
+                bool response_wait = false;
+                string command = dataOUT.ToUpper();
+                if (command == "AT+CIMI")
+                {
+                    tBoxActionState.Text = states.getimsi.ToString();
+                    response_wait = true;
+                }
+                else if (command == "AT+GSN")
+                {
+                    tBoxActionState.Text = states.getimei.ToString();
+                    response_wait = true;
+                }
+                else if (command == "AT+CGMM")
+                {
+                    tBoxActionState.Text = states.getmodel.ToString();
+                    response_wait = true;
+                }
+                else if (command == "AT+CGMI")
+                {
+                    tBoxActionState.Text = states.getmanufac.ToString();
+                    response_wait = true;
+                }
+
+                if (response_wait)
+                {
+                    timer1.Start();
                 }
             }
         }
@@ -453,7 +481,10 @@ namespace WindowsFormsApp2
                 "ERROR",
                 "AT+CIMI",
                 "+QCCID:",
-                "AT+GSN:"
+                "AT+GSN",
+                "AT+CGMM",
+                "AT+CGMI",
+                "+CME"
             };
 
             /* Debug를 위해 Hex로 문자열 표시*/
@@ -475,7 +506,7 @@ namespace WindowsFormsApp2
 
             foreach (string s in sentences)
             {
-                //logPrintInTextBox(s);
+                logPrintInTextBox(s);
 
                 //if (System.Text.RegularExpressions.Regex.IsMatch(rxMsg, s, System.Text.RegularExpressions.RegexOptions.IgnoreCase))
                 if (rxMsg.StartsWith(s, System.StringComparison.CurrentCultureIgnoreCase))
@@ -510,19 +541,13 @@ namespace WindowsFormsApp2
             if (s == "OK" || s == "ERROR")
             {
                 tBoxActionState.Text = states.idle.ToString();
-            }
-            else if (s == "AT+CIMI")
-            {
-                tBoxActionState.Text = states.getimsi.ToString();
+                timer1.Stop();
             }
             else if(s == "+QCCID:")
             {
                 tBoxIccid.Text = str2.Substring(0, 20);
-                tBoxActionState.Text = states.geticcid.ToString();
-            }
-            else if(s == "AT+GSN")
-            {
-                tBoxActionState.Text = states.getimei.ToString();
+                tBoxActionState.Text = states.idle.ToString();
+                timer1.Stop();
             }
         }
 
@@ -534,6 +559,7 @@ namespace WindowsFormsApp2
                 case states.getimsi:
                     tBoxIMSI.Text = str1;
                     tBoxActionState.Text = states.idle.ToString();
+                    timer1.Stop();
                     break;
                 case states.autogetimsi:
                     tBoxIMSI.Text = str1;
@@ -541,9 +567,25 @@ namespace WindowsFormsApp2
 
                     timer1.Stop();
                     break;
+                case states.getimei:
+                    tBoxIMEI.Text = str1;
+                    tBoxActionState.Text = states.idle.ToString();
+                    timer1.Stop();
+                    break;
                 case states.autogetimei:
                     tBoxIMEI.Text = str1;
                     tBoxActionState.Text = states.idle.ToString();
+                    timer1.Stop();
+                    break;
+                case states.getmodel:
+                    tBoxModel.Text = str1;
+                    tBoxActionState.Text = states.idle.ToString();
+                    timer1.Stop();
+                    break;
+                case states.getmanufac:
+                    tBoxManu.Text = str1;
+                    tBoxActionState.Text = states.idle.ToString();
+                    timer1.Stop();
                     break;
                 default:
                     break;
@@ -569,30 +611,35 @@ namespace WindowsFormsApp2
         {
             this.sendDataOut(commands["getimsi"]);
             tBoxActionState.Text = states.getimsi.ToString();
+            timer1.Start();
         }
 
         private void btnICCID_Click(object sender, EventArgs e)
         {
             this.sendDataOut(commands["geticcid"]);
             tBoxActionState.Text = states.geticcid.ToString();
+            timer1.Start();
         }
 
         private void btnIMEI_Click(object sender, EventArgs e)
         {
             this.sendDataOut(commands["getimei"]);
             tBoxActionState.Text = states.getimei.ToString();
+            timer1.Start();
         }
 
         private void BtnModel_Click(object sender, EventArgs e)
         {
             this.sendDataOut(commands["getmodel"]);
             tBoxActionState.Text = states.getmodel.ToString();
+            timer1.Start();
         }
 
         private void btnManufac_Click(object sender, EventArgs e)
         {
             this.sendDataOut(commands["getmanufac"]);
             tBoxActionState.Text = states.getmanufac.ToString();
+            timer1.Start();
         }
 
         private void Timer1_Tick(object sender, EventArgs e)
