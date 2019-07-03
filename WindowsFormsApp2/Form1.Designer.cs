@@ -115,6 +115,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.lblModel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -682,14 +683,14 @@
             // initinfoToolStripMenuItem
             // 
             this.initinfoToolStripMenuItem.Name = "initinfoToolStripMenuItem";
-            this.initinfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.initinfoToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.initinfoToolStripMenuItem.Text = "단말정보 ";
             this.initinfoToolStripMenuItem.Click += new System.EventHandler(this.InitinfoToolStripMenuItem_Click);
             // 
             // provisionToolStripMenuItem
             // 
             this.provisionToolStripMenuItem.Name = "provisionToolStripMenuItem";
-            this.provisionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.provisionToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.provisionToolStripMenuItem.Text = "플랫폼 등록";
             // 
             // aboutToolStripMenuItem
@@ -759,6 +760,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lblModel);
             this.groupBox1.Controls.Add(this.tBoxIccid);
             this.groupBox1.Controls.Add(this.btnICCID);
             this.groupBox1.Controls.Add(this.tBoxActionState);
@@ -880,7 +882,7 @@
             // 
             // tBoxModel
             // 
-            this.tBoxModel.Location = new System.Drawing.Point(77, 14);
+            this.tBoxModel.Location = new System.Drawing.Point(83, 190);
             this.tBoxModel.Name = "tBoxModel";
             this.tBoxModel.ReadOnly = true;
             this.tBoxModel.Size = new System.Drawing.Size(126, 21);
@@ -936,6 +938,15 @@
             // 
             this.timer1.Interval = 10000;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
+            // 
+            // lblModel
+            // 
+            this.lblModel.AutoSize = true;
+            this.lblModel.Location = new System.Drawing.Point(77, 18);
+            this.lblModel.Name = "lblModel";
+            this.lblModel.Size = new System.Drawing.Size(61, 12);
+            this.lblModel.TabIndex = 16;
+            this.lblModel.Text = "알 수 없음";
             // 
             // Form1
             // 
@@ -1058,6 +1069,7 @@
         private System.Windows.Forms.ToolStripMenuItem initinfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem provisionToolStripMenuItem;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Label lblModel;
     }
 }
 

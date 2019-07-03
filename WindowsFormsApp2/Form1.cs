@@ -21,6 +21,8 @@ namespace WindowsFormsApp2
             getimsi,
             getimei,
             geticcid,
+            autogetmodel,
+            autogetmanufac,
             autogetimsi,
             autogetimei,
             autogeticcid
@@ -407,7 +409,7 @@ namespace WindowsFormsApp2
             RxDispOrder = "BOTTOM";
         }
 
-        private void logPrintInTextBox(string v)
+        public void logPrintInTextBox(string v)
         {
             string displayMsg = makeLogPrintLine(v);
 
@@ -506,7 +508,7 @@ namespace WindowsFormsApp2
 
             foreach (string s in sentences)
             {
-                logPrintInTextBox(s);
+                //logPrintInTextBox(s);
 
                 //if (System.Text.RegularExpressions.Regex.IsMatch(rxMsg, s, System.Text.RegularExpressions.RegexOptions.IgnoreCase))
                 if (rxMsg.StartsWith(s, System.StringComparison.CurrentCultureIgnoreCase))
@@ -518,7 +520,7 @@ namespace WindowsFormsApp2
                     int first = rxMsg.IndexOf(s) + s.Length;
                     string str2 = "";
                     str2 = rxMsg.Substring(first, rxMsg.Length - first);
-                    logPrintInTextBox("남은 문자열 : " + str2);
+                    //logPrintInTextBox("남은 문자열 : " + str2);
 
                     this.parseReceiveData(s, str2);
 
@@ -538,14 +540,55 @@ namespace WindowsFormsApp2
 
         void parseReceiveData(string s, string str2)
         {
-            if (s == "OK" || s == "ERROR")
+            if (s == "OK")
             {
-                tBoxActionState.Text = states.idle.ToString();
-                timer1.Stop();
+                // 단말 정보 자동 갱신 순서
+                // autogetmodel - autogetmanufac - autogetimsi - autogetimei - geticcid (마지막)
+
+                states state = (states)Enum.Parse(typeof(states), tBoxActionState.Text);
+                switch (state)
+                {
+                    case states.autogetmodel:
+                        this.sendDataOut(commands["getmanufac"]);
+                        tBoxActionState.Text = states.autogetmanufac.ToString();
+
+                        timer1.Start();
+                        break;
+                    case states.autogetmanufac:
+                        this.sendDataOut(commands["getimsi"]);
+                        tBoxActionState.Text = states.autogetimsi.ToString();
+
+                        timer1.Start();
+                        break;
+                    case states.autogetimsi:
+                        this.sendDataOut(commands["getimei"]);
+                        tBoxActionState.Text = states.autogetimei.ToString();
+
+                        timer1.Start();
+                        break;
+                    case states.autogetimei:
+                        this.sendDataOut(commands["geticcid"]);
+                        tBoxActionState.Text = states.geticcid.ToString();
+
+                        timer1.Start();
+                        break;
+                    default:
+                        tBoxActionState.Text = states.idle.ToString();
+                        timer1.Stop();
+                        break;
+                }
             }
-            else if(s == "+QCCID:")
+            else if (s == "+QCCID:")
             {
                 tBoxIccid.Text = str2.Substring(0, 20);
+                if(tBoxActionState.Text != states.autogeticcid.ToString())
+                {
+                    tBoxActionState.Text = states.idle.ToString();
+                    timer1.Stop();
+                }
+            }
+            else if (s == "ERROR")
+            {
                 tBoxActionState.Text = states.idle.ToString();
                 timer1.Stop();
             }
@@ -563,9 +606,8 @@ namespace WindowsFormsApp2
                     break;
                 case states.autogetimsi:
                     tBoxIMSI.Text = str1;
-                    tBoxActionState.Text = states.idle.ToString();
-
-                    timer1.Stop();
+                    tBoxIMSI.Refresh();
+                    this.logPrintInTextBox("IMSI값이 저장되었습니다.");
                     break;
                 case states.getimei:
                     tBoxIMEI.Text = str1;
@@ -574,18 +616,28 @@ namespace WindowsFormsApp2
                     break;
                 case states.autogetimei:
                     tBoxIMEI.Text = str1;
-                    tBoxActionState.Text = states.idle.ToString();
-                    timer1.Stop();
+                    tBoxIMEI.Refresh();
+                    this.logPrintInTextBox("IMEI값이이 저장되었습니다.");
                     break;
                 case states.getmodel:
                     tBoxModel.Text = str1;
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
                     break;
+                case states.autogetmodel:
+                    tBoxModel.Text = str1;
+                    tBoxModel.Refresh();
+                    this.logPrintInTextBox("모델값이 저장되었습니다.");
+                    break;
                 case states.getmanufac:
                     tBoxManu.Text = str1;
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
+                    break;
+                case states.autogetmanufac:
+                    tBoxManu.Text = str1;
+                    tBoxManu.Refresh();
+                    this.logPrintInTextBox("제조사값이 저장되었습니다.");
                     break;
                 default:
                     break;
@@ -594,10 +646,16 @@ namespace WindowsFormsApp2
 
         private void InitinfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.sendDataOut(commands["getimsi"]);
-            tBoxActionState.Text = states.autogetimsi.ToString();
+            this.sendDataOut(commands["getmodel"]);
+            tBoxActionState.Text = states.autogetmodel.ToString();
 
             timer1.Start();
+
+            //this.sendDataOut(commands["getmanufac"]);
+            //tBoxActionState.Text = states.getmanufac.ToString();
+            
+            //this.sendDataOut(commands["getimsi"]);
+            //tBoxActionState.Text = states.autogetimsi.ToString();
 
             //this.sendDataOut(commands["geticcid"]);
             //tBoxActionState.Text = states.autogeticcid.ToString();
