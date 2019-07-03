@@ -29,7 +29,21 @@ namespace WindowsFormsApp2
             autogetimsi_next,
             autogetimei,
             autogetimei_next,
-            autogeticcid
+            autogeticcid,
+            setserverinfo,
+            setservertype,
+            setepns,
+            setmbsps,
+            setAutoBS,
+            register,
+            deregister,
+            sendLWM2Mdata,
+            receiveLWM2Mdata,
+            setFOTAinfo,
+            receiveFOTAdata,
+            downloadMDLFOTA,
+            updateMDLFOTA,
+
         }
 
         string sendWith;
@@ -37,7 +51,7 @@ namespace WindowsFormsApp2
         string RxDisplayRule;
         string RxDispOrder;
         Dictionary<string, string> commands = new Dictionary<string, string>();
-        // string userIDFromDictionaryByKey = dict["UserID"];
+        Dictionary<string, string> serverips = new Dictionary<string, string>();
 
         public Form1()
         {
@@ -71,6 +85,16 @@ namespace WindowsFormsApp2
             commands.Add("getimei", "AT+GSN");
             commands.Add("getmodel", "AT+CGMM");
             commands.Add("getmanufac", "AT+CGMI");
+
+            commands.Add("setserverinfo", "AT+QLWM2M=\"cdp\",");
+            commands.Add("setservertype", "AT+QLWM2M=\"select\",2");
+            commands.Add("setepns", "AT+QLWM2M=\"epns\",0,");
+            commands.Add("setmbsps", "AT+QLWM2M=\"mbsps\",");
+            commands.Add("setAutoBS", "AT+QLWM2M=\"enable\",");
+
+            serverips.Add("개발", "1.1.0.0");
+            serverips.Add("검증", "1.1.0.0");
+            serverips.Add("상용", "1.1.0.0");
         }
 
         private void setWindowLayOut()
@@ -185,7 +209,7 @@ namespace WindowsFormsApp2
         private void TBoxDataOut_TextChanged(object sender, EventArgs e)
         {
             int dataOUTLength = tBoxDataOut.TextLength;
-            lblDataOutLength.Text = string.Format("{0:00}", dataOUTLength);
+            lblDataOutLength.Text = string.Format("{0:0000}", dataOUTLength);
         }
 
         private void TBoxDataOut_KeyDown(object sender, KeyEventArgs e)
@@ -452,7 +476,7 @@ namespace WindowsFormsApp2
         private void ShowData(object sender, EventArgs e)
         {
             int dataINLength = dataIN.Length;
-            lblDataInLength.Text = string.Format("{0:00}", dataINLength);
+            lblDataInLength.Text = string.Format("{0:0000}", dataINLength);
 
             //logPrintInTextBox(dataIN);
 
@@ -650,6 +674,13 @@ namespace WindowsFormsApp2
 
         private void InitinfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            getDeviveInfo();
+         }
+
+        private void getDeviveInfo()
+        {
+            this.logPrintInTextBox("DEVICE 정보 전체를 요청합니다.");
+
             this.sendDataOut(commands["getmodel"]);
             tBoxActionState.Text = states.autogetmodel.ToString();
 
@@ -657,7 +688,7 @@ namespace WindowsFormsApp2
 
             //this.sendDataOut(commands["getmanufac"]);
             //tBoxActionState.Text = states.autogetmanufac.ToString();
-            
+
             //this.sendDataOut(commands["getimsi"]);
             //tBoxActionState.Text = states.autogetimsi.ToString();
 
@@ -713,5 +744,56 @@ namespace WindowsFormsApp2
             tBoxActionState.Text = states.idle.ToString();
         }
 
+        private void DevserverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cBoxSERVER.Text = "개발";
+        }
+
+        private void CvsserverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cBoxSERVER.Text = "검증";
+        }
+
+        private void OpserverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cBoxSERVER.Text = "상용";
+        }
+
+        private void ProvisionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(isDeviceInfo())
+            {
+                // 플랫폼 서버의 IP/port 설정
+                //AT+QLWM2M="cdp",<ip>,<port>
+                this.sendDataOut(commands["setserverinfo"] + serverips[cBoxSERVER.Text] + ",80");
+                tBoxActionState.Text = states.setserverinfo.ToString();
+
+                // 플랫폼 서버 타입 설정
+                //AT+QLWM2M="select",2
+                this.sendDataOut(commands["setservertype"]);
+                tBoxActionState.Text = states.setservertype.ToString();
+
+                // EndPointName 플랫폼 device ID 설정
+                //AT+QLWM2M="enps",0,<service code>
+                this.sendDataOut(commands["setepns"]+ tBoxSVCCD.Text);
+                tBoxActionState.Text = states.setepns.ToString();
+
+                // Bootstrap Parameter 설정
+                //AT+QLWM2M="mbsps",<service code>,
+                this.sendDataOut(commands["setmbsps"] + tBoxSVCCD.Text);
+                tBoxActionState.Text = states.setmbsps.ToString();
+            }
+        }
+
+        private bool isDeviceInfo()
+        {
+            //if((tBoxIMSI.Text == "알 수 없음")&&(tBoxIMEI.Text == "알 수 없음"))
+            //{
+            //    this.getDeviveInfo();
+            //    return false;  
+            //}
+
+            return true;
+        }
     }
 }
