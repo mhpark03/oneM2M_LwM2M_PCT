@@ -43,7 +43,8 @@ namespace WindowsFormsApp2
             receiveFOTAdata,
             downloadMDLFOTA,
             updateMDLFOTA,
-            bootstrap
+            bootstrap,
+            lwm2mreset
         }
 
         string sendWith;
@@ -79,7 +80,7 @@ namespace WindowsFormsApp2
 
             this.setWindowLayOut();
             groupBox1.Enabled = false;
-            groupBox3.Enabled = false;
+            groupBox4.Enabled = false;
 
             commands.Add("getimsi", "AT+CIMI");
             commands.Add("geticcid", "AT+QCCID");
@@ -92,12 +93,21 @@ namespace WindowsFormsApp2
             commands.Add("setepns", "AT+QLWM2M=\"epns\",0,\"");
             commands.Add("setmbsps", "AT+QLWM2M=\"mbsps\",\"");
             commands.Add("setAutoBS", "AT+QLWM2M=\"enable\",");
+            commands.Add("register", "AT+QLWM2M=\"register\"");
+            commands.Add("deregister", "AT+QLWM2M=\"deregister\"");
+            commands.Add("lwm2mreset", "AT+QLWM2M=\"reset\"");
+            commands.Add("bootstrap", "AT+QLWM2M=\"bootstrap\",2");
+            
         }
 
         private void setWindowLayOut()
         {
-            groupBox3.Width = panel1.Width - 230;
-            groupBox3.Height = panel1.Height - 55;
+            groupBox4.Width = panel1.Width - 230;
+            groupBox4.Height = panel1.Height - 55;
+            tBoxATCMD.Width = groupBox4.Width - 72;
+
+            groupBox3.Width = groupBox4.Width - 230;
+            groupBox3.Height = groupBox4.Height - 35;
 
             tBoxDataIN.Height = groupBox3.Height - 54;
             tBoxDataOut.Width = groupBox3.Width - 72;
@@ -121,7 +131,7 @@ namespace WindowsFormsApp2
                 serialPort1.Open();
                 progressBar1.Value = 100;
                 groupBox1.Enabled = true;
-                groupBox3.Enabled = true;
+                groupBox4.Enabled = true;
                 logPrintInTextBox("COM PORT가 연결 되었습니다.");
 
             }
@@ -130,7 +140,7 @@ namespace WindowsFormsApp2
             {
                 MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 groupBox1.Enabled = false;
-                groupBox3.Enabled = false;
+                groupBox4.Enabled = false;
                 logPrintInTextBox("COM PORT 연결이 실패하였습니다.");
 
             }
@@ -149,7 +159,7 @@ namespace WindowsFormsApp2
             serialPort1.Close();
             progressBar1.Value = 0;
             groupBox1.Enabled = false;
-            groupBox3.Enabled = false;
+            groupBox4.Enabled = false;
             logPrintInTextBox("COM PORT가 해제 되었습니다.");
 
         }
@@ -165,14 +175,6 @@ namespace WindowsFormsApp2
                 this.doOpenComPort();
             }
 
-        }
-
-        private void BtnSendData_Click(object sender, EventArgs e)
-        {
-            if(tBoxDataOut.Text != "")
-            {
-                this.sendDataOut(tBoxDataOut.Text);
-            }
         }
 
         private void ChBoxDtrEnable_CheckedChanged(object sender, EventArgs e)
@@ -203,17 +205,26 @@ namespace WindowsFormsApp2
             }
         }
 
-        private void TBoxDataOut_TextChanged(object sender, EventArgs e)
+        private void TBoxATCMD_TextChanged(object sender, EventArgs e)
         {
-            int dataOUTLength = tBoxDataOut.TextLength;
+            int dataOUTLength = tBoxATCMD.TextLength;
             lblDataOutLength.Text = string.Format("{0:0000}", dataOUTLength);
         }
 
-        private void TBoxDataOut_KeyDown(object sender, KeyEventArgs e)
+        private void BtnATCMD_Click(object sender, EventArgs e)
+        {
+            if (tBoxATCMD.Text != "")
+            {
+                this.sendDataOut(tBoxATCMD.Text);
+            }
+
+        }
+
+        private void TBoxATCMD_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                this.sendDataOut(tBoxDataOut.Text);
+                this.sendDataOut(tBoxATCMD.Text);
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
@@ -619,17 +630,28 @@ namespace WindowsFormsApp2
 
                             string iccid = tBoxIccid.Text;
                             command = command + iccid.Substring(iccid.Length - 6, 6) + "\",\"";
-                            command = command + tBoxModel.Text +"\"";
+                            command = command + tBoxDeviceModel.Text +"\"";
                             this.sendDataOut(command);
                             tBoxActionState.Text = states.setmbsps.ToString();
+
+                            timer1.Start();
                         }
                         else
                         {
                             MessageBox.Show("USIM이 정상인지 확인해주세요.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            tBoxActionState.Text = states.idle.ToString();
+                            timer1.Stop();
                         }
+                        break;
+                    case states.setmbsps:
+                        // Bootstrap 요청
+                        //AT+QLWM2M="bootstrap",2
+                        this.sendDataOut(commands["bootstrap"]);
+                        tBoxActionState.Text = states.bootstrap.ToString();
 
                         timer1.Start();
                         break;
+
                     default:
                         tBoxActionState.Text = states.idle.ToString();
                         timer1.Stop();
@@ -810,6 +832,11 @@ namespace WindowsFormsApp2
                 //this.sendDataOut(commands["setmbsps"]);
                 //tBoxActionState.Text = states.setmbsps.ToString();
 
+                // Bootstrap 요청
+                //AT+QLWM2M="bootstrap",2
+                //this.sendDataOut(commands["bootstrap"]);
+                //tBoxActionState.Text = states.bootstrap.ToString();
+
                 timer1.Start();
             }
         }
@@ -858,10 +885,27 @@ namespace WindowsFormsApp2
 
         private void RegisterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // 플랫폼 서버의 IP/port 설정
-            //AT+QLWM2M="cdp",<ip>,<port>
-            this.sendDataOut(commands["register"] + serverip + "," + serverport);
+            // 플랫폼 등록 요청
+            //AT+QLWM2M="register"
+            this.sendDataOut(commands["register"]);
             tBoxActionState.Text = states.register.ToString();
+        }
+
+        private void DeregisterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // 플랫폼 등록해제 요청
+            //AT+QLWM2M="deregister"
+            this.sendDataOut(commands["deregister"]);
+            tBoxActionState.Text = states.deregister.ToString();
+        }
+
+        private void ResetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // 플랫폼 정보 삭제 요청
+            //AT+QLWM2M="reset"
+            this.sendDataOut(commands["lwm2mreset"]);
+            tBoxActionState.Text = states.lwm2mreset.ToString();
+
         }
 
         private void CBoxAutoBS_CheckedChanged(object sender, EventArgs e)
@@ -899,6 +943,31 @@ namespace WindowsFormsApp2
                 tBoxDataIN.Select(tBoxDataIN.Text.Length, 0);
                 tBoxDataIN.ScrollToCaret();
             }
+        }
+
+        private void BtnSendData_Click(object sender, EventArgs e)
+        {
+            //입력 Text값을 플랫폼 서버로 전송
+            sendDataToServer(tBoxDataOut.Text);
+        }
+
+        private void TBoxDataOut_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                //입력 Text값을 플랫폼 서버로 전송
+                this.sendDataToServer(tBoxDataOut.Text);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void sendDataToServer(string text)
+        {
+            // Data send to SERVER
+            //AT+QLWM2M="uldata",<object>,<length>,<data>
+            this.sendDataOut(commands["setAutoBS"] + "0");
+            tBoxActionState.Text = states.setAutoBS.ToString();
         }
     }
 }
