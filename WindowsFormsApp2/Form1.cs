@@ -43,14 +43,14 @@ namespace WindowsFormsApp2
             receiveFOTAdata,
             downloadMDLFOTA,
             updateMDLFOTA,
-
+            bootstrap
         }
 
         string sendWith;
         string dataIN;
         string RxDisplayRule;
         string RxDispOrder;
-        string serverip = "106.103.233.63";
+        string serverip = "\"106.103.233.63\"";
         string serverport = "8433";
         Dictionary<string, string> commands = new Dictionary<string, string>();
 
@@ -89,8 +89,8 @@ namespace WindowsFormsApp2
 
             commands.Add("setserverinfo", "AT+QLWM2M=\"cdp\",");
             commands.Add("setservertype", "AT+QLWM2M=\"select\",2");
-            commands.Add("setepns", "AT+QLWM2M=\"epns\",0,");
-            commands.Add("setmbsps", "AT+QLWM2M=\"mbsps\",");
+            commands.Add("setepns", "AT+QLWM2M=\"epns\",0,\"");
+            commands.Add("setmbsps", "AT+QLWM2M=\"mbsps\",\"");
             commands.Add("setAutoBS", "AT+QLWM2M=\"enable\",");
         }
 
@@ -597,18 +597,10 @@ namespace WindowsFormsApp2
 
                         timer1.Start();
                         break;
-                    case states.setserverinfo:
-                        // 플랫폼 서버 타입 설정
-                        //AT+QLWM2M="select",2
-                        this.sendDataOut(commands["setservertype"]);
-                        tBoxActionState.Text = states.setservertype.ToString();
-
-                        timer1.Start();
-                        break;
                     case states.setservertype:
                         // EndPointName 플랫폼 device ID 설정
                         //AT+QLWM2M="enps",0,<service code>
-                        this.sendDataOut(commands["setepns"] + tBoxSVCCD.Text);
+                        this.sendDataOut(commands["setepns"] + tBoxSVCCD.Text +"\"");
                         tBoxActionState.Text = states.setepns.ToString();
 
                         timer1.Start();
@@ -617,16 +609,17 @@ namespace WindowsFormsApp2
                         string imsi = tBoxIMSI.Text;
                         if (imsi.StartsWith("45006"))
                         {
-                            string ctn = imsi.Substring(5, imsi.Length);
+                            string ctn = "0" + imsi.Substring(5, imsi.Length-5);
 
                             // Bootstrap Parameter 설정
-                            //AT+QLWM2M="mbsps",<service code>,<sn>,<ctn>,<iccid>,<model>
-                            string command = commands["setmbsps"] + tBoxSVCCD.Text + ",";
-                            command = command + tBoxIMEI.Text + ",";
-                            command = command + ctn + ",";
+                            //AT+QLWM2M="mbsps",<service code>,<sn>,<ctn>,<iccid>,<device model>
+                            string command = commands["setmbsps"] + tBoxSVCCD.Text + "\",\"";
+                            command = command + tBoxIMEI.Text + "\",\"";
+                            command = command + ctn + "\",\"";
+
                             string iccid = tBoxIccid.Text;
-                            command = command + iccid.Substring(iccid.Length - 6, iccid.Length) + ",";
-                            command += tBoxModel;
+                            command = command + iccid.Substring(iccid.Length - 6, 6) + "\",\"";
+                            command = command + tBoxModel.Text +"\"";
                             this.sendDataOut(command);
                             tBoxActionState.Text = states.setmbsps.ToString();
                         }
@@ -646,7 +639,9 @@ namespace WindowsFormsApp2
             else if (s == "+QCCID:")
             {
                 tBoxIccid.Text = str2.Substring(0, 20);
-                if(tBoxActionState.Text != states.autogeticcid.ToString())
+                logPrintInTextBox("ICCID값이 저장되었습니다.");
+
+                if (tBoxActionState.Text != states.autogeticcid.ToString())
                 {
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
@@ -800,21 +795,18 @@ namespace WindowsFormsApp2
         {
             if(isDeviceInfo())
             {
-                // 플랫폼 서버의 IP/port 설정
-                //AT+QLWM2M="cdp",<ip>,<port>
-                this.sendDataOut(commands["setserverinfo"] + serverip + "," + serverport);
-                tBoxActionState.Text = states.setserverinfo.ToString();
-
                 // 플랫폼 서버 타입 설정
                 //AT+QLWM2M="select",2
-                //this.sendDataOut(commands["setservertype"]);
-                //tBoxActionState.Text = states.setservertype.ToString();
+                this.sendDataOut(commands["setservertype"]);
+                tBoxActionState.Text = states.setservertype.ToString();
 
                 // EndPointName 플랫폼 device ID 설정
                 //AT+QLWM2M="enps",0,<service code>
-                //this.sendDataOut(commands["setepns"] + tBoxSVCCD.Text);
+                //this.sendDataOut(commands["setepns"] + tBoxSVCCD.Text +"\"");
                 //tBoxActionState.Text = states.setepns.ToString();
 
+                // Bootstrap Parameter 설정
+                //AT+QLWM2M="mbsps",<service code>,<sn>,<ctn>,<iccid>,<device model>
                 //this.sendDataOut(commands["setmbsps"]);
                 //tBoxActionState.Text = states.setmbsps.ToString();
 
@@ -837,27 +829,67 @@ namespace WindowsFormsApp2
         {
             if(cBoxSERVER.Text == "개발")
             {
-                serverip = "106.103.233.63";
+                serverip = "\"106.103.233.63\"";
                 serverport = "8433";
             }
             else if (cBoxSERVER.Text == "검증")
             {
-                serverip = "106.103.227.95";
+                serverip = "\"106.103.227.95\"";
                 serverport = "8433";
             }
             else if (cBoxSERVER.Text == "상용")
             {
-                serverip = "106.103.210.242";
+                serverip = "\"106.103.210.242\"";
                 serverport = "8433";
             }
+
+            setLwm2mServer();
+        }
+
+        private void setLwm2mServer()
+        {
+            // 플랫폼 서버의 IP/port 설정
+            //AT+QLWM2M="cdp",<ip>,<port>
+            this.sendDataOut(commands["setserverinfo"] + serverip + "," + serverport);
+            tBoxActionState.Text = states.setserverinfo.ToString();
+
+            timer1.Start();
         }
 
         private void RegisterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // 플랫폼 서버의 IP/port 설정
             //AT+QLWM2M="cdp",<ip>,<port>
-            this.sendDataOut(commands["setserverinfo"] + serverip + "," + serverport);
-            tBoxActionState.Text = states.setserverinfo.ToString();
+            this.sendDataOut(commands["register"] + serverip + "," + serverport);
+            tBoxActionState.Text = states.register.ToString();
+        }
+
+        private void CBoxAutoBS_CheckedChanged(object sender, EventArgs e)
+        {
+            if(cBoxAutoBS.Checked)
+            {
+                // Auto BS & Registration 설정
+                //AT+QLWM2M="enable",0 or 1
+                this.sendDataOut(commands["setAutoBS"] + "1");
+                tBoxActionState.Text = states.setAutoBS.ToString();
+            }
+            else
+            {
+                // Auto BS & Registration 설정
+                //AT+QLWM2M="enable",0 or 1
+                this.sendDataOut(commands["setAutoBS"] + "0");
+                tBoxActionState.Text = states.setAutoBS.ToString();
+            }
+        }
+
+        private void EnableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cBoxAutoBS.Checked = true;
+        }
+
+        private void DisableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cBoxAutoBS.Checked = false;
         }
     }
 }
