@@ -280,6 +280,7 @@
             this.tBoxDataIN.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.tBoxDataIN.Size = new System.Drawing.Size(461, 202);
             this.tBoxDataIN.TabIndex = 6;
+            this.tBoxDataIN.TextChanged += new System.EventHandler(this.TBoxDataIN_TextChanged);
             // 
             // btnSendData
             // 
@@ -732,14 +733,14 @@
             // enableToolStripMenuItem
             // 
             this.enableToolStripMenuItem.Name = "enableToolStripMenuItem";
-            this.enableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.enableToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.enableToolStripMenuItem.Text = "Enable";
             this.enableToolStripMenuItem.Click += new System.EventHandler(this.EnableToolStripMenuItem_Click);
             // 
             // disableToolStripMenuItem
             // 
             this.disableToolStripMenuItem.Name = "disableToolStripMenuItem";
-            this.disableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.disableToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.disableToolStripMenuItem.Text = "Disable";
             this.disableToolStripMenuItem.Click += new System.EventHandler(this.DisableToolStripMenuItem_Click);
             // 

@@ -891,5 +891,14 @@ namespace WindowsFormsApp2
         {
             cBoxAutoBS.Checked = false;
         }
+
+        private void TBoxDataIN_TextChanged(object sender, EventArgs e)
+        {
+            if(RxDispOrder == "BOTTOM")
+            {
+                tBoxDataIN.Select(tBoxDataIN.Text.Length, 0);
+                tBoxDataIN.ScrollToCaret();
+            }
+        }
     }
 }
