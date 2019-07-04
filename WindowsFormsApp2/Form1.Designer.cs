@@ -133,10 +133,11 @@
             this.tBoxModel = new System.Windows.Forms.TextBox();
             this.btnModel = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.cBoxSendHex = new System.Windows.Forms.CheckBox();
             this.cBoxAutoBS = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.cBoxSendHex = new System.Windows.Forms.CheckBox();
+            this.cBoxLogSave = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -911,6 +912,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cBoxLogSave);
+            this.groupBox1.Controls.Add(this.cBoxSendHex);
             this.groupBox1.Controls.Add(this.tBoxDeviceModel);
             this.groupBox1.Controls.Add(this.button3);
             this.groupBox1.Controls.Add(this.cBoxSERVER);
@@ -1128,7 +1131,6 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.cBoxSendHex);
             this.panel2.Controls.Add(this.cBoxAutoBS);
             this.panel2.Controls.Add(this.chBoxRTSEnable);
             this.panel2.Controls.Add(this.groupBox2);
@@ -1146,6 +1148,20 @@
             this.panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
             this.panel2.Size = new System.Drawing.Size(836, 48);
             this.panel2.TabIndex = 10;
+            // 
+            // cBoxSendHex
+            // 
+            this.cBoxSendHex.AutoSize = true;
+            this.cBoxSendHex.Checked = true;
+            this.cBoxSendHex.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cBoxSendHex.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cBoxSendHex.Location = new System.Drawing.Point(8, 353);
+            this.cBoxSendHex.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.cBoxSendHex.Name = "cBoxSendHex";
+            this.cBoxSendHex.Size = new System.Drawing.Size(54, 19);
+            this.cBoxSendHex.TabIndex = 15;
+            this.cBoxSendHex.Text = "HEX";
+            this.cBoxSendHex.UseVisualStyleBackColor = true;
             // 
             // cBoxAutoBS
             // 
@@ -1180,17 +1196,19 @@
             this.timer1.Interval = 10000;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
-            // cBoxSendHex
+            // cBoxLogSave
             // 
-            this.cBoxSendHex.AutoSize = true;
-            this.cBoxSendHex.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cBoxSendHex.Location = new System.Drawing.Point(603, 15);
-            this.cBoxSendHex.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
-            this.cBoxSendHex.Name = "cBoxSendHex";
-            this.cBoxSendHex.Size = new System.Drawing.Size(54, 19);
-            this.cBoxSendHex.TabIndex = 15;
-            this.cBoxSendHex.Text = "HEX";
-            this.cBoxSendHex.UseVisualStyleBackColor = true;
+            this.cBoxLogSave.AutoSize = true;
+            this.cBoxLogSave.Checked = true;
+            this.cBoxLogSave.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cBoxLogSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cBoxLogSave.Location = new System.Drawing.Point(88, 353);
+            this.cBoxLogSave.Margin = new System.Windows.Forms.Padding(5, 2, 5, 2);
+            this.cBoxLogSave.Name = "cBoxLogSave";
+            this.cBoxLogSave.Size = new System.Drawing.Size(97, 19);
+            this.cBoxLogSave.TabIndex = 22;
+            this.cBoxLogSave.Text = "Log file save";
+            this.cBoxLogSave.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1206,6 +1224,7 @@
             this.MinimumSize = new System.Drawing.Size(854, 532);
             this.Name = "Form1";
             this.Text = "LGU+ ATcommand TEST";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.menuStrip1.ResumeLayout(false);
@@ -1338,6 +1357,7 @@
         private System.Windows.Forms.Button btnATCMD;
         private System.Windows.Forms.TextBox tBoxATCMD;
         private System.Windows.Forms.CheckBox cBoxSendHex;
+        private System.Windows.Forms.CheckBox cBoxLogSave;
     }
 }
 

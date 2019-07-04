@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Ports;
+using System.IO;
 
 namespace WindowsFormsApp2
 {
@@ -1025,8 +1026,8 @@ namespace WindowsFormsApp2
                 tBoxActionState.Text = states.sendmsghex.ToString();
 
                 //received hex data make to ascii code
-                string receiveDataIN = BcdToString(hexOutput.ToCharArray());
-                logPrintInTextBox(receiveDataIN, "");
+                //string receiveDataIN = BcdToString(hexOutput.ToCharArray());
+                //logPrintInTextBox(receiveDataIN, "");
 
                 timer1.Start();
             }
@@ -1061,6 +1062,37 @@ namespace WindowsFormsApp2
                 hexstring += String.Format("{0:X}", value);
             }
             return hexstring;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if((tBoxDataIN.Text != "") && (cBoxLogSave.Checked == true))
+            {
+                string pathname = @"c:\temp\seriallog\";
+                DateTime currenttime = DateTime.Now;
+                string filename = "atlog_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
+
+                Directory.CreateDirectory(pathname);
+
+                // Create a file to write to.
+                FileStream fs = null;
+                try
+                {
+                    fs = new FileStream(pathname + filename, FileMode.Create, FileAccess.Write);
+                    // Create a file to write to.
+                    StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+
+                    char[] logmsg = tBoxDataIN.Text.ToCharArray();
+                    sw.Write(logmsg, 0, tBoxDataIN.TextLength);
+
+                    sw.Close();
+                    fs.Close();
+                }
+                catch (Exception err)
+                {
+                    MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }
