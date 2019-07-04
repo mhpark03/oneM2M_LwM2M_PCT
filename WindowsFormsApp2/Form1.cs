@@ -44,7 +44,9 @@ namespace WindowsFormsApp2
             downloadMDLFOTA,
             updateMDLFOTA,
             bootstrap,
-            lwm2mreset
+            lwm2mreset,
+            sendmsgstr,
+            sendmsghex
         }
 
         string sendWith;
@@ -54,6 +56,7 @@ namespace WindowsFormsApp2
         string serverip = "\"106.103.233.63\"";
         string serverport = "8433";
         Dictionary<string, string> commands = new Dictionary<string, string>();
+        Dictionary<char, int> bcdvalues = new Dictionary<char, int>();
 
         public Form1()
         {
@@ -82,6 +85,29 @@ namespace WindowsFormsApp2
             groupBox1.Enabled = false;
             groupBox4.Enabled = false;
 
+            bcdvalues.Add('0', 0);
+            bcdvalues.Add('1', 1);
+            bcdvalues.Add('2', 2);
+            bcdvalues.Add('3', 3);
+            bcdvalues.Add('4', 4);
+            bcdvalues.Add('5', 5);
+            bcdvalues.Add('6', 6);
+            bcdvalues.Add('7', 7);
+            bcdvalues.Add('8', 8);
+            bcdvalues.Add('9', 9);
+            bcdvalues.Add('A', 10);
+            bcdvalues.Add('B', 11);
+            bcdvalues.Add('C', 12);
+            bcdvalues.Add('D', 13);
+            bcdvalues.Add('E', 14);
+            bcdvalues.Add('F', 15);
+            bcdvalues.Add('a', 10);
+            bcdvalues.Add('b', 11);
+            bcdvalues.Add('c', 12);
+            bcdvalues.Add('d', 13);
+            bcdvalues.Add('e', 14);
+            bcdvalues.Add('f', 15);
+
             commands.Add("getimsi", "AT+CIMI");
             commands.Add("geticcid", "AT+QCCID");
             commands.Add("getimei", "AT+GSN");
@@ -97,20 +123,22 @@ namespace WindowsFormsApp2
             commands.Add("deregister", "AT+QLWM2M=\"deregister\"");
             commands.Add("lwm2mreset", "AT+QLWM2M=\"reset\"");
             commands.Add("bootstrap", "AT+QLWM2M=\"bootstrap\",2");
-            
+            commands.Add("sendmsgstr", "AT+QLWM2M=\"urdata\",\"");
+            commands.Add("sendmsghex", "AT+QLWM2M=\"urhex\",\"");
+
         }
 
         private void setWindowLayOut()
         {
             groupBox4.Width = panel1.Width - 230;
             groupBox4.Height = panel1.Height - 55;
-            tBoxATCMD.Width = groupBox4.Width - 72;
+            tBoxATCMD.Width = groupBox4.Width - 90;
 
             groupBox3.Width = groupBox4.Width - 230;
             groupBox3.Height = groupBox4.Height - 35;
 
             tBoxDataIN.Height = groupBox3.Height - 54;
-            tBoxDataOut.Width = groupBox3.Width - 72;
+            tBoxDataOut.Width = groupBox3.Width - 90;
         }
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -132,7 +160,7 @@ namespace WindowsFormsApp2
                 progressBar1.Value = 100;
                 groupBox1.Enabled = true;
                 groupBox4.Enabled = true;
-                logPrintInTextBox("COM PORT가 연결 되었습니다.");
+                logPrintInTextBox("COM PORT가 연결 되었습니다.","");
 
             }
 
@@ -141,7 +169,7 @@ namespace WindowsFormsApp2
                 MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 groupBox1.Enabled = false;
                 groupBox4.Enabled = false;
-                logPrintInTextBox("COM PORT 연결이 실패하였습니다.");
+                logPrintInTextBox("COM PORT 연결이 실패하였습니다.","");
 
             }
         }
@@ -160,7 +188,7 @@ namespace WindowsFormsApp2
             progressBar1.Value = 0;
             groupBox1.Enabled = false;
             groupBox4.Enabled = false;
-            logPrintInTextBox("COM PORT가 해제 되었습니다.");
+            logPrintInTextBox("COM PORT가 해제 되었습니다.","");
 
         }
 
@@ -234,22 +262,22 @@ namespace WindowsFormsApp2
         {
             if (serialPort1.IsOpen)
             {
-                if (sendWith == "None")
+                string sendmsg = dataOUT;
+                if (sendWith == "Both")
                 {
-                    serialPort1.Write(dataOUT);
-                }
-                else if (sendWith == "Both")
-                {
-                    serialPort1.Write(dataOUT + "\r\n");
+                    sendmsg = dataOUT + "\r\n";
                 }
                 else if (sendWith == "LF")
                 {
-                    serialPort1.Write(dataOUT + "\r");
+                    sendmsg = dataOUT + "\r";
                 }
                 else if (sendWith == "CR")
                 {
-                    serialPort1.Write(dataOUT + "\n");
+                    sendmsg = dataOUT + "\n";
                 }
+
+                serialPort1.Write(sendmsg);
+                logPrintInTextBox(sendmsg,"tx");
 
                 bool response_wait = false;
                 string command = dataOUT.ToUpper();
@@ -445,9 +473,9 @@ namespace WindowsFormsApp2
             RxDispOrder = "BOTTOM";
         }
 
-        public void logPrintInTextBox(string v)
+        public void logPrintInTextBox(string message, string kind)
         {
-            string displayMsg = makeLogPrintLine(v);
+            string displayMsg = makeLogPrintLine(message,kind);
 
             if (RxDisplayRule == "Update")
             {
@@ -467,11 +495,24 @@ namespace WindowsFormsApp2
 
         }
 
-        private string makeLogPrintLine(string msg)
+        private string makeLogPrintLine(string msg, string kind)
         {
             string msg_form;
             DateTime currenttime = DateTime.Now;
-            msg_form = currenttime.ToString("hh:mm:ss.fff") + " : " + msg + "\r\n";
+            msg_form = currenttime.ToString("hh:mm:ss.fff") + " : ";
+            if(kind == "tx")
+            {
+                msg_form += "==> : ";
+            }
+            else if (kind == "rx")
+            {
+                msg_form += "<== : ";
+            }
+            else
+            {
+                msg_form += "     : ";
+            }
+            msg_form = msg_form  + msg + "\r\n";
             return msg_form;
         }
 
@@ -486,7 +527,7 @@ namespace WindowsFormsApp2
             int dataINLength = dataIN.Length;
             lblDataInLength.Text = string.Format("{0:0000}", dataINLength);
 
-            //logPrintInTextBox(dataIN);
+            //logPrintInTextBox(dataIN,"rx");
 
             string[] words = dataIN.Split('\n');
 
@@ -534,29 +575,29 @@ namespace WindowsFormsApp2
                 // Get the integral value of the character.
                 int value = Convert.ToInt32(_eachChar);
                 // Convert the decimal value to a hexadecimal value in string form.
-                hexOutput += String.Format("{0:X}", value);
+                hexOutput += String.Format("{0:XX}", value);
             }
-            logPrintInTextBox(hexOutput);
+            logPrintInTextBox(hexOutput,"");
             */
 
-            logPrintInTextBox(rxMsg);
+            logPrintInTextBox(rxMsg,"rx");
             bool find_msg = false;
 
             foreach (string s in sentences)
             {
-                //logPrintInTextBox(s);
+                //logPrintInTextBox(s,"");
 
                 //if (System.Text.RegularExpressions.Regex.IsMatch(rxMsg, s, System.Text.RegularExpressions.RegexOptions.IgnoreCase))
                 if (rxMsg.StartsWith(s, System.StringComparison.CurrentCultureIgnoreCase))
                 {
-                   //logPrintInTextBox(s + " : There is matching data.");
+                   //logPrintInTextBox(s + " : There is matching data.","");
 
                     // This search returns the substring between two strings, so 
                     // the first index is moved to the character just after the first string.
                     int first = rxMsg.IndexOf(s) + s.Length;
                     string str2 = "";
                     str2 = rxMsg.Substring(first, rxMsg.Length - first);
-                    //logPrintInTextBox("남은 문자열 : " + str2);
+                    //logPrintInTextBox("남은 문자열 : " + str2,"");
 
                     this.parseReceiveData(s, str2);
 
@@ -567,7 +608,7 @@ namespace WindowsFormsApp2
 
             if (find_msg == false)
             {
-                //logPrintInTextBox("No Matching Data!!!");
+                //logPrintInTextBox("No Matching Data!!!","");
 
                 this.parseNoPrefixData(rxMsg);
             }
@@ -661,7 +702,7 @@ namespace WindowsFormsApp2
             else if (s == "+QCCID:")
             {
                 tBoxIccid.Text = str2.Substring(0, 20);
-                logPrintInTextBox("ICCID값이 저장되었습니다.");
+                logPrintInTextBox("ICCID값이 저장되었습니다.","");
 
                 if (tBoxActionState.Text != states.autogeticcid.ToString())
                 {
@@ -689,7 +730,7 @@ namespace WindowsFormsApp2
                 case states.autogetimsi:
                     tBoxIMSI.Text = str1;
                     tBoxActionState.Text = states.autogetimsi_next.ToString();
-                    this.logPrintInTextBox("IMSI값이 저장되었습니다.");
+                    this.logPrintInTextBox("IMSI값이 저장되었습니다.","");
                     break;
                 case states.getimei:
                     tBoxIMEI.Text = str1;
@@ -699,7 +740,7 @@ namespace WindowsFormsApp2
                 case states.autogetimei:
                     tBoxIMEI.Text = str1;
                     tBoxActionState.Text = states.autogetimei_next.ToString();
-                    this.logPrintInTextBox("IMEI값이이 저장되었습니다.");
+                    this.logPrintInTextBox("IMEI값이이 저장되었습니다.","");
                     break;
                 case states.getmodel:
                     tBoxModel.Text = str1;
@@ -709,7 +750,7 @@ namespace WindowsFormsApp2
                 case states.autogetmodel:
                     tBoxModel.Text = str1;
                     tBoxActionState.Text = states.autogetmodel_next.ToString();
-                    this.logPrintInTextBox("모델값이 저장되었습니다.");
+                    this.logPrintInTextBox("모델값이 저장되었습니다.","");
                     break;
                 case states.getmanufac:
                     tBoxManu.Text = str1;
@@ -719,7 +760,7 @@ namespace WindowsFormsApp2
                 case states.autogetmanufac:
                     tBoxManu.Text = str1;
                     tBoxActionState.Text = states.autogetmanufac_next.ToString();
-                    this.logPrintInTextBox("제조사값이 저장되었습니다.");
+                    this.logPrintInTextBox("제조사값이 저장되었습니다.","");
                     break;
                 default:
                     break;
@@ -733,7 +774,7 @@ namespace WindowsFormsApp2
 
         private void getDeviveInfo()
         {
-            this.logPrintInTextBox("DEVICE 정보 전체를 요청합니다.");
+            this.logPrintInTextBox("DEVICE 정보 전체를 요청합니다.","");
 
             this.sendDataOut(commands["getmodel"]);
             tBoxActionState.Text = states.autogetmodel.ToString();
@@ -791,8 +832,8 @@ namespace WindowsFormsApp2
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            timer1.Enabled = false;
-            logPrintInTextBox("타이머가 종료 되었습니다.");
+            timer1.Stop();
+            logPrintInTextBox("타이머가 종료 되었습니다.","");
             MessageBox.Show("타이머가 종료되었습니다.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             tBoxActionState.Text = states.idle.ToString();
@@ -964,10 +1005,62 @@ namespace WindowsFormsApp2
 
         private void sendDataToServer(string text)
         {
-            // Data send to SERVER
-            //AT+QLWM2M="uldata",<object>,<length>,<data>
-            this.sendDataOut(commands["setAutoBS"] + "0");
-            tBoxActionState.Text = states.setAutoBS.ToString();
+            if(cBoxSendHex.Checked == false)
+            {
+                // Data send to SERVER (string original)
+                //AT+QLWM2M="uldata",<object>,<length>,<data>
+                this.sendDataOut(commands["sendmsgstr"] + text + "\"");
+                tBoxActionState.Text = states.sendmsgstr.ToString();
+
+                timer1.Start();
+            }
+            else
+            {
+                // Data send to SERVER (string to BCD convert)
+                //AT+QLWM2M="ulhex",<object>,<length>,<data>
+
+                string hexOutput = StringToBCD(text.ToCharArray());
+
+                this.sendDataOut(commands["sendmsghex"] + hexOutput + "\"");
+                tBoxActionState.Text = states.sendmsghex.ToString();
+
+                //received hex data make to ascii code
+                string receiveDataIN = BcdToString(hexOutput.ToCharArray());
+                logPrintInTextBox(receiveDataIN, "");
+
+                timer1.Start();
+            }
+        }
+
+        private string BcdToString(char[] charValues)
+        {
+            string bcdstring = "";
+            for (int i = 0; i < charValues.Length - 1;)
+            {
+                // Convert to the first character.
+                int value = bcdvalues[charValues[i++]] * 0x10;
+
+                // Convert to the second character.
+                value += bcdvalues[charValues[i++]];
+
+                // Convert the decimal value to a hexadecimal value in string form.
+                bcdstring += Char.ConvertFromUtf32(value);
+            }
+            return bcdstring;
+        }
+
+        private string StringToBCD(char[] charValues)
+        {
+
+            string hexstring = "";
+            foreach (char _eachChar in charValues)
+            {
+                // Get the integral value of the character.
+                int value = Convert.ToInt32(_eachChar);
+                // Convert the decimal value to a hexadecimal value in string form.
+                hexstring += String.Format("{0:X}", value);
+            }
+            return hexstring;
         }
     }
 }
