@@ -117,15 +117,16 @@ namespace WindowsFormsApp2
 
             commands.Add("setserverinfo", "AT+QLWM2M=\"cdp\",");
             commands.Add("setservertype", "AT+QLWM2M=\"select\",2");
-            commands.Add("setepns", "AT+QLWM2M=\"epns\",0,\"");
+            commands.Add("setepns", "AT+QLWM2M=\"epns\",1,\"");
+            //commands.Add("setepns", "AT+QLWM2M=\"epns\",0,\"");
             commands.Add("setmbsps", "AT+QLWM2M=\"mbsps\",\"");
             commands.Add("setAutoBS", "AT+QLWM2M=\"enable\",");
             commands.Add("register", "AT+QLWM2M=\"register\"");
             commands.Add("deregister", "AT+QLWM2M=\"deregister\"");
             commands.Add("lwm2mreset", "AT+QLWM2M=\"reset\"");
             commands.Add("bootstrap", "AT+QLWM2M=\"bootstrap\",2");
-            commands.Add("sendmsgstr", "AT+QLWM2M=\"urdata\",\"");
-            commands.Add("sendmsghex", "AT+QLWM2M=\"urhex\",\"");
+            commands.Add("sendmsgstr", "AT+QLWM2M=\"uldata\",\"10250/0/1\",");
+            commands.Add("sendmsghex", "AT+QLWM2M=\"ulhex\",\"10250/0/1\",");
 
         }
 
@@ -653,7 +654,8 @@ namespace WindowsFormsApp2
                     case states.setservertype:
                         // EndPointName 플랫폼 device ID 설정
                         //AT+QLWM2M="enps",0,<service code>
-                        this.sendDataOut(commands["setepns"] + tBoxSVCCD.Text +"\"");
+                        this.sendDataOut(commands["setepns"] + "ASN-CSE-D-6399301537-FOTA" + "\"");
+                        //this.sendDataOut(commands["setepns"] + tBoxSVCCD.Text + "\"");
                         tBoxActionState.Text = states.setepns.ToString();
 
                         timer1.Start();
@@ -667,7 +669,8 @@ namespace WindowsFormsApp2
                             // Bootstrap Parameter 설정
                             //AT+QLWM2M="mbsps",<service code>,<sn>,<ctn>,<iccid>,<device model>
                             string command = commands["setmbsps"] + tBoxSVCCD.Text + "\",\"";
-                            command = command + tBoxIMEI.Text + "\",\"";
+                            command = command + "00000000000000123456" + "\",\"";
+                            //command = command + tBoxIMEI.Text + "\",\"";
                             command = command + ctn + "\",\"";
 
                             string iccid = tBoxIccid.Text;
@@ -899,18 +902,16 @@ namespace WindowsFormsApp2
             if(cBoxSERVER.Text == "개발")
             {
                 serverip = "\"106.103.233.63\"";
-                serverport = "8433";
             }
             else if (cBoxSERVER.Text == "검증")
             {
                 serverip = "\"106.103.227.95\"";
-                serverport = "8433";
             }
             else if (cBoxSERVER.Text == "상용")
             {
                 serverip = "\"106.103.210.242\"";
-                serverport = "8433";
             }
+            serverport = "5783";
 
             setLwm2mServer();
         }
@@ -1010,7 +1011,7 @@ namespace WindowsFormsApp2
             {
                 // Data send to SERVER (string original)
                 //AT+QLWM2M="uldata",<object>,<length>,<data>
-                this.sendDataOut(commands["sendmsgstr"] + text + "\"");
+                this.sendDataOut(commands["sendmsgstr"] + text.Length + ",\"" + text + "\"");
                 tBoxActionState.Text = states.sendmsgstr.ToString();
 
                 timer1.Start();
@@ -1022,7 +1023,7 @@ namespace WindowsFormsApp2
 
                 string hexOutput = StringToBCD(text.ToCharArray());
 
-                this.sendDataOut(commands["sendmsghex"] + hexOutput + "\"");
+                this.sendDataOut(commands["sendmsghex"] + hexOutput.Length/2 + ",\"" + hexOutput + "\"");
                 tBoxActionState.Text = states.sendmsghex.ToString();
 
                 //received hex data make to ascii code
