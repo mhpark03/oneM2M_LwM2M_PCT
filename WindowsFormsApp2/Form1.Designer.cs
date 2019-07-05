@@ -107,10 +107,11 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.cBoxATCMD = new System.Windows.Forms.ComboBox();
             this.btnATCMD = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cBoxLogSave = new System.Windows.Forms.CheckBox();
-            this.cBoxSendHex = new System.Windows.Forms.CheckBox();
+            this.tBoxDeviceSN = new System.Windows.Forms.TextBox();
+            this.button5 = new System.Windows.Forms.Button();
             this.tBoxDeviceModel = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.cBoxSERVER = new System.Windows.Forms.ComboBox();
@@ -130,12 +131,20 @@
             this.tBoxModel = new System.Windows.Forms.TextBox();
             this.btnModel = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.cBoxAutoBS = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cBoxAutoBS = new System.Windows.Forms.CheckBox();
+            this.cBoxLogSave = new System.Windows.Forms.CheckBox();
+            this.cBoxSendHex = new System.Windows.Forms.CheckBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.cBoxATCMD = new System.Windows.Forms.ComboBox();
-            this.tBoxDeviceSN = new System.Windows.Forms.TextBox();
-            this.button5 = new System.Windows.Forms.Button();
+            this.tBoxDeviceVer = new System.Windows.Forms.TextBox();
+            this.button6 = new System.Windows.Forms.Button();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.tSStatusLblLTE = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tSStatusLblLWM2M = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tSProgressLTE = new System.Windows.Forms.ToolStripProgressBar();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tSStatusLblLWM2M1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tSProgressLwm2m = new System.Windows.Forms.ToolStripProgressBar();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -145,6 +154,7 @@
             this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // chBoxRTSEnable
@@ -260,7 +270,7 @@
             // 
             this.tBoxDataIN.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBoxDataIN.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tBoxDataIN.Location = new System.Drawing.Point(3, 41);
+            this.tBoxDataIN.Location = new System.Drawing.Point(3, 48);
             this.tBoxDataIN.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.tBoxDataIN.Multiline = true;
             this.tBoxDataIN.Name = "tBoxDataIN";
@@ -788,11 +798,11 @@
             this.groupBox3.Controls.Add(this.panel3);
             this.groupBox3.Controls.Add(this.tBoxDataIN);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox3.Location = new System.Drawing.Point(3, 36);
+            this.groupBox3.Location = new System.Drawing.Point(3, 40);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox3.Size = new System.Drawing.Size(466, 276);
+            this.groupBox3.Size = new System.Drawing.Size(466, 283);
             this.groupBox3.TabIndex = 9;
             this.groupBox3.TabStop = false;
             // 
@@ -816,7 +826,7 @@
             this.panel1.Location = new System.Drawing.Point(0, 24);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(733, 371);
+            this.panel1.Size = new System.Drawing.Size(733, 396);
             this.panel1.TabIndex = 10;
             // 
             // groupBox4
@@ -825,7 +835,7 @@
             this.groupBox4.Controls.Add(this.groupBox3);
             this.groupBox4.Location = new System.Drawing.Point(225, 12);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(472, 315);
+            this.groupBox4.Size = new System.Drawing.Size(472, 326);
             this.groupBox4.TabIndex = 12;
             this.groupBox4.TabStop = false;
             // 
@@ -839,6 +849,20 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(466, 22);
             this.panel4.TabIndex = 12;
+            // 
+            // cBoxATCMD
+            // 
+            this.cBoxATCMD.Dock = System.Windows.Forms.DockStyle.Left;
+            this.cBoxATCMD.FormattingEnabled = true;
+            this.cBoxATCMD.Items.AddRange(new object[] {
+            "AT"});
+            this.cBoxATCMD.Location = new System.Drawing.Point(0, 0);
+            this.cBoxATCMD.Name = "cBoxATCMD";
+            this.cBoxATCMD.Size = new System.Drawing.Size(381, 20);
+            this.cBoxATCMD.Sorted = true;
+            this.cBoxATCMD.TabIndex = 3;
+            this.cBoxATCMD.Text = "AT";
+            this.cBoxATCMD.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CBoxATCMD_KeyDown);
             // 
             // btnATCMD
             // 
@@ -854,6 +878,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.tBoxDeviceVer);
+            this.groupBox1.Controls.Add(this.button6);
             this.groupBox1.Controls.Add(this.tBoxDeviceSN);
             this.groupBox1.Controls.Add(this.button5);
             this.groupBox1.Controls.Add(this.tBoxDeviceModel);
@@ -878,37 +904,27 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(209, 311);
+            this.groupBox1.Size = new System.Drawing.Size(209, 326);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             // 
-            // cBoxLogSave
+            // tBoxDeviceSN
             // 
-            this.cBoxLogSave.AutoSize = true;
-            this.cBoxLogSave.Checked = true;
-            this.cBoxLogSave.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cBoxLogSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cBoxLogSave.Location = new System.Drawing.Point(129, 15);
-            this.cBoxLogSave.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.cBoxLogSave.Name = "cBoxLogSave";
-            this.cBoxLogSave.Size = new System.Drawing.Size(86, 17);
-            this.cBoxLogSave.TabIndex = 22;
-            this.cBoxLogSave.Text = "Log file save";
-            this.cBoxLogSave.UseVisualStyleBackColor = true;
+            this.tBoxDeviceSN.Location = new System.Drawing.Point(77, 242);
+            this.tBoxDeviceSN.Name = "tBoxDeviceSN";
+            this.tBoxDeviceSN.Size = new System.Drawing.Size(126, 21);
+            this.tBoxDeviceSN.TabIndex = 23;
+            this.tBoxDeviceSN.Text = "123456";
             // 
-            // cBoxSendHex
+            // button5
             // 
-            this.cBoxSendHex.AutoSize = true;
-            this.cBoxSendHex.Checked = true;
-            this.cBoxSendHex.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cBoxSendHex.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cBoxSendHex.Location = new System.Drawing.Point(7, 12);
-            this.cBoxSendHex.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.cBoxSendHex.Name = "cBoxSendHex";
-            this.cBoxSendHex.Size = new System.Drawing.Size(47, 17);
-            this.cBoxSendHex.TabIndex = 15;
-            this.cBoxSendHex.Text = "HEX";
-            this.cBoxSendHex.UseVisualStyleBackColor = true;
+            this.button5.Location = new System.Drawing.Point(6, 242);
+            this.button5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(66, 24);
+            this.button5.TabIndex = 22;
+            this.button5.Text = "단말SN";
+            this.button5.UseVisualStyleBackColor = true;
             // 
             // tBoxDeviceModel
             // 
@@ -916,7 +932,7 @@
             this.tBoxDeviceModel.Name = "tBoxDeviceModel";
             this.tBoxDeviceModel.Size = new System.Drawing.Size(126, 21);
             this.tBoxDeviceModel.TabIndex = 21;
-            this.tBoxDeviceModel.Text = "LWENG";
+            this.tBoxDeviceModel.Text = "LWEMG";
             // 
             // button3
             // 
@@ -935,7 +951,7 @@
             "개발",
             "검증",
             "상용"});
-            this.cBoxSERVER.Location = new System.Drawing.Point(77, 274);
+            this.cBoxSERVER.Location = new System.Drawing.Point(77, 299);
             this.cBoxSERVER.Name = "cBoxSERVER";
             this.cBoxSERVER.Size = new System.Drawing.Size(126, 20);
             this.cBoxSERVER.TabIndex = 19;
@@ -944,7 +960,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(6, 273);
+            this.button2.Location = new System.Drawing.Point(6, 298);
             this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(66, 24);
@@ -1102,12 +1118,26 @@
             this.panel2.Controls.Add(this.cBoxParityBits);
             this.panel2.Controls.Add(this.cBoxStopBits);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 333);
+            this.panel2.Location = new System.Drawing.Point(0, 341);
             this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
-            this.panel2.Size = new System.Drawing.Size(733, 38);
+            this.panel2.Size = new System.Drawing.Size(733, 55);
             this.panel2.TabIndex = 10;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.cBoxAutoBS);
+            this.groupBox2.Controls.Add(this.cBoxLogSave);
+            this.groupBox2.Controls.Add(this.cBoxSendHex);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.groupBox2.Location = new System.Drawing.Point(506, 0);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBox2.Size = new System.Drawing.Size(227, 53);
+            this.groupBox2.TabIndex = 3;
+            this.groupBox2.TabStop = false;
             // 
             // cBoxAutoBS
             // 
@@ -1122,69 +1152,118 @@
             this.cBoxAutoBS.UseVisualStyleBackColor = true;
             this.cBoxAutoBS.CheckedChanged += new System.EventHandler(this.CBoxAutoBS_CheckedChanged);
             // 
-            // groupBox2
+            // cBoxLogSave
             // 
-            this.groupBox2.Controls.Add(this.cBoxAutoBS);
-            this.groupBox2.Controls.Add(this.cBoxLogSave);
-            this.groupBox2.Controls.Add(this.cBoxSendHex);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox2.Location = new System.Drawing.Point(506, 0);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Size = new System.Drawing.Size(227, 36);
-            this.groupBox2.TabIndex = 3;
-            this.groupBox2.TabStop = false;
+            this.cBoxLogSave.AutoSize = true;
+            this.cBoxLogSave.Checked = true;
+            this.cBoxLogSave.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cBoxLogSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cBoxLogSave.Location = new System.Drawing.Point(129, 15);
+            this.cBoxLogSave.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cBoxLogSave.Name = "cBoxLogSave";
+            this.cBoxLogSave.Size = new System.Drawing.Size(86, 17);
+            this.cBoxLogSave.TabIndex = 22;
+            this.cBoxLogSave.Text = "Log file save";
+            this.cBoxLogSave.UseVisualStyleBackColor = true;
+            // 
+            // cBoxSendHex
+            // 
+            this.cBoxSendHex.AutoSize = true;
+            this.cBoxSendHex.Checked = true;
+            this.cBoxSendHex.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cBoxSendHex.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cBoxSendHex.Location = new System.Drawing.Point(7, 12);
+            this.cBoxSendHex.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.cBoxSendHex.Name = "cBoxSendHex";
+            this.cBoxSendHex.Size = new System.Drawing.Size(47, 17);
+            this.cBoxSendHex.TabIndex = 15;
+            this.cBoxSendHex.Text = "HEX";
+            this.cBoxSendHex.UseVisualStyleBackColor = true;
             // 
             // timer1
             // 
             this.timer1.Interval = 10000;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
-            // cBoxATCMD
+            // tBoxDeviceVer
             // 
-            this.cBoxATCMD.Dock = System.Windows.Forms.DockStyle.Left;
-            this.cBoxATCMD.FormattingEnabled = true;
-            this.cBoxATCMD.Items.AddRange(new object[] {
-            "AT"});
-            this.cBoxATCMD.Location = new System.Drawing.Point(0, 0);
-            this.cBoxATCMD.Name = "cBoxATCMD";
-            this.cBoxATCMD.Size = new System.Drawing.Size(381, 20);
-            this.cBoxATCMD.Sorted = true;
-            this.cBoxATCMD.TabIndex = 3;
-            this.cBoxATCMD.Text = "AT";
-            this.cBoxATCMD.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CBoxATCMD_KeyDown);
+            this.tBoxDeviceVer.Location = new System.Drawing.Point(77, 271);
+            this.tBoxDeviceVer.Name = "tBoxDeviceVer";
+            this.tBoxDeviceVer.Size = new System.Drawing.Size(126, 21);
+            this.tBoxDeviceVer.TabIndex = 25;
             // 
-            // tBoxDeviceSN
+            // button6
             // 
-            this.tBoxDeviceSN.Location = new System.Drawing.Point(77, 242);
-            this.tBoxDeviceSN.Name = "tBoxDeviceSN";
-            this.tBoxDeviceSN.Size = new System.Drawing.Size(126, 21);
-            this.tBoxDeviceSN.TabIndex = 23;
-            this.tBoxDeviceSN.Text = "00000000000000123456";
+            this.button6.Location = new System.Drawing.Point(6, 271);
+            this.button6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(66, 24);
+            this.button6.TabIndex = 24;
+            this.button6.Text = "단말버전";
+            this.button6.UseVisualStyleBackColor = true;
             // 
-            // button5
+            // statusStrip1
             // 
-            this.button5.Location = new System.Drawing.Point(6, 242);
-            this.button5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(66, 24);
-            this.button5.TabIndex = 22;
-            this.button5.Text = "단말SN";
-            this.button5.UseVisualStyleBackColor = true;
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.tSStatusLblLTE,
+            this.tSProgressLTE,
+            this.tSStatusLblLWM2M1,
+            this.tSStatusLblLWM2M,
+            this.tSProgressLwm2m});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 398);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(733, 22);
+            this.statusStrip1.TabIndex = 11;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // tSStatusLblLTE
+            // 
+            this.tSStatusLblLTE.Name = "tSStatusLblLTE";
+            this.tSStatusLblLTE.Size = new System.Drawing.Size(65, 17);
+            this.tSStatusLblLTE.Text = "disconnect";
+            // 
+            // tSStatusLblLWM2M
+            // 
+            this.tSStatusLblLWM2M.Name = "tSStatusLblLWM2M";
+            this.tSStatusLblLWM2M.Size = new System.Drawing.Size(65, 17);
+            this.tSStatusLblLWM2M.Text = "disconnect";
+            // 
+            // tSProgressLTE
+            // 
+            this.tSProgressLTE.Name = "tSProgressLTE";
+            this.tSProgressLTE.Size = new System.Drawing.Size(150, 16);
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(95, 17);
+            this.toolStripStatusLabel1.Text = "LTE NETWORK : ";
+            // 
+            // tSStatusLblLWM2M1
+            // 
+            this.tSStatusLblLWM2M1.Name = "tSStatusLblLWM2M1";
+            this.tSStatusLblLWM2M1.Size = new System.Drawing.Size(112, 17);
+            this.tSStatusLblLWM2M1.Text = "     LWM2M 통신 : ";
+            // 
+            // tSProgressLwm2m
+            // 
+            this.tSProgressLwm2m.Name = "tSProgressLwm2m";
+            this.tSProgressLwm2m.Size = new System.Drawing.Size(150, 16);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(733, 395);
+            this.ClientSize = new System.Drawing.Size(733, 420);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximumSize = new System.Drawing.Size(1920, 1078);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(749, 420);
+            this.MinimumSize = new System.Drawing.Size(749, 453);
             this.Name = "Form1";
             this.Text = "LGU+ ATcommand TEST";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -1205,6 +1284,8 @@
             this.panel2.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1318,6 +1399,15 @@
         private System.Windows.Forms.ComboBox cBoxATCMD;
         private System.Windows.Forms.TextBox tBoxDeviceSN;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.TextBox tBoxDeviceVer;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel tSStatusLblLTE;
+        private System.Windows.Forms.ToolStripProgressBar tSProgressLTE;
+        private System.Windows.Forms.ToolStripStatusLabel tSStatusLblLWM2M;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel tSStatusLblLWM2M1;
+        private System.Windows.Forms.ToolStripProgressBar tSProgressLwm2m;
     }
 }
 

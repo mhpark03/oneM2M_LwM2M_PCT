@@ -47,15 +47,17 @@ namespace WindowsFormsApp2
             bootstrap,
             lwm2mreset,
             sendmsgstr,
-            sendmsghex
+            sendmsghex,
+            setcereg,
+            getcereg
         }
 
         string sendWith;
         string dataIN;
         string RxDisplayRule;
         string RxDispOrder;
-        string serverip = "\"106.103.233.63\"";
-        string serverport = "8433";
+        string serverip = "\"106.103.233.155\"";
+        string serverport = "5783";
         Dictionary<string, string> commands = new Dictionary<string, string>();
         Dictionary<char, int> bcdvalues = new Dictionary<char, int>();
 
@@ -110,21 +112,23 @@ namespace WindowsFormsApp2
             bcdvalues.Add('f', 15);
 
             commands.Add("getimsi", "AT+CIMI");
-            commands.Add("geticcid", "AT+QCCID");
+            commands.Add("geticcid", "AT+ICCID");
             commands.Add("getimei", "AT+GSN");
             commands.Add("getmodel", "AT+CGMM");
             commands.Add("getmanufac", "AT+CGMI");
+            commands.Add("setcereg", "AT+CEREG=1");
+            commands.Add("getcereg", "AT+CEREG?");
 
             commands.Add("setserverinfo", "AT+QLWM2M=\"cdp\",");
             commands.Add("setservertype", "AT+QLWM2M=\"select\",2");
-            commands.Add("setepns", "AT+QLWM2M=\"epns\",1,\"");
-            //commands.Add("setepns", "AT+QLWM2M=\"epns\",0,\"");
+            //commands.Add("setepns", "AT+QLWM2M=\"epns\",1,\"");
+            commands.Add("setepns", "AT+QLWM2M=\"epns\",0,\"");
             commands.Add("setmbsps", "AT+QLWM2M=\"mbsps\",\"");
             commands.Add("setAutoBS", "AT+QLWM2M=\"enable\",");
             commands.Add("register", "AT+QLWM2M=\"register\"");
             commands.Add("deregister", "AT+QLWM2M=\"deregister\"");
             commands.Add("lwm2mreset", "AT+QLWM2M=\"reset\"");
-            commands.Add("bootstrap", "AT+QLWM2M=\"bootstrap\",2");
+            commands.Add("bootstrap", "AT+QLWM2M=\"bootstrap\",1");
             commands.Add("sendmsgstr", "AT+QLWM2M=\"uldata\",10250,");
             commands.Add("sendmsghex", "AT+QLWM2M=\"ulhex\",10250,");
 
@@ -164,6 +168,10 @@ namespace WindowsFormsApp2
                 groupBox4.Enabled = true;
                 logPrintInTextBox("COM PORT가 연결 되었습니다.","");
 
+                this.sendDataOut(commands["setcereg"]);
+                tBoxActionState.Text = states.setcereg.ToString();
+
+                timer1.Start();                
             }
 
             catch (Exception err)
@@ -282,34 +290,39 @@ namespace WindowsFormsApp2
                 }
 
                 serialPort1.Write(sendmsg);
-                logPrintInTextBox(sendmsg,"tx");
+                logPrintInTextBox(sendmsg, "tx");
 
-                bool response_wait = false;
-                string command = dataOUT.ToUpper();
-                if (command == "AT+CIMI")
+                //textbox에서 명령어를 직접 입력한 경우 OK를 받았을떄 정보를 저장할 수 있게하기 위함.
+                if (tBoxActionState.Text == "idle")
                 {
-                    tBoxActionState.Text = states.getimsi.ToString();
-                    response_wait = true;
-                }
-                else if (command == "AT+GSN")
-                {
-                    tBoxActionState.Text = states.getimei.ToString();
-                    response_wait = true;
-                }
-                else if (command == "AT+CGMM")
-                {
-                    tBoxActionState.Text = states.getmodel.ToString();
-                    response_wait = true;
-                }
-                else if (command == "AT+CGMI")
-                {
-                    tBoxActionState.Text = states.getmanufac.ToString();
-                    response_wait = true;
-                }
+                    bool response_wait = false;
+                    string command = dataOUT.ToUpper();
+                    if (command == "AT+CIMI")
+                    {
+                        tBoxActionState.Text = states.getimsi.ToString();
+                        response_wait = true;
+                    }
+                    else if (command == "AT+GSN")
+                    {
+                        tBoxActionState.Text = states.getimei.ToString();
+                        response_wait = true;
+                    }
+                    else if (command == "AT+CGMM")
+                    {
+                        tBoxActionState.Text = states.getmodel.ToString();
+                        response_wait = true;
+                    }
+                    else if (command == "AT+CGMI")
+                    {
+                        tBoxActionState.Text = states.getmanufac.ToString();
+                        response_wait = true;
+                    }
 
-                if (response_wait)
-                {
-                    timer1.Start();
+                    if (response_wait)
+                    {
+                        timer1.Start();
+                    }
+
                 }
             }
         }
@@ -561,11 +574,15 @@ namespace WindowsFormsApp2
                 "OK",
                 "ERROR",
                 "AT+CIMI",
-                "+QCCID:",
+                "+ICCID:",
                 "AT+GSN",
                 "AT+CGMM",
                 "AT+CGMI",
-                "+CME"
+                "+CME",
+                "AT+CEREG=1",
+                "AT+CEREG?",
+                "+CEREG:",
+                "+QLWEVENT:"
             };
 
             /* Debug를 위해 Hex로 문자열 표시*/
@@ -654,8 +671,8 @@ namespace WindowsFormsApp2
                     case states.setservertype:
                         // EndPointName 플랫폼 device ID 설정
                         //AT+QLWM2M="enps",0,<service code>
-                        this.sendDataOut(commands["setepns"] + "ASN-CSE-D-6399301537-FOTA" + "\"");
-                        //this.sendDataOut(commands["setepns"] + tBoxSVCCD.Text + "\"");
+                        //this.sendDataOut(commands["setepns"] + "ASN-CSE-D-6399301537-FOTA" + "\"");
+                        this.sendDataOut(commands["setepns"] + tBoxSVCCD.Text + "\"");
                         tBoxActionState.Text = states.setepns.ToString();
 
                         timer1.Start();
@@ -687,23 +704,27 @@ namespace WindowsFormsApp2
                             timer1.Stop();
                         }
                         break;
-                    /*
                     case states.setmbsps:
                         // Bootstrap 요청
-                        //AT+QLWM2M="bootstrap",2
+                        //AT+QLWM2M="bootstrap",1
                         this.sendDataOut(commands["bootstrap"]);
                         tBoxActionState.Text = states.bootstrap.ToString();
 
                         timer1.Start();
                         break;
-                    */
+                    case states.setcereg:
+                        this.sendDataOut(commands["getcereg"]);
+                        tBoxActionState.Text = states.getcereg.ToString();
+
+                        timer1.Start();
+                        break;
                     default:
                         tBoxActionState.Text = states.idle.ToString();
                         timer1.Stop();
                         break;
                 }
             }
-            else if (s == "+QCCID:")
+            else if (s == "+ICCID:")
             {
                 tBoxIccid.Text = str2.Substring(0, 20);
                 logPrintInTextBox("ICCID값이 저장되었습니다.","");
@@ -713,6 +734,59 @@ namespace WindowsFormsApp2
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
                 }
+            }
+            else if (s == "+CEREG:")
+            {
+                string ltestatus = str2.Substring(1, 1);
+                string lteregi = str2.Substring(3, 1);
+                if(ltestatus == "0")
+                {
+                    tSStatusLblLTE.Text = "disconnect";
+                    tSProgressLTE.Value = 0;
+                }
+                else if(ltestatus == "1")
+                {
+                    if((lteregi == "1")|| (lteregi == "5"))
+                    {
+                        tSStatusLblLTE.Text = "registered";
+                        tSProgressLTE.Value = 100;
+                    }
+                    else
+                    {
+                        tSStatusLblLTE.Text = "not registered";
+                        tSProgressLTE.Value = 50;
+                    }
+                }
+                else
+                {
+                    tSStatusLblLTE.Text = "enable";
+                    tSProgressLTE.Value = 100;
+                }
+
+                tBoxActionState.Text = states.idle.ToString();
+                timer1.Stop();
+            }
+            else if (s == "+QLWEVENT:")
+            {
+                char[] lwm2mstep = str2.ToCharArray();
+                int value = Convert.ToInt32(lwm2mstep[0]);
+                if (value < 6)
+                {
+                    tSProgressLwm2m.Value = value * 20;
+
+                }
+                else
+                {
+                    tSProgressLwm2m.Value = 100;
+                }
+
+                int first = str2.IndexOf("\"");
+                int last = str2.LastIndexOf("\"");
+                string lwm2mstate = str2.Substring(first+1, last-first-2);
+                tSStatusLblLWM2M.Text = lwm2mstate;
+
+                tBoxActionState.Text = states.idle.ToString();
+                timer1.Stop();
             }
             else if (s == "ERROR")
             {
@@ -863,7 +937,7 @@ namespace WindowsFormsApp2
                 //tBoxActionState.Text = states.setmbsps.ToString();
 
                 // Bootstrap 요청
-                //AT+QLWM2M="bootstrap",2
+                //AT+QLWM2M="bootstrap",1
                 //this.sendDataOut(commands["bootstrap"]);
                 //tBoxActionState.Text = states.bootstrap.ToString();
 
@@ -906,11 +980,11 @@ namespace WindowsFormsApp2
             }
             else if (cBoxSERVER.Text == "검증")
             {
-                serverip = "\"106.103.227.95\"";
+                serverip = "\"106.103.230.51\"";
             }
             else if (cBoxSERVER.Text == "상용")
             {
-                serverip = "\"106.103.210.242\"";
+                serverip = "\"106.103.250.108\"";
             }
             serverport = "5783";
 
