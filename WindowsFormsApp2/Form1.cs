@@ -125,8 +125,8 @@ namespace WindowsFormsApp2
             commands.Add("deregister", "AT+QLWM2M=\"deregister\"");
             commands.Add("lwm2mreset", "AT+QLWM2M=\"reset\"");
             commands.Add("bootstrap", "AT+QLWM2M=\"bootstrap\",2");
-            commands.Add("sendmsgstr", "AT+QLWM2M=\"uldata\",\"10250/0/1\",");
-            commands.Add("sendmsghex", "AT+QLWM2M=\"ulhex\",\"10250/0/1\",");
+            commands.Add("sendmsgstr", "AT+QLWM2M=\"uldata\",10250,");
+            commands.Add("sendmsghex", "AT+QLWM2M=\"ulhex\",10250,");
 
         }
 
@@ -134,7 +134,7 @@ namespace WindowsFormsApp2
         {
             groupBox4.Width = panel1.Width - 230;
             groupBox4.Height = panel1.Height - 55;
-            tBoxATCMD.Width = groupBox4.Width - 90;
+            cBoxATCMD.Width = groupBox4.Width - 90;
 
             groupBox3.Width = groupBox4.Width - 230;
             groupBox3.Height = groupBox4.Height - 35;
@@ -235,26 +235,29 @@ namespace WindowsFormsApp2
             }
         }
 
-        private void TBoxATCMD_TextChanged(object sender, EventArgs e)
-        {
-            int dataOUTLength = tBoxATCMD.TextLength;
-            lblDataOutLength.Text = string.Format("{0:0000}", dataOUTLength);
-        }
-
         private void BtnATCMD_Click(object sender, EventArgs e)
         {
-            if (tBoxATCMD.Text != "")
+            if (cBoxATCMD.Text.Length != 0)
             {
-                this.sendDataOut(tBoxATCMD.Text);
+                DataOutandstore(cBoxATCMD.Text);
             }
 
         }
 
-        private void TBoxATCMD_KeyDown(object sender, KeyEventArgs e)
+        private void DataOutandstore(string text)
+        {
+            this.sendDataOut(text);
+            if (!cBoxATCMD.Items.Contains(text))
+            {
+                cBoxATCMD.Items.Add(text);
+            }
+        }
+
+        private void CBoxATCMD_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                this.sendDataOut(tBoxATCMD.Text);
+                DataOutandstore(cBoxATCMD.Text);
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
@@ -526,9 +529,6 @@ namespace WindowsFormsApp2
 
         private void ShowData(object sender, EventArgs e)
         {
-            int dataINLength = dataIN.Length;
-            lblDataInLength.Text = string.Format("{0:0000}", dataINLength);
-
             //logPrintInTextBox(dataIN,"rx");
 
             string[] words = dataIN.Split('\n');
@@ -669,8 +669,7 @@ namespace WindowsFormsApp2
                             // Bootstrap Parameter 설정
                             //AT+QLWM2M="mbsps",<service code>,<sn>,<ctn>,<iccid>,<device model>
                             string command = commands["setmbsps"] + tBoxSVCCD.Text + "\",\"";
-                            command = command + "00000000000000123456" + "\",\"";
-                            //command = command + tBoxIMEI.Text + "\",\"";
+                            command = command + tBoxDeviceSN.Text + "\",\"";
                             command = command + ctn + "\",\"";
 
                             string iccid = tBoxIccid.Text;
@@ -688,6 +687,7 @@ namespace WindowsFormsApp2
                             timer1.Stop();
                         }
                         break;
+                    /*
                     case states.setmbsps:
                         // Bootstrap 요청
                         //AT+QLWM2M="bootstrap",2
@@ -696,7 +696,7 @@ namespace WindowsFormsApp2
 
                         timer1.Start();
                         break;
-
+                    */
                     default:
                         tBoxActionState.Text = states.idle.ToString();
                         timer1.Stop();
@@ -873,11 +873,12 @@ namespace WindowsFormsApp2
 
         private bool isDeviceInfo()
         {
-            //if((tBoxIMSI.Text == "알 수 없음")&&(tBoxIMEI.Text == "알 수 없음"))
-            //{
-            //    this.getDeviveInfo();
-            //    return false;  
-            //}
+            if((tBoxIMSI.Text == "알 수 없음") || (tBoxIccid.Text == "알 수 없음"))
+            {
+                this.getDeviveInfo();
+                MessageBox.Show("모듈 정보를 읽고 있습니다.\n다시 시도해주세요.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;  
+            }
 
             return true;
         }
@@ -1095,5 +1096,6 @@ namespace WindowsFormsApp2
                 }
             }
         }
+
     }
 }

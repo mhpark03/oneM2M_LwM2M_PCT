@@ -38,8 +38,6 @@
             this.cBoxCOMPORT = new System.Windows.Forms.ComboBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
-            this.lblDataInLength = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.tBoxDataIN = new System.Windows.Forms.TextBox();
             this.btnSendData = new System.Windows.Forms.Button();
             this.tBoxDataOut = new System.Windows.Forms.TextBox();
@@ -106,13 +104,10 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.lblDataOutLength = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.btnATCMD = new System.Windows.Forms.Button();
-            this.tBoxATCMD = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cBoxLogSave = new System.Windows.Forms.CheckBox();
             this.cBoxSendHex = new System.Windows.Forms.CheckBox();
@@ -138,6 +133,9 @@
             this.cBoxAutoBS = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.cBoxATCMD = new System.Windows.Forms.ComboBox();
+            this.tBoxDeviceSN = new System.Windows.Forms.TextBox();
+            this.button5 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -257,28 +255,6 @@
             // serialPort1
             // 
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.SerialPort1_DataReceived);
-            // 
-            // lblDataInLength
-            // 
-            this.lblDataInLength.AutoSize = true;
-            this.lblDataInLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDataInLength.Location = new System.Drawing.Point(112, 12);
-            this.lblDataInLength.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblDataInLength.Name = "lblDataInLength";
-            this.lblDataInLength.Size = new System.Drawing.Size(35, 15);
-            this.lblDataInLength.TabIndex = 6;
-            this.lblDataInLength.Text = "0000";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(76, 11);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(33, 15);
-            this.label8.TabIndex = 5;
-            this.label8.Text = "RX : ";
             // 
             // tBoxDataIN
             // 
@@ -782,21 +758,21 @@
             // devserverToolStripMenuItem
             // 
             this.devserverToolStripMenuItem.Name = "devserverToolStripMenuItem";
-            this.devserverToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.devserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.devserverToolStripMenuItem.Text = "개발 서버";
             this.devserverToolStripMenuItem.Click += new System.EventHandler(this.DevserverToolStripMenuItem_Click);
             // 
             // cvsserverToolStripMenuItem
             // 
             this.cvsserverToolStripMenuItem.Name = "cvsserverToolStripMenuItem";
-            this.cvsserverToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cvsserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.cvsserverToolStripMenuItem.Text = "검증 서버";
             this.cvsserverToolStripMenuItem.Click += new System.EventHandler(this.CvsserverToolStripMenuItem_Click);
             // 
             // opserverToolStripMenuItem
             // 
             this.opserverToolStripMenuItem.Name = "opserverToolStripMenuItem";
-            this.opserverToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.opserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.opserverToolStripMenuItem.Text = "상용서버";
             this.opserverToolStripMenuItem.Click += new System.EventHandler(this.OpserverToolStripMenuItem_Click);
             // 
@@ -831,28 +807,6 @@
             this.panel3.Size = new System.Drawing.Size(460, 22);
             this.panel3.TabIndex = 11;
             // 
-            // lblDataOutLength
-            // 
-            this.lblDataOutLength.AutoSize = true;
-            this.lblDataOutLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDataOutLength.Location = new System.Drawing.Point(44, 12);
-            this.lblDataOutLength.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblDataOutLength.Name = "lblDataOutLength";
-            this.lblDataOutLength.Size = new System.Drawing.Size(35, 15);
-            this.lblDataOutLength.TabIndex = 6;
-            this.lblDataOutLength.Text = "0000";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(7, 11);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(31, 15);
-            this.label6.TabIndex = 5;
-            this.label6.Text = "TX : ";
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.groupBox4);
@@ -877,8 +831,8 @@
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.cBoxATCMD);
             this.panel4.Controls.Add(this.btnATCMD);
-            this.panel4.Controls.Add(this.tBoxATCMD);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(3, 17);
             this.panel4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -898,21 +852,10 @@
             this.btnATCMD.UseVisualStyleBackColor = true;
             this.btnATCMD.Click += new System.EventHandler(this.BtnATCMD_Click);
             // 
-            // tBoxATCMD
-            // 
-            this.tBoxATCMD.Dock = System.Windows.Forms.DockStyle.Left;
-            this.tBoxATCMD.Location = new System.Drawing.Point(0, 0);
-            this.tBoxATCMD.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.tBoxATCMD.Name = "tBoxATCMD";
-            this.tBoxATCMD.Size = new System.Drawing.Size(381, 21);
-            this.tBoxATCMD.TabIndex = 3;
-            this.tBoxATCMD.TextChanged += new System.EventHandler(this.TBoxATCMD_TextChanged);
-            this.tBoxATCMD.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TBoxATCMD_KeyDown);
-            // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.cBoxLogSave);
-            this.groupBox1.Controls.Add(this.cBoxSendHex);
+            this.groupBox1.Controls.Add(this.tBoxDeviceSN);
+            this.groupBox1.Controls.Add(this.button5);
             this.groupBox1.Controls.Add(this.tBoxDeviceModel);
             this.groupBox1.Controls.Add(this.button3);
             this.groupBox1.Controls.Add(this.cBoxSERVER);
@@ -945,7 +888,7 @@
             this.cBoxLogSave.Checked = true;
             this.cBoxLogSave.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cBoxLogSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cBoxLogSave.Location = new System.Drawing.Point(77, 282);
+            this.cBoxLogSave.Location = new System.Drawing.Point(129, 15);
             this.cBoxLogSave.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.cBoxLogSave.Name = "cBoxLogSave";
             this.cBoxLogSave.Size = new System.Drawing.Size(86, 17);
@@ -959,7 +902,7 @@
             this.cBoxSendHex.Checked = true;
             this.cBoxSendHex.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cBoxSendHex.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cBoxSendHex.Location = new System.Drawing.Point(7, 282);
+            this.cBoxSendHex.Location = new System.Drawing.Point(7, 12);
             this.cBoxSendHex.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.cBoxSendHex.Name = "cBoxSendHex";
             this.cBoxSendHex.Size = new System.Drawing.Size(47, 17);
@@ -992,7 +935,7 @@
             "개발",
             "검증",
             "상용"});
-            this.cBoxSERVER.Location = new System.Drawing.Point(77, 242);
+            this.cBoxSERVER.Location = new System.Drawing.Point(77, 274);
             this.cBoxSERVER.Name = "cBoxSERVER";
             this.cBoxSERVER.Size = new System.Drawing.Size(126, 20);
             this.cBoxSERVER.TabIndex = 19;
@@ -1001,7 +944,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(6, 241);
+            this.button2.Location = new System.Drawing.Point(6, 273);
             this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(66, 24);
@@ -1149,7 +1092,6 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.cBoxAutoBS);
             this.panel2.Controls.Add(this.chBoxRTSEnable);
             this.panel2.Controls.Add(this.groupBox2);
             this.panel2.Controls.Add(this.chBoxDtrEnable);
@@ -1171,7 +1113,7 @@
             // 
             this.cBoxAutoBS.AutoSize = true;
             this.cBoxAutoBS.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cBoxAutoBS.Location = new System.Drawing.Point(457, 11);
+            this.cBoxAutoBS.Location = new System.Drawing.Point(55, 13);
             this.cBoxAutoBS.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.cBoxAutoBS.Name = "cBoxAutoBS";
             this.cBoxAutoBS.Size = new System.Drawing.Size(70, 17);
@@ -1182,16 +1124,15 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.lblDataInLength);
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.label8);
-            this.groupBox2.Controls.Add(this.lblDataOutLength);
+            this.groupBox2.Controls.Add(this.cBoxAutoBS);
+            this.groupBox2.Controls.Add(this.cBoxLogSave);
+            this.groupBox2.Controls.Add(this.cBoxSendHex);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox2.Location = new System.Drawing.Point(576, 0);
+            this.groupBox2.Location = new System.Drawing.Point(506, 0);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Size = new System.Drawing.Size(157, 36);
+            this.groupBox2.Size = new System.Drawing.Size(227, 36);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             // 
@@ -1199,6 +1140,38 @@
             // 
             this.timer1.Interval = 10000;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
+            // 
+            // cBoxATCMD
+            // 
+            this.cBoxATCMD.Dock = System.Windows.Forms.DockStyle.Left;
+            this.cBoxATCMD.FormattingEnabled = true;
+            this.cBoxATCMD.Items.AddRange(new object[] {
+            "AT"});
+            this.cBoxATCMD.Location = new System.Drawing.Point(0, 0);
+            this.cBoxATCMD.Name = "cBoxATCMD";
+            this.cBoxATCMD.Size = new System.Drawing.Size(381, 20);
+            this.cBoxATCMD.Sorted = true;
+            this.cBoxATCMD.TabIndex = 3;
+            this.cBoxATCMD.Text = "AT";
+            this.cBoxATCMD.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CBoxATCMD_KeyDown);
+            // 
+            // tBoxDeviceSN
+            // 
+            this.tBoxDeviceSN.Location = new System.Drawing.Point(77, 242);
+            this.tBoxDeviceSN.Name = "tBoxDeviceSN";
+            this.tBoxDeviceSN.Size = new System.Drawing.Size(126, 21);
+            this.tBoxDeviceSN.TabIndex = 23;
+            this.tBoxDeviceSN.Text = "00000000000000123456";
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(6, 242);
+            this.button5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(66, 24);
+            this.button5.TabIndex = 22;
+            this.button5.Text = "단말SN";
+            this.button5.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1211,7 +1184,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximumSize = new System.Drawing.Size(1920, 1078);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(749, 433);
+            this.MinimumSize = new System.Drawing.Size(749, 420);
             this.Name = "Form1";
             this.Text = "LGU+ ATcommand TEST";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -1226,7 +1199,6 @@
             this.panel1.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -1246,8 +1218,6 @@
         private System.Windows.Forms.ComboBox cBoxBaudRate;
         private System.Windows.Forms.ComboBox cBoxCOMPORT;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Label lblDataInLength;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox tBoxDataIN;
         private System.Windows.Forms.Button btnSendData;
         private System.Windows.Forms.TextBox tBoxDataOut;
@@ -1267,8 +1237,6 @@
         private System.Windows.Forms.ToolStripMenuItem writeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 표시방법ToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Label lblDataOutLength;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ToolStripMenuItem CursorToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
@@ -1345,9 +1313,11 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button btnATCMD;
-        private System.Windows.Forms.TextBox tBoxATCMD;
         private System.Windows.Forms.CheckBox cBoxSendHex;
         private System.Windows.Forms.CheckBox cBoxLogSave;
+        private System.Windows.Forms.ComboBox cBoxATCMD;
+        private System.Windows.Forms.TextBox tBoxDeviceSN;
+        private System.Windows.Forms.Button button5;
     }
 }
 
