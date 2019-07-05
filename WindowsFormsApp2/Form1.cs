@@ -843,21 +843,6 @@ namespace WindowsFormsApp2
             tBoxActionState.Text = states.idle.ToString();
         }
 
-        private void DevserverToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            cBoxSERVER.Text = "개발";
-        }
-
-        private void CvsserverToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            cBoxSERVER.Text = "검증";
-        }
-
-        private void OpserverToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            cBoxSERVER.Text = "상용";
-        }
-
         private void ProvisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if(isDeviceInfo())
@@ -897,11 +882,26 @@ namespace WindowsFormsApp2
             return true;
         }
 
+        private void DevserverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cBoxSERVER.Text = "개발";
+        }
+
+        private void CvsserverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cBoxSERVER.Text = "검증";
+        }
+
+        private void OpserverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cBoxSERVER.Text = "상용";
+        }
+
         private void CBoxSERVER_TextChanged(object sender, EventArgs e)
         {
             if(cBoxSERVER.Text == "개발")
             {
-                serverip = "\"106.103.233.63\"";
+                serverip = "\"106.103.233.155\"";
             }
             else if (cBoxSERVER.Text == "검증")
             {

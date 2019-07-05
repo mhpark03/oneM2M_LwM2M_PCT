@@ -782,21 +782,21 @@
             // devserverToolStripMenuItem
             // 
             this.devserverToolStripMenuItem.Name = "devserverToolStripMenuItem";
-            this.devserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.devserverToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.devserverToolStripMenuItem.Text = "개발 서버";
             this.devserverToolStripMenuItem.Click += new System.EventHandler(this.DevserverToolStripMenuItem_Click);
             // 
             // cvsserverToolStripMenuItem
             // 
             this.cvsserverToolStripMenuItem.Name = "cvsserverToolStripMenuItem";
-            this.cvsserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.cvsserverToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.cvsserverToolStripMenuItem.Text = "검증 서버";
             this.cvsserverToolStripMenuItem.Click += new System.EventHandler(this.CvsserverToolStripMenuItem_Click);
             // 
             // opserverToolStripMenuItem
             // 
             this.opserverToolStripMenuItem.Name = "opserverToolStripMenuItem";
-            this.opserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.opserverToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.opserverToolStripMenuItem.Text = "상용서버";
             this.opserverToolStripMenuItem.Click += new System.EventHandler(this.OpserverToolStripMenuItem_Click);
             // 
