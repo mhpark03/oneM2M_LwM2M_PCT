@@ -23,14 +23,16 @@ namespace WindowsFormsApp2
             getimei,
             geticcid,
             autogetmodel,
-            autogetmodel_next,
             autogetmanufac,
-            autogetmanufac_next,
             autogetimsi,
-            autogetimsi_next,
             autogetimei,
-            autogetimei_next,
             autogeticcid,
+            autogetmodel_next,
+            autogetmanufac_next,
+            autogetimsi_next,
+            autogetimei_next,
+            autogeticcid_next,
+            bootstrap,
             setserverinfo,
             setservertype,
             setepns,
@@ -44,7 +46,6 @@ namespace WindowsFormsApp2
             receiveFOTAdata,
             downloadMDLFOTA,
             updateMDLFOTA,
-            bootstrap,
             lwm2mreset,
             sendmsgstr,
             sendmsghex,
@@ -54,10 +55,14 @@ namespace WindowsFormsApp2
 
         string sendWith;
         string dataIN;
-        string RxDisplayRule;
         string RxDispOrder;
         string serverip = "\"106.103.233.155\"";
         string serverport = "5783";
+        int network_chkcnt = 3;
+        string nextcommand = "";    //OK를 받은 후 전송할 명령어가 존재하는 경우
+                                    //예를들어 +CEREG와 같이 OK를 포함한 응답 값을 받은 경우 OK처리 후에 명령어를 전송해야 한다
+                                    // states 값을 바꾸고 명령어를 전송하면 명령의 응답을 받기전 이전에 받았던 OK에 동작할 수 있다.
+
         Dictionary<string, string> commands = new Dictionary<string, string>();
         Dictionary<char, int> bcdvalues = new Dictionary<char, int>();
 
@@ -81,7 +86,6 @@ namespace WindowsFormsApp2
             serialPort1.RtsEnable = false;
 
             sendWith = "Both";
-            RxDisplayRule = "All";
             RxDispOrder = "BOTTOM";
 
             this.setWindowLayOut();
@@ -168,8 +172,8 @@ namespace WindowsFormsApp2
                 groupBox4.Enabled = true;
                 logPrintInTextBox("COM PORT가 연결 되었습니다.","");
 
-                this.sendDataOut(commands["setcereg"]);
-                tBoxActionState.Text = states.setcereg.ToString();
+                this.sendDataOut(commands["getcereg"]);
+                tBoxActionState.Text = states.getcereg.ToString();
 
                 timer1.Start();                
             }
@@ -255,9 +259,11 @@ namespace WindowsFormsApp2
         private void DataOutandstore(string text)
         {
             this.sendDataOut(text);
+
+            // 타이핑한 명령어가 이미 등록되지 않았으면, 목록에 저장하고 가나다 순으로 sorting 함.
             if (!cBoxATCMD.Items.Contains(text))
             {
-                cBoxATCMD.Items.Add(text);
+                cBoxATCMD.Items.Add(text);      // 명령어를 재사용하는 경우를 대비하여 명령 목록에 추가
             }
         }
 
@@ -265,7 +271,7 @@ namespace WindowsFormsApp2
         {
             if (e.KeyCode == Keys.Enter)
             {
-                DataOutandstore(cBoxATCMD.Text);
+                DataOutandstore(cBoxATCMD.Text);    //textbox에 명령어 입력 중 Enter를 누른 경우 명령어 호출  
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
@@ -273,57 +279,62 @@ namespace WindowsFormsApp2
 
         private void sendDataOut(string dataOUT)
         {
-            if (serialPort1.IsOpen)
+            try
             {
-                string sendmsg = dataOUT;
-                if (sendWith == "Both")
+                if (serialPort1.IsOpen)
                 {
-                    sendmsg = dataOUT + "\r\n";
-                }
-                else if (sendWith == "LF")
-                {
-                    sendmsg = dataOUT + "\r";
-                }
-                else if (sendWith == "CR")
-                {
-                    sendmsg = dataOUT + "\n";
-                }
-
-                serialPort1.Write(sendmsg);
-                logPrintInTextBox(sendmsg, "tx");
-
-                //textbox에서 명령어를 직접 입력한 경우 OK를 받았을떄 정보를 저장할 수 있게하기 위함.
-                if (tBoxActionState.Text == "idle")
-                {
-                    bool response_wait = false;
-                    string command = dataOUT.ToUpper();
-                    if (command == "AT+CIMI")
+                    string sendmsg = dataOUT;
+                    if (sendWith == "Both")     // LF + CR
                     {
-                        tBoxActionState.Text = states.getimsi.ToString();
-                        response_wait = true;
+                        sendmsg = dataOUT + "\r\n";
                     }
-                    else if (command == "AT+GSN")
+                    else if (sendWith == "LF")
                     {
-                        tBoxActionState.Text = states.getimei.ToString();
-                        response_wait = true;
+                        sendmsg = dataOUT + "\r";
                     }
-                    else if (command == "AT+CGMM")
+                    else if (sendWith == "CR")
                     {
-                        tBoxActionState.Text = states.getmodel.ToString();
-                        response_wait = true;
-                    }
-                    else if (command == "AT+CGMI")
-                    {
-                        tBoxActionState.Text = states.getmanufac.ToString();
-                        response_wait = true;
+                        sendmsg = dataOUT + "\n";
                     }
 
-                    if (response_wait)
+                    serialPort1.Write(sendmsg);
+                    logPrintInTextBox(sendmsg, "tx");
+
+                    //textbox에서 명령어를 직접 입력한 경우에도 응답 값을 받았을떄 정보를 저장하고 화면에 표시할 수 있게하기 위함.
+                    if (tBoxActionState.Text == "idle")
                     {
+                        string command = dataOUT.ToUpper();
+                        if (command == "AT+CIMI")
+                        {
+                            tBoxActionState.Text = states.getimsi.ToString();
+                        }
+                        else if (command == "AT+ICCID")
+                        {
+                            tBoxActionState.Text = states.geticcid.ToString();
+                        }
+                        else if (command == "AT+GSN")
+                        {
+                            tBoxActionState.Text = states.getimei.ToString();
+                        }
+                        else if (command == "AT+CGMM")
+                        {
+                            tBoxActionState.Text = states.getmodel.ToString();
+                        }
+                        else if (command == "AT+CGMI")
+                        {
+                            tBoxActionState.Text = states.getmanufac.ToString();
+                        }
+
                         timer1.Start();
                     }
 
                 }
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                serialPort1.Open();     // Serial port가 끊어진 것으로 판단, 포트 재오픈
             }
         }
 
@@ -337,7 +348,7 @@ namespace WindowsFormsApp2
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Created by Minho Park", "Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Created by Minho Park\nSince 2019", "Creator", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -350,6 +361,7 @@ namespace WindowsFormsApp2
             this.setWindowLayOut();
         }
 
+        // menu bar에서 COM port의 data format를 설정
         private void TSMenu6bits_Click(object sender, EventArgs e)
         {
             cBoxDataBits.Text = "6";
@@ -365,6 +377,7 @@ namespace WindowsFormsApp2
             cBoxDataBits.Text = "8";
         }
 
+        // menu bar에서 COM port의 stop bits format를 설정
         private void TSMenuStopOne_Click(object sender, EventArgs e)
         {
             cBoxStopBits.Text = "One";
@@ -375,6 +388,7 @@ namespace WindowsFormsApp2
             cBoxStopBits.Text = "Two";
         }
 
+        // menu bar에서 COM port의 parity bit format를 설정
         private void TSMenuParityNone_Click(object sender, EventArgs e)
         {
             cBoxParityBits.Text = "None";
@@ -390,6 +404,7 @@ namespace WindowsFormsApp2
             cBoxParityBits.Text = "Even";
         }
 
+        // menu bar에서 COM port의 baud rate를 설정
         private void TSMenuBaudRate24_Click(object sender, EventArgs e)
         {
             cBoxBaudRate.Text = "2400";
@@ -420,6 +435,7 @@ namespace WindowsFormsApp2
             cBoxBaudRate.Text = "115200";
         }
 
+        // menu bar에서 COM port의 하드웨어 DTR control를 설정
         private void TSMenuDTRDisable_Click(object sender, EventArgs e)
         {
             chBoxDtrEnable.Checked = false;
@@ -430,6 +446,7 @@ namespace WindowsFormsApp2
             chBoxDtrEnable.Checked = true;
         }
 
+        // menu bar에서 COM port의 하드웨어 RTS control를 설정
         private void TSMenuRTSDisable_Click(object sender, EventArgs e)
         {
             chBoxRTSEnable.Checked = false;
@@ -440,16 +457,19 @@ namespace WindowsFormsApp2
             chBoxRTSEnable.Checked = true;
         }
 
+        // menu bar에서 COM port를 변경하면 화면의 COM port 값도 같이 변경
         private void TSCBoxComPort_TextChanged(object sender, EventArgs e)
         {
             cBoxCOMPORT.Text = tSCBoxComPort.Text;
         }
 
+        // 화면에서 COM port를 변경하면 menu bar의 COM port 값도 같이 변경
         private void CBoxCOMPORT_TextChanged(object sender, EventArgs e)
         {
             tSCBoxComPort.Text = cBoxCOMPORT.Text;
         }
 
+        // menu bar에서 명령어 전송시 자동으로 문장 마지막에 추가할 문자를 설정
         private void TSMenuEndLineNone_Click(object sender, EventArgs e)
         {
             sendWith = "None";
@@ -471,16 +491,7 @@ namespace WindowsFormsApp2
             sendWith = "CR";
         }
 
-        private void TSMenuRxUpdate_Click(object sender, EventArgs e)
-        {
-            RxDisplayRule = "Update";
-        }
-
-        private void TSMenuRxAll_Click(object sender, EventArgs e)
-        {
-            RxDisplayRule = "All";
-        }
-
+        // menu bar에서 수신한 값을 표시하는 방향(위/아래)을 설정
         private void TSMenuTop_Click(object sender, EventArgs e)
         {
             RxDispOrder = "TOP";
@@ -491,28 +502,23 @@ namespace WindowsFormsApp2
             RxDispOrder = "BOTTOM";
         }
 
+        // 송수신 명령/응답 값과 동작 설명을 textbox에 삽입하고 앱 종료시 로그파일로 저장한다.
         public void logPrintInTextBox(string message, string kind)
         {
             string displayMsg = makeLogPrintLine(message,kind);
 
-            if (RxDisplayRule == "Update")
+            if (RxDispOrder == "TOP")
             {
-                tBoxDataIN.Text = displayMsg;
+                tBoxDataIN.Text = tBoxDataIN.Text.Insert(0, displayMsg);
             }
-            else if (RxDisplayRule == "All")
+            else
             {
-                if (RxDispOrder == "TOP")
-                {
-                    tBoxDataIN.Text = tBoxDataIN.Text.Insert(0, displayMsg);
-                }
-                else
-                {
-                    tBoxDataIN.Text += displayMsg;
-                }
+                tBoxDataIN.Text += displayMsg;
             }
 
         }
 
+        // 명령어에 대해 동작시각과 방향을 포함하여 저장한다.
         private string makeLogPrintLine(string msg, string kind)
         {
             string msg_form;
@@ -534,17 +540,19 @@ namespace WindowsFormsApp2
             return msg_form;
         }
 
+        // serial port에서 data 수신이 될 때, 발생하는 이벤트 함수
         private void SerialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            dataIN = serialPort1.ReadExisting();
+            dataIN = serialPort1.ReadExisting();    // 수신한 버퍼에 있는 데이터 모두 받음
             this.Invoke(new EventHandler(ShowData));
         }
 
+        // 수신 데이터 처리 thread 시작
         private void ShowData(object sender, EventArgs e)
         {
             //logPrintInTextBox(dataIN,"rx");
 
-            string[] words = dataIN.Split('\n');
+            string[] words = dataIN.Split('\n');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
 
             foreach (var word in words)
             {
@@ -553,36 +561,36 @@ namespace WindowsFormsApp2
                 int lflength = word.IndexOf("\r");
                 if(lflength>1)
                 {
-                    str1 = word.Substring(0 , lflength);
+                    str1 = word.Substring(0 , lflength);    // \r\n를 제외하고 명령어만 처리하기 위함
                 }
                 else
                 {
                     str1 = word;
                 }
 
-                if (str1 != "")
+                if (str1 != "")             // 빈 줄은 제외하기 위함
                 {
                     this.parseRXData(str1);
                 }
             }
         }
 
+        // 수신한 데이터 한 줄에 대해 후처리가 필요한 응답 값을 찾아서 설정함 
         private void parseRXData(string rxMsg)
         {
             string[] sentences =
             {
-                "OK",
-                "ERROR",
-                "AT+CIMI",
-                "+ICCID:",
-                "AT+GSN",
-                "AT+CGMM",
-                "AT+CGMI",
-                "+CME",
-                "AT+CEREG=1",
-                "AT+CEREG?",
-                "+CEREG:",
-                "+QLWEVENT:"
+                "OK",           // 모든 응답이 완료한 경우, 다음 동작이 필요한지 확인 (nextcommand)
+                "ERROR",        // 오류 응답을 받은 경우, 동작을 중지한다.
+                //"AT+CIMI",
+                "+ICCID:",      // ICCID 값을 저장한다.
+                //"AT+GSN",
+                //"AT+CGMM",
+                //"AT+CGMI",
+                //"AT+CEREG=1",
+                //"AT+CEREG?",
+                "+CEREG:",      // LTE network 상태를 확인하고 연결이 되어 있지 않으면 재접속 시도
+                "+QLWEVENT:"    // 모듈 부팅시, LWM2M 등록 상태 이벤트, 진행 상태를 status bar에 진행율 표시
             };
 
             /* Debug를 위해 Hex로 문자열 표시*/
@@ -599,20 +607,23 @@ namespace WindowsFormsApp2
             logPrintInTextBox(hexOutput,"");
             */
 
-            logPrintInTextBox(rxMsg,"rx");
+            logPrintInTextBox(rxMsg,"rx");          // 수신한 데이터 한줄을 표시
             bool find_msg = false;
 
+            // 후처리가 필요한 명령어 목록에서 하나씩 순서대로 읽어서 비교한다.
             foreach (string s in sentences)
             {
                 //logPrintInTextBox(s,"");
 
+                // 수신한 데이터에 대해 후처리가 필요한 명령어가 포함되어 있는지 체크한다.
                 //if (System.Text.RegularExpressions.Regex.IsMatch(rxMsg, s, System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+
+                // 수신한 데이터에 대해 후처리가 필요한 명령어로 시작하는지 체크한다.
                 if (rxMsg.StartsWith(s, System.StringComparison.CurrentCultureIgnoreCase))
                 {
                    //logPrintInTextBox(s + " : There is matching data.","");
 
-                    // This search returns the substring between two strings, so 
-                    // the first index is moved to the character just after the first string.
+                    // 타겟으로 하는 문자열(s, 고정 값)과 이후 문자열(str2, 변하는 값)을 구분함.
                     int first = rxMsg.IndexOf(s) + s.Length;
                     string str2 = "";
                     str2 = rxMsg.Substring(first, rxMsg.Length - first);
@@ -625,6 +636,8 @@ namespace WindowsFormsApp2
                 }
             }
 
+            // 후처리가 필요한 명령어인데 고정 값이 없고 data만 있는 경우
+            //예를들어 IMSI, IMEI 요청에 대한 응답 값 등
             if (find_msg == false)
             {
                 //logPrintInTextBox("No Matching Data!!!","");
@@ -634,40 +647,15 @@ namespace WindowsFormsApp2
 
         }
 
+        // 수신한 응답 값과 특정 값과 일치하는 경우
+        // 응답을 받고 후 작업이 필요한지 확인한다. 
         void parseReceiveData(string s, string str2)
         {
             if (s == "OK")
             {
-                // 단말 정보 자동 갱신 순서
-                // autogetmodel - autogetmanufac - autogetimsi - autogetimei - geticcid (마지막)
-
                 states state = (states)Enum.Parse(typeof(states), tBoxActionState.Text);
                 switch (state)
                 {
-                    case states.autogetmodel_next:
-                        this.sendDataOut(commands["getmanufac"]);
-                        tBoxActionState.Text = states.autogetmanufac.ToString();
-
-                        timer1.Start();
-                        break;
-                    case states.autogetmanufac_next:
-                        this.sendDataOut(commands["getimsi"]);
-                        tBoxActionState.Text = states.autogetimsi.ToString();
-
-                        timer1.Start();
-                        break;
-                    case states.autogetimsi_next:
-                        this.sendDataOut(commands["getimei"]);
-                        tBoxActionState.Text = states.autogetimei.ToString();
-
-                        timer1.Start();
-                        break;
-                    case states.autogetimei_next:
-                        this.sendDataOut(commands["geticcid"]);
-                        tBoxActionState.Text = states.geticcid.ToString();
-
-                        timer1.Start();
-                        break;
                     case states.setservertype:
                         // EndPointName 플랫폼 device ID 설정
                         //AT+QLWM2M="enps",0,<service code>
@@ -676,6 +664,7 @@ namespace WindowsFormsApp2
                         tBoxActionState.Text = states.setepns.ToString();
 
                         timer1.Start();
+                        nextcommand = "skip";
                         break;
                     case states.setepns:
                         string imsi = tBoxIMSI.Text;
@@ -696,57 +685,68 @@ namespace WindowsFormsApp2
                             tBoxActionState.Text = states.setmbsps.ToString();
 
                             timer1.Start();
+                            nextcommand = "skip";
                         }
                         else
                         {
                             MessageBox.Show("USIM이 정상인지 확인해주세요.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            tBoxActionState.Text = states.idle.ToString();
-                            timer1.Stop();
+                            nextcommand = "";
                         }
                         break;
                     case states.setmbsps:
                         // Bootstrap 요청
                         //AT+QLWM2M="bootstrap",1
-                        this.sendDataOut(commands["bootstrap"]);
-                        tBoxActionState.Text = states.bootstrap.ToString();
-
-                        timer1.Start();
+                        nextcommand = states.bootstrap.ToString();
                         break;
                     case states.setcereg:
-                        this.sendDataOut(commands["getcereg"]);
-                        tBoxActionState.Text = states.getcereg.ToString();
-
-                        timer1.Start();
+                        nextcommand = states.getcereg.ToString();
                         break;
                     default:
+                        break;
+                }
+
+                if (nextcommand != "skip")
+                {
+                    if (nextcommand != "")
+                    {
+                        this.sendDataOut(commands[nextcommand]);
+                        tBoxActionState.Text = nextcommand;
+                        nextcommand = "";
+
+                        timer1.Start();
+                    }
+                    else
+                    {
                         tBoxActionState.Text = states.idle.ToString();
                         timer1.Stop();
-                        break;
+                    }
                 }
             }
             else if (s == "+ICCID:")
             {
                 tBoxIccid.Text = str2.Substring(0, 20);
                 logPrintInTextBox("ICCID값이 저장되었습니다.","");
-
-                if (tBoxActionState.Text != states.autogeticcid.ToString())
-                {
-                    tBoxActionState.Text = states.idle.ToString();
-                    timer1.Stop();
-                }
             }
             else if (s == "+CEREG:")
             {
+                timer2.Stop();
+
+                tBoxActionState.Text = states.idle.ToString();
+                timer1.Stop();
+
                 string ltestatus = str2.Substring(1, 1);
-                string lteregi = str2.Substring(3, 1);
                 if(ltestatus == "0")
                 {
                     tSStatusLblLTE.Text = "disconnect";
                     tSProgressLTE.Value = 0;
+
+                    nextcommand = states.setcereg.ToString();
                 }
                 else if(ltestatus == "1")
                 {
-                    if((lteregi == "1")|| (lteregi == "5"))
+                    string lteregi = str2.Substring(3, 1);
+
+                    if ((lteregi == "1")|| (lteregi == "5"))
                     {
                         tSStatusLblLTE.Text = "registered";
                         tSProgressLTE.Value = 100;
@@ -755,6 +755,8 @@ namespace WindowsFormsApp2
                     {
                         tSStatusLblLTE.Text = "not registered";
                         tSProgressLTE.Value = 50;
+
+                        timer2.Start();
                     }
                 }
                 else
@@ -784,13 +786,11 @@ namespace WindowsFormsApp2
                 int last = str2.LastIndexOf("\"");
                 string lwm2mstate = str2.Substring(first+1, last-first-2);
                 tSStatusLblLWM2M.Text = lwm2mstate;
-
-                tBoxActionState.Text = states.idle.ToString();
-                timer1.Stop();
             }
             else if (s == "ERROR")
             {
                 tBoxActionState.Text = states.idle.ToString();
+                nextcommand = "";
                 timer1.Stop();
             }
         }
@@ -800,45 +800,104 @@ namespace WindowsFormsApp2
             states state = (states)Enum.Parse(typeof(states), tBoxActionState.Text);
             switch(state)
             {
+                // 단말 정보 자동 갱신 순서
+                // (autogetmodel) - (autogetmanufac) - autogetimsi - autogetimei - geticcid
+                case states.autogetmodel:
+                    tBoxModel.Text = str1;
+                    tBoxActionState.Text = states.idle.ToString();
+                    nextcommand = states.autogetmanufac.ToString();
+                    this.logPrintInTextBox("모델값이 저장되었습니다.", "");
+                    break;
+                // 단말 정보 자동 갱신 순서
+                // autogetmodel - (autogetmanufac) - (autogetimsi) - autogetimei - geticcid
+                case states.autogetmanufac:
+                    tBoxManu.Text = str1;
+                    tBoxActionState.Text = states.idle.ToString();
+                    nextcommand = states.autogetimsi.ToString();
+                    this.logPrintInTextBox("제조사값이 저장되었습니다.", "");
+                    break;
+                // 단말 정보 자동 갱신 순서
+                // autogetmodel - autogetmanufac - (autogetimsi) - (autogetimei) - geticcid
+                case states.autogetimsi:
+                    tBoxIMSI.Text = str1;
+                    tBoxActionState.Text = states.idle.ToString();
+                    nextcommand = states.autogetimei.ToString();
+                    this.logPrintInTextBox("IMSI값이 저장되었습니다.", "");
+                    break;
+                // 단말 정보 자동 갱신 순서
+                // autogetmodel - autogetmanufac - autogetimsi - (autogetimei) - (geticcid) - 마지막
+                case states.autogetimei:
+                    tBoxIMEI.Text = str1;
+                    tBoxActionState.Text = states.idle.ToString();
+                    nextcommand = states.geticcid.ToString();
+                    this.logPrintInTextBox("IMEI값이이 저장되었습니다.", "");
+                    break;
+                case states.setservertype:
+                    // EndPointName 플랫폼 device ID 설정
+                    //AT+QLWM2M="enps",0,<service code>
+                    //this.sendDataOut(commands["setepns"] + "ASN-CSE-D-6399301537-FOTA" + "\"");
+                    this.sendDataOut(commands["setepns"] + tBoxSVCCD.Text + "\"");
+                    tBoxActionState.Text = states.setepns.ToString();
+
+                    timer1.Start();
+                    nextcommand = "skip";
+                    break;
+                case states.setepns:
+                    string imsi = tBoxIMSI.Text;
+                    if (imsi.StartsWith("45006"))
+                    {
+                        string ctn = "0" + imsi.Substring(5, imsi.Length - 5);
+
+                        // Bootstrap Parameter 설정
+                        //AT+QLWM2M="mbsps",<service code>,<sn>,<ctn>,<iccid>,<device model>
+                        string command = commands["setmbsps"] + tBoxSVCCD.Text + "\",\"";
+                        command = command + tBoxDeviceSN.Text + "\",\"";
+                        command = command + ctn + "\",\"";
+
+                        string iccid = tBoxIccid.Text;
+                        command = command + iccid.Substring(iccid.Length - 6, 6) + "\",\"";
+                        command = command + tBoxDeviceModel.Text + "\"";
+                        this.sendDataOut(command);
+                        tBoxActionState.Text = states.setmbsps.ToString();
+
+                        timer1.Start();
+                        nextcommand = "skip";
+                    }
+                    else
+                    {
+                        MessageBox.Show("USIM이 정상인지 확인해주세요.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        nextcommand = "";
+                    }
+                    break;
+                case states.setmbsps:
+                    // Bootstrap 요청
+                    //AT+QLWM2M="bootstrap",1
+                    nextcommand = states.bootstrap.ToString();
+                    break;
+
                 case states.getimsi:
                     tBoxIMSI.Text = str1;
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
-                    break;
-                case states.autogetimsi:
-                    tBoxIMSI.Text = str1;
-                    tBoxActionState.Text = states.autogetimsi_next.ToString();
-                    this.logPrintInTextBox("IMSI값이 저장되었습니다.","");
+                    this.logPrintInTextBox("IMSI값이 저장되었습니다.", "");
                     break;
                 case states.getimei:
                     tBoxIMEI.Text = str1;
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
-                    break;
-                case states.autogetimei:
-                    tBoxIMEI.Text = str1;
-                    tBoxActionState.Text = states.autogetimei_next.ToString();
-                    this.logPrintInTextBox("IMEI값이이 저장되었습니다.","");
+                    this.logPrintInTextBox("IMEI값이이 저장되었습니다.", "");
                     break;
                 case states.getmodel:
                     tBoxModel.Text = str1;
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
-                    break;
-                case states.autogetmodel:
-                    tBoxModel.Text = str1;
-                    tBoxActionState.Text = states.autogetmodel_next.ToString();
-                    this.logPrintInTextBox("모델값이 저장되었습니다.","");
+                    this.logPrintInTextBox("모델값이 저장되었습니다.", "");
                     break;
                 case states.getmanufac:
                     tBoxManu.Text = str1;
                     tBoxActionState.Text = states.idle.ToString();
                     timer1.Stop();
-                    break;
-                case states.autogetmanufac:
-                    tBoxManu.Text = str1;
-                    tBoxActionState.Text = states.autogetmanufac_next.ToString();
-                    this.logPrintInTextBox("제조사값이 저장되었습니다.","");
+                    this.logPrintInTextBox("제조사값이 저장되었습니다.", "");
                     break;
                 default:
                     break;
@@ -854,23 +913,12 @@ namespace WindowsFormsApp2
         {
             this.logPrintInTextBox("DEVICE 정보 전체를 요청합니다.","");
 
+            // 단말 정보 자동 갱신 순서
+            // (autogetmodel) - autogetmanufac - autogetimsi - autogetimei - geticcid - bootstrap
             this.sendDataOut(commands["getmodel"]);
             tBoxActionState.Text = states.autogetmodel.ToString();
 
             timer1.Start();
-
-            //this.sendDataOut(commands["getmanufac"]);
-            //tBoxActionState.Text = states.autogetmanufac.ToString();
-
-            //this.sendDataOut(commands["getimsi"]);
-            //tBoxActionState.Text = states.autogetimsi.ToString();
-
-            //this.sendDataOut(commands["geticcid"]);
-            //tBoxActionState.Text = states.autogeticcid.ToString();
-
-            //this.sendDataOut(commands["getimei"]);
-            //tBoxActionState.Text = states.autogetimei.ToString();
-
         }
 
         private void btnIMSI_Click(object sender, EventArgs e)
@@ -1171,5 +1219,23 @@ namespace WindowsFormsApp2
             }
         }
 
+        private void Timer2_Tick(object sender, EventArgs e)
+        {
+            if(network_chkcnt-- > 0)
+            {
+                this.sendDataOut(commands["getcereg"]);
+                tBoxActionState.Text = states.getcereg.ToString();
+
+                timer1.Start();
+            }
+            else
+            {
+                this.sendDataOut(commands["getcereg"]);
+                tBoxActionState.Text = states.getcereg.ToString();
+
+                timer1.Start();
+            }
+            timer2.Stop();
+        }
     }
 }
