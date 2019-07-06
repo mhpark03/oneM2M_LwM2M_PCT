@@ -27,11 +27,6 @@ namespace WindowsFormsApp2
             autogetimsi,
             autogetimei,
             autogeticcid,
-            autogetmodel_next,
-            autogetmanufac_next,
-            autogetimsi_next,
-            autogetimei_next,
-            autogeticcid_next,
             bootstrap,
             setserverinfo,
             setservertype,
@@ -50,7 +45,8 @@ namespace WindowsFormsApp2
             sendmsgstr,
             sendmsghex,
             setcereg,
-            getcereg
+            getcereg,
+            reset
         }
 
         string sendWith;
@@ -74,11 +70,16 @@ namespace WindowsFormsApp2
         private void Form1_Load(object sender, EventArgs e)
         {
             string[] ports = SerialPort.GetPortNames();
-            //foreach()
-            //ToolStripItem[] items = ports;
-            cBoxCOMPORT.Items.AddRange(ports);
-            tSCBoxComPort.Items.AddRange(ports);
-            //comportTSMenu.DropDownItems.AddRange(ports);
+            if(ports.Length == 0)
+            {
+                logPrintInTextBox("연결 가능한 COM PORT가 없습니다.", "");
+            }
+            else
+            {
+                cBoxCOMPORT.Items.AddRange(ports);
+                tSCBoxComPort.Items.AddRange(ports);
+                cBoxCOMPORT.SelectedIndex = 0;
+            }
 
             chBoxDtrEnable.Checked = false;
             serialPort1.DtrEnable = false;
@@ -122,6 +123,7 @@ namespace WindowsFormsApp2
             commands.Add("getmanufac", "AT+CGMI");
             commands.Add("setcereg", "AT+CEREG=1");
             commands.Add("getcereg", "AT+CEREG?");
+            commands.Add("reset", "AT+CFUN=3,3");
 
             commands.Add("setserverinfo", "AT+QLWM2M=\"cdp\",");
             commands.Add("setservertype", "AT+QLWM2M=\"select\",2");
@@ -160,11 +162,14 @@ namespace WindowsFormsApp2
         {
             try
             {
-                serialPort1.PortName = cBoxCOMPORT.Text;
-                serialPort1.BaudRate = Convert.ToInt32(cBoxBaudRate.Text);
-                serialPort1.DataBits = Convert.ToInt32(cBoxDataBits.Text);
-                serialPort1.StopBits = (StopBits)Enum.Parse(typeof(StopBits), cBoxStopBits.Text);
-                serialPort1.Parity = (Parity)Enum.Parse(typeof(Parity), cBoxParityBits.Text);
+                if(!serialPort1.IsOpen)
+                {
+                    serialPort1.PortName = cBoxCOMPORT.Text;
+                    serialPort1.BaudRate = Convert.ToInt32(cBoxBaudRate.Text);
+                    serialPort1.DataBits = Convert.ToInt32(cBoxDataBits.Text);
+                    serialPort1.StopBits = (StopBits)Enum.Parse(typeof(StopBits), cBoxStopBits.Text);
+                    serialPort1.Parity = (Parity)Enum.Parse(typeof(Parity), cBoxParityBits.Text);
+                }
 
                 serialPort1.Open();
                 progressBar1.Value = 100;
@@ -180,10 +185,9 @@ namespace WindowsFormsApp2
 
             catch (Exception err)
             {
-                MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                groupBox1.Enabled = false;
-                groupBox4.Enabled = false;
-                logPrintInTextBox("COM PORT 연결이 실패하였습니다.","");
+                //groupBox1.Enabled = false;
+                //groupBox4.Enabled = false;
+                logPrintInTextBox(err.Message, "");
 
             }
         }
@@ -334,7 +338,7 @@ namespace WindowsFormsApp2
             {
                 MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                serialPort1.Open();     // Serial port가 끊어진 것으로 판단, 포트 재오픈
+                this.doOpenComPort();     // Serial port가 끊어진 것으로 판단, 포트 재오픈
             }
         }
 
@@ -657,6 +661,8 @@ namespace WindowsFormsApp2
                 switch (state)
                 {
                     case states.setservertype:
+                        // LWM2M bootstrap 자동 요청 순서
+                        // (servertype) - (endpointpame) - mbsps - bootstrap
                         // EndPointName 플랫폼 device ID 설정
                         //AT+QLWM2M="enps",0,<service code>
                         //this.sendDataOut(commands["setepns"] + "ASN-CSE-D-6399301537-FOTA" + "\"");
@@ -667,6 +673,9 @@ namespace WindowsFormsApp2
                         nextcommand = "skip";
                         break;
                     case states.setepns:
+                        // LWM2M bootstrap 자동 요청 순서
+                        // servertype - (endpointpame) - (mbsps) - bootstrap
+                        // PLMN 정보 확인 후 진행
                         string imsi = tBoxIMSI.Text;
                         if (imsi.StartsWith("45006"))
                         {
@@ -691,20 +700,25 @@ namespace WindowsFormsApp2
                         {
                             MessageBox.Show("USIM이 정상인지 확인해주세요.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             nextcommand = "";
+                            timer1.Stop();
                         }
                         break;
                     case states.setmbsps:
+                        // LWM2M bootstrap 자동 요청 순서
+                        // servertype - endpointpame - (mbsps) - (bootstrap) 마지막
                         // Bootstrap 요청
                         //AT+QLWM2M="bootstrap",1
                         nextcommand = states.bootstrap.ToString();
                         break;
                     case states.setcereg:
+                        // LTE network attach 요청하면 정상적으로 attach 성공했는지 확인 필요
                         nextcommand = states.getcereg.ToString();
                         break;
                     default:
                         break;
                 }
 
+                // 마지막 응답(OK)을 받은 후에 후속 작업이 필요한지 확인한다.
                 if (nextcommand != "skip")
                 {
                     if (nextcommand != "")
@@ -724,15 +738,17 @@ namespace WindowsFormsApp2
             }
             else if (s == "+ICCID:")
             {
+                // AT+ICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
+                // OK 응답이 따라온다
                 tBoxIccid.Text = str2.Substring(0, 20);
                 logPrintInTextBox("ICCID값이 저장되었습니다.","");
             }
             else if (s == "+CEREG:")
             {
+                // AT+CEREG의 응답으로 LTE attach 상태 확인하고 disable되어 있어면 attach 요청, 
+                // attach가 완료되지 않았으면 1초 후에 재확인, (timer2 사용)
+                // OK 응답이 따라온다
                 timer2.Stop();
-
-                tBoxActionState.Text = states.idle.ToString();
-                timer1.Stop();
 
                 string ltestatus = str2.Substring(1, 1);
                 if(ltestatus == "0")
@@ -740,7 +756,9 @@ namespace WindowsFormsApp2
                     tSStatusLblLTE.Text = "disconnect";
                     tSProgressLTE.Value = 0;
 
+                    network_chkcnt = 3;             // LTE attach disable을 경우 enable하고 getcereg 3회 확인
                     nextcommand = states.setcereg.ToString();
+                    logPrintInTextBox("LTE 연결을 요청이 필요합니다.", "");
                 }
                 else if(ltestatus == "1")
                 {
@@ -750,19 +768,24 @@ namespace WindowsFormsApp2
                     {
                         tSStatusLblLTE.Text = "registered";
                         tSProgressLTE.Value = 100;
+                        timer2.Stop();
+                        logPrintInTextBox("LTE망에 연결 되었습니다.", "");
                     }
                     else
                     {
-                        tSStatusLblLTE.Text = "not registered";
+                        // LTE attach 시도 중
+                        tSStatusLblLTE.Text = "registerring";
                         tSProgressLTE.Value = 50;
 
-                        timer2.Start();
+                        timer2.Start();     // 1초 후에 AT+CEREG 호출
                     }
                 }
                 else
                 {
                     tSStatusLblLTE.Text = "enable";
                     tSProgressLTE.Value = 100;
+
+                    timer2.Stop();
                 }
 
                 tBoxActionState.Text = states.idle.ToString();
@@ -770,6 +793,8 @@ namespace WindowsFormsApp2
             }
             else if (s == "+QLWEVENT:")
             {
+                // 모듈이 LWM2M서버와 연동하는 경우 발생하는 이벤트,
+                // OK 응답 발생하지 않음
                 char[] lwm2mstep = str2.ToCharArray();
                 int value = Convert.ToInt32(lwm2mstep[0]);
                 if (value < 6)
@@ -956,40 +981,43 @@ namespace WindowsFormsApp2
             timer1.Start();
         }
 
+        // AT command를 요청하고 10초 동안 OK 응답이 없으면 COM port 재설정
         private void Timer1_Tick(object sender, EventArgs e)
         {
             timer1.Stop();
-            logPrintInTextBox("타이머가 종료 되었습니다.","");
-            MessageBox.Show("타이머가 종료되었습니다.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            logPrintInTextBox(tBoxActionState.Text+"요청에 대해 timeout이 발생하였습니다.","");
+            //MessageBox.Show("타이머가 종료되었습니다.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             tBoxActionState.Text = states.idle.ToString();
+
+            this.doOpenComPort();
         }
 
+        // menubar에서 LWM2M 플랫폼 디바이스 등록을 요청 (bootstrap)
         private void ProvisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(isDeviceInfo())
+            if(tSStatusLblLTE.Text == "register")
             {
-                // 플랫폼 서버 타입 설정
-                //AT+QLWM2M="select",2
-                this.sendDataOut(commands["setservertype"]);
-                tBoxActionState.Text = states.setservertype.ToString();
+                if ((tBoxIMSI.Text == "알 수 없음") || (tBoxIccid.Text == "알 수 없음"))
+                {
+                    this.getDeviveInfo();
+                    this.logPrintInTextBox("모듈 정보를 먼저 읽고 있습니다. 다시 시도해주세요.","");
+                }
+                if (isDeviceInfo())
+                {
+                    // LWM2M bootstrap 자동 요청 순서
+                    // (servertype) - endpointpame - mbsps - bootstrap
+                    // 플랫폼 서버 타입 설정
+                    //AT+QLWM2M="select",2
+                    this.sendDataOut(commands["setservertype"]);
+                    tBoxActionState.Text = states.setservertype.ToString();
 
-                // EndPointName 플랫폼 device ID 설정
-                //AT+QLWM2M="enps",0,<service code>
-                //this.sendDataOut(commands["setepns"] + tBoxSVCCD.Text +"\"");
-                //tBoxActionState.Text = states.setepns.ToString();
-
-                // Bootstrap Parameter 설정
-                //AT+QLWM2M="mbsps",<service code>,<sn>,<ctn>,<iccid>,<device model>
-                //this.sendDataOut(commands["setmbsps"]);
-                //tBoxActionState.Text = states.setmbsps.ToString();
-
-                // Bootstrap 요청
-                //AT+QLWM2M="bootstrap",1
-                //this.sendDataOut(commands["bootstrap"]);
-                //tBoxActionState.Text = states.bootstrap.ToString();
-
-                timer1.Start();
+                    timer1.Start();
+                }
+            }
+            else
+            {
+                logPrintInTextBox("LTE 망에 연결되지 않았습니다.", "");
             }
         }
 
@@ -1221,21 +1249,24 @@ namespace WindowsFormsApp2
 
         private void Timer2_Tick(object sender, EventArgs e)
         {
-            if(network_chkcnt-- > 0)
+            timer2.Stop();
+
+            if (network_chkcnt-- > 0)
             {
                 this.sendDataOut(commands["getcereg"]);
                 tBoxActionState.Text = states.getcereg.ToString();
 
                 timer1.Start();
+                logPrintInTextBox("LTE 연결 상태를 확인합니다.", "");
             }
             else
             {
-                this.sendDataOut(commands["getcereg"]);
-                tBoxActionState.Text = states.getcereg.ToString();
+                this.sendDataOut(commands["reset"]);
+                tBoxActionState.Text = states.reset.ToString();
 
                 timer1.Start();
+                logPrintInTextBox("3회 가 over하여 모듈을 reset합니다.", "");
             }
-            timer2.Stop();
         }
     }
 }
