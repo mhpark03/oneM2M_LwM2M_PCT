@@ -594,7 +594,8 @@ namespace WindowsFormsApp2
                 //"AT+CEREG=1",
                 //"AT+CEREG?",
                 "+CEREG:",      // LTE network 상태를 확인하고 연결이 되어 있지 않으면 재접속 시도
-                "+QLWEVENT:"    // 모듈 부팅시, LWM2M 등록 상태 이벤트, 진행 상태를 status bar에 진행율 표시
+                "+QLWEVENT:",    // 모듈 부팅시, LWM2M 등록 상태 이벤트, 진행 상태를 status bar에 진행율 표시
+                "+QLWDLDATA:"
             };
 
             /* Debug를 위해 Hex로 문자열 표시*/
@@ -736,6 +737,12 @@ namespace WindowsFormsApp2
                     }
                 }
             }
+            else if (s == "ERROR")
+            {
+                tBoxActionState.Text = states.idle.ToString();
+                nextcommand = "";
+                timer1.Stop();
+            }
             else if (s == "+ICCID:")
             {
                 // AT+ICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
@@ -793,7 +800,7 @@ namespace WindowsFormsApp2
             }
             else if (s == "+QLWEVENT:")
             {
-                // 모듈이 LWM2M서버와 연동하는 경우 발생하는 이벤트,
+                // 모듈이 LWM2M서버에 접속/등록하는 단계에서 발생하는 이벤트,
                 // OK 응답 발생하지 않음
                 char[] lwm2mstep = str2.ToCharArray();
                 int value = Convert.ToInt32(lwm2mstep[0]);
@@ -812,11 +819,21 @@ namespace WindowsFormsApp2
                 string lwm2mstate = str2.Substring(first+1, last-first-2);
                 tSStatusLblLWM2M.Text = lwm2mstate;
             }
-            else if (s == "ERROR")
+            else if (s == "+QLWDLDATA:")
             {
-                tBoxActionState.Text = states.idle.ToString();
-                nextcommand = "";
-                timer1.Stop();
+                // 모듈이 LWM2M서버에서 받은 데이터를 전달하는 이벤트,
+                // OK 응답 발생하지 않고 bcd를 ascii로 변경해야함
+                string[] words = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                if(words[0] == " \"/10250/0/1\"")       // data object인지 확인
+                {
+                    if(Convert.ToInt32(words[2]) == (words[3].Length-2)/2)    // data size 비교 (양쪽 끝의 " 크기 빼고)
+                    {
+                        //received hex data make to ascii code
+                        string hexInPut = words[3].Substring(1, words[3].Length - 2);
+                        string receiveDataIN = BcdToString(hexInPut.ToCharArray());
+                        logPrintInTextBox("\""+receiveDataIN+"\"를 수신하였습니다.", "");
+                    }
+                }
             }
         }
 
@@ -1176,10 +1193,6 @@ namespace WindowsFormsApp2
 
                 this.sendDataOut(commands["sendmsghex"] + hexOutput.Length/2 + ",\"" + hexOutput + "\"");
                 tBoxActionState.Text = states.sendmsghex.ToString();
-
-                //received hex data make to ascii code
-                //string receiveDataIN = BcdToString(hexOutput.ToCharArray());
-                //logPrintInTextBox(receiveDataIN, "");
 
                 timer1.Start();
             }
