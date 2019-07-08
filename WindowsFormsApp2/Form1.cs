@@ -826,13 +826,39 @@ namespace WindowsFormsApp2
                 string[] words = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
                 if(words[0] == " \"/10250/0/1\"")       // data object인지 확인
                 {
-                    if(Convert.ToInt32(words[2]) == (words[3].Length-2)/2)    // data size 비교 (양쪽 끝의 " 크기 빼고)
+                    if(words[1] == "4")     // string data received
                     {
-                        //received hex data make to ascii code
-                        string hexInPut = words[3].Substring(1, words[3].Length - 2);
-                        string receiveDataIN = BcdToString(hexInPut.ToCharArray());
-                        logPrintInTextBox("\""+receiveDataIN+"\"를 수신하였습니다.", "");
+                        if (Convert.ToInt32(words[2]) == (words[3].Length - 2))    // data size 비교 (양쪽 끝의 " 크기 빼고)
+                        {
+                            logPrintInTextBox(words[3]+"를 수신하였습니다.", "");
+                        }
+                        else
+                        {
+                            logPrintInTextBox("data size가 맞지 않습니다.", "");
+                        }
                     }
+                    else if (words[1] == "5")     // hex data received
+                    {
+                        if (Convert.ToInt32(words[2]) == (words[3].Length - 2) / 2)    // data size 비교 (양쪽 끝의 " 크기 빼고 2bytes가 1글자임)
+                        {
+                            //received hex data make to ascii code
+                            string hexInPut = words[3].Substring(1, words[3].Length - 2);
+                            string receiveDataIN = BcdToString(hexInPut.ToCharArray());
+                            logPrintInTextBox("\"" + receiveDataIN + "\"를 수신하였습니다.", "");
+                        }
+                        else
+                        {
+                            logPrintInTextBox("data size가 맞지 않습니다.", "");
+                        }
+                    }
+                }
+                else if (words[0] == " \"/26241/0/1\"")       // device firmware object인지 확인
+                {
+
+                }
+                else
+                {
+                    logPrintInTextBox("지원하지 않는 data object입니다.", "");
                 }
             }
         }
