@@ -125,6 +125,12 @@ namespace WindowsFormsApp2
             commands.Add("getcereg", "AT+CEREG?");
             commands.Add("reset", "AT+CFUN=3,3");
 
+            commands.Add("autogetimsi", "AT+CIMI");
+            commands.Add("autogeticcid", "AT+ICCID");
+            commands.Add("autogetimei", "AT+GSN");
+            commands.Add("autogetmodel", "AT+CGMM");
+            commands.Add("autogetmanufac", "AT+CGMI");
+
             commands.Add("setserverinfo", "AT+QLWM2M=\"cdp\",");
             commands.Add("setservertype", "AT+QLWM2M=\"select\",2");
             //commands.Add("setepns", "AT+QLWM2M=\"epns\",1,\"");
@@ -586,11 +592,11 @@ namespace WindowsFormsApp2
             {
                 "OK",           // 모든 응답이 완료한 경우, 다음 동작이 필요한지 확인 (nextcommand)
                 "ERROR",        // 오류 응답을 받은 경우, 동작을 중지한다.
-                //"AT+CIMI",
+                "AT+CIMI",
                 "+ICCID:",      // ICCID 값을 저장한다.
-                //"AT+GSN",
-                //"AT+CGMM",
-                //"AT+CGMI",
+                "AT+GSN",
+                "AT+CGMM",
+                "AT+CGMI",
                 //"AT+CEREG=1",
                 //"AT+CEREG?",
                 "+CEREG:",      // LTE network 상태를 확인하고 연결이 되어 있지 않으면 재접속 시도
@@ -1039,7 +1045,7 @@ namespace WindowsFormsApp2
         // menubar에서 LWM2M 플랫폼 디바이스 등록을 요청 (bootstrap)
         private void ProvisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(tSStatusLblLTE.Text == "register")
+            if(tSStatusLblLTE.Text == "registered")
             {
                 if ((tBoxIMSI.Text == "알 수 없음") || (tBoxIccid.Text == "알 수 없음"))
                 {
