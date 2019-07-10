@@ -592,11 +592,12 @@ namespace WindowsFormsApp2
             {
                 "OK",           // 모든 응답이 완료한 경우, 다음 동작이 필요한지 확인 (nextcommand)
                 "ERROR",        // 오류 응답을 받은 경우, 동작을 중지한다.
-                "AT+CIMI",
                 "+ICCID:",      // ICCID 값을 저장한다.
-                "AT+GSN",
-                "AT+CGMM",
-                "AT+CGMI",
+                "AT",           // AT는 Device가 modem으로 요청하는 명령어로 무시하기 위함
+                //"AT+CIMI",
+                //"AT+GSN",
+                //"AT+CGMM",
+                //"AT+CGMI",
                 //"AT+CEREG=1",
                 //"AT+CEREG?",
                 "+CEREG:",      // LTE network 상태를 확인하고 연결이 되어 있지 않으면 재접속 시도
@@ -1267,7 +1268,7 @@ namespace WindowsFormsApp2
             {
                 string pathname = @"c:\temp\seriallog\";
                 DateTime currenttime = DateTime.Now;
-                string filename = "atlog_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
+                string filename = "lwm2m_log_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
 
                 Directory.CreateDirectory(pathname);
 
