@@ -614,7 +614,7 @@ namespace WindowsFormsApp2
                 // Get the integral value of the character.
                 int value = Convert.ToInt32(_eachChar);
                 // Convert the decimal value to a hexadecimal value in string form.
-                hexOutput += String.Format("{0:XX}", value);
+                hexOutput += String.Format("{0:X}", value);
             }
             logPrintInTextBox(hexOutput,"");
             */
@@ -650,7 +650,7 @@ namespace WindowsFormsApp2
 
             // 후처리가 필요한 명령어인데 고정 값이 없고 data만 있는 경우
             //예를들어 IMSI, IMEI 요청에 대한 응답 값 등
-            if (find_msg == false)
+            if ((find_msg == false)&&(rxMsg!="\r") && (rxMsg != "\n"))
             {
                 //logPrintInTextBox("No Matching Data!!!","");
 
