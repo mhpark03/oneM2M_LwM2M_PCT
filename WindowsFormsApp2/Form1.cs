@@ -22,11 +22,15 @@ namespace WindowsFormsApp2
             getimsi,
             getimei,
             geticcid,
+            getimeitpb23,
+            geticcidtpb23,
             autogetmodel,
             autogetmanufac,
             autogetimsi,
             autogetimei,
             autogeticcid,
+            autogetimeitpb23,
+            autogeticcidtpb23,
             bootstrap,
             setserverinfo,
             setservertype,
@@ -119,6 +123,8 @@ namespace WindowsFormsApp2
             commands.Add("getimsi", "AT+CIMI");
             commands.Add("geticcid", "AT+ICCID");
             commands.Add("getimei", "AT+GSN");
+            commands.Add("geticcidtpb23", "AT+MUICCID");
+            commands.Add("getimeitpb23", "AT+CGSN=1");
             commands.Add("getmodel", "AT+CGMM");
             commands.Add("getmanufac", "AT+CGMI");
             commands.Add("setcereg", "AT+CEREG=1");
@@ -128,6 +134,8 @@ namespace WindowsFormsApp2
             commands.Add("autogetimsi", "AT+CIMI");
             commands.Add("autogeticcid", "AT+ICCID");
             commands.Add("autogetimei", "AT+GSN");
+            commands.Add("autogeticcidtpb23", "AT+MUICCID");
+            commands.Add("autogetimeitpb23", "AT+CGSN=1");
             commands.Add("autogetmodel", "AT+CGMM");
             commands.Add("autogetmanufac", "AT+CGMI");
 
@@ -323,6 +331,14 @@ namespace WindowsFormsApp2
                             tBoxActionState.Text = states.geticcid.ToString();
                         }
                         else if (command == "AT+GSN")
+                        {
+                            tBoxActionState.Text = states.getimei.ToString();
+                        }
+                        else if (command == "AT+MUICCID")
+                        {
+                            tBoxActionState.Text = states.geticcid.ToString();
+                        }
+                        else if (command == "AT+CGSN=1")
                         {
                             tBoxActionState.Text = states.getimei.ToString();
                         }
@@ -593,6 +609,8 @@ namespace WindowsFormsApp2
                 "OK",           // 모든 응답이 완료한 경우, 다음 동작이 필요한지 확인 (nextcommand)
                 "ERROR",        // 오류 응답을 받은 경우, 동작을 중지한다.
                 "+ICCID:",      // ICCID 값을 저장한다.
+                "+MUICCID:",      // ICCID 값을 저장한다.
+                "+CGSN:",
                 "AT",           // AT는 Device가 modem으로 요청하는 명령어로 무시하기 위함
                 //"AT+CIMI",
                 //"AT+GSN",
@@ -757,6 +775,20 @@ namespace WindowsFormsApp2
                 tBoxIccid.Text = str2.Substring(0, 20);
                 logPrintInTextBox("ICCID값이 저장되었습니다.","");
             }
+            else if (s == "+MUICCID:")
+            {
+                // AT+MUICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
+                // OK 응답이 따라온다
+                tBoxIccid.Text = str2.Substring(0, 20);
+                logPrintInTextBox("ICCID값이 저장되었습니다.", "");
+            }
+            else if (s == "+CGSN:")
+            {
+                // AT+CGSN=1 (화웨이 V150) 응답으로 IMEI 값 화면 표시/bootstrap 정보 생성를 위해 저장,
+                // OK 응답이 따라온다
+                tBoxIMEI.Text = str2.Substring(0, 20);
+                logPrintInTextBox("IMEI값이 저장되었습니다.", "");
+            }
             else if (s == "+CEREG:")
             {
                 // AT+CEREG의 응답으로 LTE attach 상태 확인하고 disable되어 있어면 attach 요청, 
@@ -896,7 +928,14 @@ namespace WindowsFormsApp2
                 case states.autogetimsi:
                     tBoxIMSI.Text = str1;
                     tBoxActionState.Text = states.idle.ToString();
-                    nextcommand = states.autogetimei.ToString();
+                    if(tBoxModel.Text == "TPB23")
+                    {
+                        nextcommand = states.autogetimeitpb23.ToString();
+                    }
+                    else
+                    {
+                        nextcommand = states.autogetimei.ToString();
+                    }
                     this.logPrintInTextBox("IMSI값이 저장되었습니다.", "");
                     break;
                 // 단말 정보 자동 갱신 순서
@@ -905,7 +944,13 @@ namespace WindowsFormsApp2
                     tBoxIMEI.Text = str1;
                     tBoxActionState.Text = states.idle.ToString();
                     nextcommand = states.geticcid.ToString();
-                    this.logPrintInTextBox("IMEI값이이 저장되었습니다.", "");
+                    this.logPrintInTextBox("IMEI값이 저장되었습니다.", "");
+                    break;
+                case states.autogetimeitpb23:
+                    tBoxIMEI.Text = str1;
+                    tBoxActionState.Text = states.idle.ToString();
+                    nextcommand = states.geticcidtpb23.ToString();
+                    this.logPrintInTextBox("IMEI값이 저장되었습니다.", "");
                     break;
                 case states.setservertype:
                     // EndPointName 플랫폼 device ID 설정
@@ -1005,7 +1050,14 @@ namespace WindowsFormsApp2
 
         private void btnICCID_Click(object sender, EventArgs e)
         {
-            this.sendDataOut(commands["geticcid"]);
+            if(tBoxModel == "TPB23")
+            {
+                this.sendDataOut(commands["geticcidtpb23"]);
+            }
+            else
+            {
+                this.sendDataOut(commands["geticcid"]);
+            }
             tBoxActionState.Text = states.geticcid.ToString();
             timer1.Start();
         }
