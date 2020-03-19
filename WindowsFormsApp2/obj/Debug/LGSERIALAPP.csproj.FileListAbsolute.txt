@@ -41,3 +41,15 @@ C:\pmh\visualstudio\cshapsample\VisualStudio_serialcomm\WindowsFormsApp2\obj\Deb
 C:\pmh\visualstudio\cshapsample\VisualStudio_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.csproj.CopyComplete
 C:\pmh\visualstudio\cshapsample\VisualStudio_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.exe
 C:\pmh\visualstudio\cshapsample\VisualStudio_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.pdb
+D:\VisualStudio\workspace\lwm2m_serialcomm\WindowsFormsApp2\bin\Debug\LGSERIALAPP.exe.config
+D:\VisualStudio\workspace\lwm2m_serialcomm\WindowsFormsApp2\bin\Debug\LGSERIALAPP.exe
+D:\VisualStudio\workspace\lwm2m_serialcomm\WindowsFormsApp2\bin\Debug\LGSERIALAPP.pdb
+D:\VisualStudio\workspace\lwm2m_serialcomm\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.dll
+D:\VisualStudio\workspace\lwm2m_serialcomm\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.xml
+D:\VisualStudio\workspace\lwm2m_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.csprojAssemblyReference.cache
+D:\VisualStudio\workspace\lwm2m_serialcomm\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.Form1.resources
+D:\VisualStudio\workspace\lwm2m_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.Properties.Resources.resources
+D:\VisualStudio\workspace\lwm2m_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.csproj.GenerateResource.cache
+D:\VisualStudio\workspace\lwm2m_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.csproj.CopyComplete
+D:\VisualStudio\workspace\lwm2m_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.exe
+D:\VisualStudio\workspace\lwm2m_serialcomm\WindowsFormsApp2\obj\Debug\LGSERIALAPP.pdb

@@ -81,7 +81,6 @@ namespace WindowsFormsApp2
             else
             {
                 cBoxCOMPORT.Items.AddRange(ports);
-                tSCBoxComPort.Items.AddRange(ports);
                 cBoxCOMPORT.SelectedIndex = 0;
             }
 
@@ -179,10 +178,12 @@ namespace WindowsFormsApp2
                 if(!serialPort1.IsOpen)
                 {
                     serialPort1.PortName = cBoxCOMPORT.Text;
-                    serialPort1.BaudRate = Convert.ToInt32(cBoxBaudRate.Text);
-                    serialPort1.DataBits = Convert.ToInt32(cBoxDataBits.Text);
-                    serialPort1.StopBits = (StopBits)Enum.Parse(typeof(StopBits), cBoxStopBits.Text);
-                    serialPort1.Parity = (Parity)Enum.Parse(typeof(Parity), cBoxParityBits.Text);
+                    serialPort1.BaudRate = (int)115200;
+                    serialPort1.DataBits = (int)8;
+                    serialPort1.StopBits = StopBits.One;
+                    serialPort1.Parity = Parity.None;
+                    serialPort1.ReadTimeout = (int)500;
+                    serialPort1.WriteTimeout = (int)500;
                 }
 
                 serialPort1.Open();
@@ -387,112 +388,9 @@ namespace WindowsFormsApp2
             this.setWindowLayOut();
         }
 
-        // menu bar에서 COM port의 data format를 설정
-        private void TSMenu6bits_Click(object sender, EventArgs e)
-        {
-            cBoxDataBits.Text = "6";
-        }
-
-        private void TSMenu7bits_Click(object sender, EventArgs e)
-        {
-            cBoxDataBits.Text = "7";
-        }
-
-        private void TSMenu8bits_Click(object sender, EventArgs e)
-        {
-            cBoxDataBits.Text = "8";
-        }
-
-        // menu bar에서 COM port의 stop bits format를 설정
-        private void TSMenuStopOne_Click(object sender, EventArgs e)
-        {
-            cBoxStopBits.Text = "One";
-        }
-
-        private void TSMenuStopTwo_Click(object sender, EventArgs e)
-        {
-            cBoxStopBits.Text = "Two";
-        }
-
-        // menu bar에서 COM port의 parity bit format를 설정
-        private void TSMenuParityNone_Click(object sender, EventArgs e)
-        {
-            cBoxParityBits.Text = "None";
-        }
-
-        private void TSMenuParityOdd_Click(object sender, EventArgs e)
-        {
-            cBoxParityBits.Text = "Odd";
-        }
-
-        private void TSMenuParityEven_Click(object sender, EventArgs e)
-        {
-            cBoxParityBits.Text = "Even";
-        }
-
-        // menu bar에서 COM port의 baud rate를 설정
-        private void TSMenuBaudRate24_Click(object sender, EventArgs e)
-        {
-            cBoxBaudRate.Text = "2400";
-        }
-
-        private void TSMenuBaudRate48_Click(object sender, EventArgs e)
-        {
-            cBoxBaudRate.Text = "4800";
-        }
-
-        private void TSMenuBaudRate96_Click(object sender, EventArgs e)
-        {
-            cBoxBaudRate.Text = "9600";
-        }
-
-        private void TSMenuBaudRate384_Click(object sender, EventArgs e)
-        {
-            cBoxBaudRate.Text = "38400";
-        }
-
-        private void TSMenuBaudRate768_Click(object sender, EventArgs e)
-        {
-            cBoxBaudRate.Text = "76800";
-        }
-
-        private void TSMenuBaudRate1152_Click(object sender, EventArgs e)
-        {
-            cBoxBaudRate.Text = "115200";
-        }
-
-        // menu bar에서 COM port의 하드웨어 DTR control를 설정
-        private void TSMenuDTRDisable_Click(object sender, EventArgs e)
-        {
-            chBoxDtrEnable.Checked = false;
-        }
-
-        private void TSMenuDTREnable_Click(object sender, EventArgs e)
-        {
-            chBoxDtrEnable.Checked = true;
-        }
-
-        // menu bar에서 COM port의 하드웨어 RTS control를 설정
-        private void TSMenuRTSDisable_Click(object sender, EventArgs e)
-        {
-            chBoxRTSEnable.Checked = false;
-        }
-
-        private void TSMenuRTSEnable_Click(object sender, EventArgs e)
-        {
-            chBoxRTSEnable.Checked = true;
-        }
-
-        // menu bar에서 COM port를 변경하면 화면의 COM port 값도 같이 변경
-        private void TSCBoxComPort_TextChanged(object sender, EventArgs e)
-        {
-            cBoxCOMPORT.Text = tSCBoxComPort.Text;
-        }
-
         // 화면에서 COM port를 변경하면 menu bar의 COM port 값도 같이 변경
         private void CBoxCOMPORT_TextChanged(object sender, EventArgs e)
         {
-            tSCBoxComPort.Text = cBoxCOMPORT.Text;
         }
 
         // menu bar에서 명령어 전송시 자동으로 문장 마지막에 추가할 문자를 설정
@@ -1050,7 +948,7 @@ namespace WindowsFormsApp2
 
         private void btnICCID_Click(object sender, EventArgs e)
         {
-            if(tBoxModel == "TPB23")
+            if(tBoxModel.Text == "TPB23")
             {
                 this.sendDataOut(commands["geticcidtpb23"]);
             }

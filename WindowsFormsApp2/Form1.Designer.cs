@@ -47,32 +47,6 @@
             this.COMCTRLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OpenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CloseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.comportTSMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSCBoxComPort = new System.Windows.Forms.ToolStripComboBox();
-            this.bAUDRATEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuBaudRate24 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuBaudRate48 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuBaudRate96 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuBaudRate384 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuBaudRate768 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuBaudRate1152 = new System.Windows.Forms.ToolStripMenuItem();
-            this.dATABITSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenu6bits = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenu7bits = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenu8bits = new System.Windows.Forms.ToolStripMenuItem();
-            this.sTOPBITSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuStopOne = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuStopTwo = new System.Windows.Forms.ToolStripMenuItem();
-            this.pARITYBitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuParityNone = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuParityOdd = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuParityEven = new System.Windows.Forms.ToolStripMenuItem();
-            this.dTREnableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuDTRDisable = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuDTREnable = new System.Windows.Forms.ToolStripMenuItem();
-            this.rTPControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuRTSDisable = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuRTSEnable = new System.Windows.Forms.ToolStripMenuItem();
             this.송신ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ClearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.writeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -337,14 +311,7 @@
             // 
             this.COMCTRLToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.OpenToolStripMenuItem,
-            this.CloseToolStripMenuItem,
-            this.comportTSMenu,
-            this.bAUDRATEToolStripMenuItem,
-            this.dATABITSToolStripMenuItem,
-            this.sTOPBITSToolStripMenuItem,
-            this.pARITYBitsToolStripMenuItem,
-            this.dTREnableToolStripMenuItem,
-            this.rTPControlToolStripMenuItem});
+            this.CloseToolStripMenuItem});
             this.COMCTRLToolStripMenuItem.Name = "COMCTRLToolStripMenuItem";
             this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.COMCTRLToolStripMenuItem.Text = "설정";
@@ -362,206 +329,6 @@
             this.CloseToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.CloseToolStripMenuItem.Text = "COM 해제";
             this.CloseToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
-            // 
-            // comportTSMenu
-            // 
-            this.comportTSMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tSCBoxComPort});
-            this.comportTSMenu.Name = "comportTSMenu";
-            this.comportTSMenu.Size = new System.Drawing.Size(158, 22);
-            this.comportTSMenu.Text = "COM PORT";
-            // 
-            // tSCBoxComPort
-            // 
-            this.tSCBoxComPort.Name = "tSCBoxComPort";
-            this.tSCBoxComPort.Size = new System.Drawing.Size(121, 23);
-            this.tSCBoxComPort.TextChanged += new System.EventHandler(this.TSCBoxComPort_TextChanged);
-            // 
-            // bAUDRATEToolStripMenuItem
-            // 
-            this.bAUDRATEToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tSMenuBaudRate24,
-            this.tSMenuBaudRate48,
-            this.tSMenuBaudRate96,
-            this.tSMenuBaudRate384,
-            this.tSMenuBaudRate768,
-            this.tSMenuBaudRate1152});
-            this.bAUDRATEToolStripMenuItem.Name = "bAUDRATEToolStripMenuItem";
-            this.bAUDRATEToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.bAUDRATEToolStripMenuItem.Text = "BAUD RATE";
-            // 
-            // tSMenuBaudRate24
-            // 
-            this.tSMenuBaudRate24.Name = "tSMenuBaudRate24";
-            this.tSMenuBaudRate24.Size = new System.Drawing.Size(144, 22);
-            this.tSMenuBaudRate24.Text = "2400bps";
-            this.tSMenuBaudRate24.Click += new System.EventHandler(this.TSMenuBaudRate24_Click);
-            // 
-            // tSMenuBaudRate48
-            // 
-            this.tSMenuBaudRate48.Name = "tSMenuBaudRate48";
-            this.tSMenuBaudRate48.Size = new System.Drawing.Size(144, 22);
-            this.tSMenuBaudRate48.Text = "4800bps";
-            this.tSMenuBaudRate48.Click += new System.EventHandler(this.TSMenuBaudRate48_Click);
-            // 
-            // tSMenuBaudRate96
-            // 
-            this.tSMenuBaudRate96.Name = "tSMenuBaudRate96";
-            this.tSMenuBaudRate96.Size = new System.Drawing.Size(144, 22);
-            this.tSMenuBaudRate96.Text = "9600bps";
-            this.tSMenuBaudRate96.Click += new System.EventHandler(this.TSMenuBaudRate96_Click);
-            // 
-            // tSMenuBaudRate384
-            // 
-            this.tSMenuBaudRate384.Name = "tSMenuBaudRate384";
-            this.tSMenuBaudRate384.Size = new System.Drawing.Size(144, 22);
-            this.tSMenuBaudRate384.Text = "38400bps";
-            this.tSMenuBaudRate384.Click += new System.EventHandler(this.TSMenuBaudRate384_Click);
-            // 
-            // tSMenuBaudRate768
-            // 
-            this.tSMenuBaudRate768.Name = "tSMenuBaudRate768";
-            this.tSMenuBaudRate768.Size = new System.Drawing.Size(144, 22);
-            this.tSMenuBaudRate768.Text = "76800bps";
-            this.tSMenuBaudRate768.Click += new System.EventHandler(this.TSMenuBaudRate768_Click);
-            // 
-            // tSMenuBaudRate1152
-            // 
-            this.tSMenuBaudRate1152.Name = "tSMenuBaudRate1152";
-            this.tSMenuBaudRate1152.Size = new System.Drawing.Size(144, 22);
-            this.tSMenuBaudRate1152.Text = "115200bps";
-            this.tSMenuBaudRate1152.Click += new System.EventHandler(this.TSMenuBaudRate1152_Click);
-            // 
-            // dATABITSToolStripMenuItem
-            // 
-            this.dATABITSToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tSMenu6bits,
-            this.tSMenu7bits,
-            this.tSMenu8bits});
-            this.dATABITSToolStripMenuItem.Name = "dATABITSToolStripMenuItem";
-            this.dATABITSToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.dATABITSToolStripMenuItem.Text = "DATA bits";
-            // 
-            // tSMenu6bits
-            // 
-            this.tSMenu6bits.Name = "tSMenu6bits";
-            this.tSMenu6bits.Size = new System.Drawing.Size(123, 22);
-            this.tSMenu6bits.Text = "6 bits";
-            this.tSMenu6bits.Click += new System.EventHandler(this.TSMenu6bits_Click);
-            // 
-            // tSMenu7bits
-            // 
-            this.tSMenu7bits.Name = "tSMenu7bits";
-            this.tSMenu7bits.Size = new System.Drawing.Size(123, 22);
-            this.tSMenu7bits.Text = "7 bits";
-            this.tSMenu7bits.Click += new System.EventHandler(this.TSMenu7bits_Click);
-            // 
-            // tSMenu8bits
-            // 
-            this.tSMenu8bits.Name = "tSMenu8bits";
-            this.tSMenu8bits.Size = new System.Drawing.Size(123, 22);
-            this.tSMenu8bits.Text = "8 bits";
-            this.tSMenu8bits.Click += new System.EventHandler(this.TSMenu8bits_Click);
-            // 
-            // sTOPBITSToolStripMenuItem
-            // 
-            this.sTOPBITSToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tSMenuStopOne,
-            this.tSMenuStopTwo});
-            this.sTOPBITSToolStripMenuItem.Name = "sTOPBITSToolStripMenuItem";
-            this.sTOPBITSToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.sTOPBITSToolStripMenuItem.Text = "STOP bits";
-            // 
-            // tSMenuStopOne
-            // 
-            this.tSMenuStopOne.Name = "tSMenuStopOne";
-            this.tSMenuStopOne.Size = new System.Drawing.Size(102, 22);
-            this.tSMenuStopOne.Text = "One";
-            this.tSMenuStopOne.Click += new System.EventHandler(this.TSMenuStopOne_Click);
-            // 
-            // tSMenuStopTwo
-            // 
-            this.tSMenuStopTwo.Name = "tSMenuStopTwo";
-            this.tSMenuStopTwo.Size = new System.Drawing.Size(102, 22);
-            this.tSMenuStopTwo.Text = "Two";
-            this.tSMenuStopTwo.Click += new System.EventHandler(this.TSMenuStopTwo_Click);
-            // 
-            // pARITYBitsToolStripMenuItem
-            // 
-            this.pARITYBitsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tSMenuParityNone,
-            this.tSMenuParityOdd,
-            this.tSMenuParityEven});
-            this.pARITYBitsToolStripMenuItem.Name = "pARITYBitsToolStripMenuItem";
-            this.pARITYBitsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.pARITYBitsToolStripMenuItem.Text = "PARITY bits";
-            // 
-            // tSMenuParityNone
-            // 
-            this.tSMenuParityNone.Name = "tSMenuParityNone";
-            this.tSMenuParityNone.Size = new System.Drawing.Size(109, 22);
-            this.tSMenuParityNone.Text = "None";
-            this.tSMenuParityNone.Click += new System.EventHandler(this.TSMenuParityNone_Click);
-            // 
-            // tSMenuParityOdd
-            // 
-            this.tSMenuParityOdd.Name = "tSMenuParityOdd";
-            this.tSMenuParityOdd.Size = new System.Drawing.Size(109, 22);
-            this.tSMenuParityOdd.Text = "Odd";
-            this.tSMenuParityOdd.Click += new System.EventHandler(this.TSMenuParityOdd_Click);
-            // 
-            // tSMenuParityEven
-            // 
-            this.tSMenuParityEven.Name = "tSMenuParityEven";
-            this.tSMenuParityEven.Size = new System.Drawing.Size(109, 22);
-            this.tSMenuParityEven.Text = "Even";
-            this.tSMenuParityEven.Click += new System.EventHandler(this.TSMenuParityEven_Click);
-            // 
-            // dTREnableToolStripMenuItem
-            // 
-            this.dTREnableToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tSMenuDTRDisable,
-            this.tSMenuDTREnable});
-            this.dTREnableToolStripMenuItem.Name = "dTREnableToolStripMenuItem";
-            this.dTREnableToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.dTREnableToolStripMenuItem.Text = "DTR control";
-            // 
-            // tSMenuDTRDisable
-            // 
-            this.tSMenuDTRDisable.Name = "tSMenuDTRDisable";
-            this.tSMenuDTRDisable.Size = new System.Drawing.Size(130, 22);
-            this.tSMenuDTRDisable.Text = "Disable";
-            this.tSMenuDTRDisable.Click += new System.EventHandler(this.TSMenuDTRDisable_Click);
-            // 
-            // tSMenuDTREnable
-            // 
-            this.tSMenuDTREnable.Name = "tSMenuDTREnable";
-            this.tSMenuDTREnable.Size = new System.Drawing.Size(130, 22);
-            this.tSMenuDTREnable.Text = "Enable";
-            this.tSMenuDTREnable.Click += new System.EventHandler(this.TSMenuDTREnable_Click);
-            // 
-            // rTPControlToolStripMenuItem
-            // 
-            this.rTPControlToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tSMenuRTSDisable,
-            this.tSMenuRTSEnable});
-            this.rTPControlToolStripMenuItem.Name = "rTPControlToolStripMenuItem";
-            this.rTPControlToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.rTPControlToolStripMenuItem.Text = "RTS control";
-            // 
-            // tSMenuRTSDisable
-            // 
-            this.tSMenuRTSDisable.Name = "tSMenuRTSDisable";
-            this.tSMenuRTSDisable.Size = new System.Drawing.Size(130, 22);
-            this.tSMenuRTSDisable.Text = "Disable";
-            this.tSMenuRTSDisable.Click += new System.EventHandler(this.TSMenuRTSDisable_Click);
-            // 
-            // tSMenuRTSEnable
-            // 
-            this.tSMenuRTSEnable.Name = "tSMenuRTSEnable";
-            this.tSMenuRTSEnable.Size = new System.Drawing.Size(130, 22);
-            this.tSMenuRTSEnable.Text = "Enable";
-            this.tSMenuRTSEnable.Click += new System.EventHandler(this.TSMenuRTSEnable_Click);
             // 
             // 송신ToolStripMenuItem
             // 
@@ -1301,34 +1068,8 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.ToolStripMenuItem dATABITSToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sTOPBITSToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pARITYBitsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem dTREnableToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem rTPControlToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tSMenu6bits;
-        private System.Windows.Forms.ToolStripMenuItem tSMenu7bits;
-        private System.Windows.Forms.ToolStripMenuItem tSMenu8bits;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnModel;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuStopOne;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuStopTwo;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuParityNone;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuParityOdd;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuParityEven;
-        private System.Windows.Forms.ToolStripMenuItem bAUDRATEToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuBaudRate24;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuBaudRate48;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuBaudRate96;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuBaudRate384;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuBaudRate768;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuBaudRate1152;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuDTRDisable;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuDTREnable;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuRTSDisable;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuRTSEnable;
-        private System.Windows.Forms.ToolStripMenuItem comportTSMenu;
-        private System.Windows.Forms.ToolStripComboBox tSCBoxComPort;
         private System.Windows.Forms.ToolStripMenuItem tSMenuEndLineNone;
         private System.Windows.Forms.ToolStripMenuItem tSMenuEndLineBoth;
         private System.Windows.Forms.ToolStripMenuItem tSMenuEndLineLF;
