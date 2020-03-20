@@ -52,16 +52,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="PCTMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="PCTMain.Designer.cs">
+      <DependentUpon>PCTMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TestCase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestCase.Designer.cs">
+      <DependentUpon>TestCase.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="PCTMain.resx">
+      <DependentUpon>PCTMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestCase.resx">
+      <DependentUpon>TestCase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

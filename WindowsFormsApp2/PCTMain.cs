@@ -352,14 +352,76 @@ namespace WindowsFormsApp2
             }
         }
 
-        // 플랫폼서버로 BOOTSTRAP 요청
+        // oneM2M 플랫폼서버로 단말 인증 요청
+        private void btnMEFAuth_Click(object sender, EventArgs e)
+        {
+            Provision();
+        }
+
+        private void btnGetDeviceCSR_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TSMenuModemVer_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut(commands["getmodemSvrVer"]);
+            lbActionState.Text = states.getmodemSvrVer.ToString();
+
+            timer1.Start();
+        }
+
+        private void TSMenuDeviceVer_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut(commands["getdeviceSvrVer"]);
+            lbActionState.Text = states.getdeviceSvrVer.ToString();
+
+            timer1.Start();
+        }
+
+        private void tSMenuTxVersion_Click(object sender, EventArgs e)
+        {
+            DeviceFWVerSendOne(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
+        }
+
+        private void btnCreateDeviceCSR_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDelDeviceCSR_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSetContainer_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDelContainer_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSendDataOneM2M_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnRcvDataOneM2M_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDeviceVerOneM2M_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // LwM2M 플랫폼서버로 BOOTSTRAP 요청
         private void btnBootstrap_Click(object sender, EventArgs e)
         {
-            if ((lbIMSI.Text == ".") || (lbIccid.Text == "."))
-            {
-                this.getDeviveInfo();
-                this.logPrintInTextBox("모듈 정보를 먼저 읽고 있습니다. 다시 시도해주세요.", "");
-            }
             if (isDeviceInfo())
             {
                 // LWM2M bootstrap 자동 요청 순서
@@ -373,7 +435,7 @@ namespace WindowsFormsApp2
             }
         }
 
-        // 플랫폼서버로 REGISTER 요청
+        // LwM2M 플랫폼서버로 REGISTER 요청
         private void btnRegister_Click(object sender, EventArgs e)
         {
             if (isDeviceInfo())
@@ -405,14 +467,14 @@ namespace WindowsFormsApp2
             }
         }
 
-        // 플랫폼서버로 DATA 보내기
+        // LwM2M 플랫폼서버로 DATA 보내기
         private void btnSendData_Click_1(object sender, EventArgs e)
         {
             //입력 Text값을 플랫폼 서버로 전송
             sendDataToServer(tBoxDataOut.Text);
         }
 
-        // 플랫폼서버로 REGISTER 요청
+        // LwM2M 플랫폼서버로 DEREGISTER 요청
         private void btnDeregister_Click(object sender, EventArgs e)
         {
             if (isDeviceInfo())
@@ -435,12 +497,25 @@ namespace WindowsFormsApp2
             }
         }
 
+        // LwM2M 플랫폼서버로 DEVICE VERSION REPORT
+        private void btnDeviceVerLwM2M_Click(object sender, EventArgs e)
+        {
+            if (oneM2Mmode == 0)      // oneM2M : MEF Auth인증 요청
+                DeviceFWVerSendOne(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
+            else
+                DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
+        }
+
         // serial port에서 data 수신이 될 때, 발생하는 이벤트 함수
         private void SerialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             dataIN += serialPort1.ReadExisting();    // 수신한 버퍼에 있는 데이터 모두 받음
             this.Invoke(new EventHandler(ShowData));
         }
+
+        /// <summary>
+        /// 이하 처리 함수 들
+        /// </summary>
 
         // SERIAL COM PORT 제어 함수
         private void doOpenComPort()
@@ -1940,6 +2015,55 @@ namespace WindowsFormsApp2
             lbActionState.Text = states.idle.ToString();
         }
 
+        // menubar에서 LWM2M 플랫폼 디바이스 등록을 요청 (bootstrap)
+        private void Provision()
+        {
+            if (isDeviceInfo())
+            {
+                if (oneM2Mmode == 0)      // oneM2M : MEF Auth인증 요청
+                {
+                    // 모듈이 oneM2M 모드인지 확인하고 플랫폼 인증 요청
+                    this.sendDataOut(commands["getonem2mmode"]);
+                    lbActionState.Text = states.getonem2mmode.ToString();
+
+                    // 플랫폼 서버 MEF AUTH 요청
+                    //this.sendDataOut(commands["setmefauthnt"] + tBoxSVCCD.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + tBoxIMSI.Text);
+                    //tBoxActionState.Text = states.setmefauthnt.ToString();
+                }
+                else if (lbModel.Text == "BG96")       //쿼텔
+                {
+                    // 쿼텔 LWM2M bootstrap 자동 요청 순서
+                    // (disable) - setcdp - servertype - endpointpame - mbsps - enable
+                    // 플랫폼 서버 타입 설정
+                    //AT+QLWM2M="select",2
+                    //this.sendDataOut(commands["setservertype"]);
+                    //tBoxActionState.Text = states.setservertype.ToString();
+                    //AT+QLWM2M="enable",0
+                    this.sendDataOut(commands["disable_bg96"]);
+                    lbActionState.Text = states.disable_bg96.ToString();
+                }
+                else if (lbModel.Text == "TPB23")
+                {
+                    // LWM2M bootstrap 자동 요청 순서 (V150)
+                    // setncdp - setepnstpb23 - setmbspstpb23 - bootstrapmodetpb23 - bootstraptpb23
+                    // LWM2M 서버 설정
+                    // AT+NCDP=IP,PORT
+                    this.sendDataOut(commands["setncdp"] + "\"" + serverip + "\"," + serverport);
+                    lbActionState.Text = states.setncdp.ToString();
+                }
+                else            //일반(U+ command)
+                {
+                    // LWM2M bootstrap 자동 요청 순서
+                    // setncdp - setepnstpb23 - setmbspstpb23 - bootstrapmodetpb23 - bootstraptpb23
+                    // LWM2M 서버 설정
+                    // AT+NCDP=IP,PORT
+                    this.sendDataOut(commands["setncdp"] + serverip + "," + serverport);
+                    lbActionState.Text = states.setncdp.ToString();
+                }
+                timer1.Start();
+            }
+        }
+
         // Hash an input string and return the hash as
         // a 32 character hexadecimal string.
         static string getMd5Hash(string input)
@@ -2258,25 +2382,9 @@ namespace WindowsFormsApp2
                 DeviceFWVerSend(tBoxDeviceVer.Text, "2", device_fota_reseult);
         }
 
-        private void TSMenuModemVer_Click(object sender, EventArgs e)
+        private void btnTestPage_Click(object sender, EventArgs e)
         {
-            this.sendDataOut(commands["getmodemSvrVer"]);
-            lbActionState.Text = states.getmodemSvrVer.ToString();
-
-            timer1.Start();
-        }
-
-        private void TSMenuDeviceVer_Click(object sender, EventArgs e)
-        {
-            this.sendDataOut(commands["getdeviceSvrVer"]);
-            lbActionState.Text = states.getdeviceSvrVer.ToString();
-
-            timer1.Start();
-        }
-
-        private void tSMenuTxVersion_Click(object sender, EventArgs e)
-        {
-            DeviceFWVerSendOne(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
+            
         }
     }
 }
