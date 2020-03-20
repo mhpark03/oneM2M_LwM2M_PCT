@@ -29,12 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.chBoxRTSEnable = new System.Windows.Forms.CheckBox();
-            this.chBoxDtrEnable = new System.Windows.Forms.CheckBox();
-            this.cBoxParityBits = new System.Windows.Forms.ComboBox();
-            this.cBoxStopBits = new System.Windows.Forms.ComboBox();
-            this.cBoxDataBits = new System.Windows.Forms.ComboBox();
-            this.cBoxBaudRate = new System.Windows.Forms.ComboBox();
             this.cBoxCOMPORT = new System.Windows.Forms.ComboBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
@@ -42,36 +36,11 @@
             this.btnSendData = new System.Windows.Forms.Button();
             this.tBoxDataOut = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.COMCTRLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.OpenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.CloseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.송신ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ClearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.writeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuEndLineNone = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuEndLineBoth = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuEndLineLF = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuEndLineCR = new System.Windows.Forms.ToolStripMenuItem();
-            this.수ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ClearRXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.CursorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuTop = new System.Windows.Forms.ToolStripMenuItem();
-            this.tSMenuDown = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.initinfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.provisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.registerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deregisterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.autobsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.enableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.disableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.serverTSMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.devserverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cvsserverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.opserverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -82,15 +51,8 @@
             this.btnATCMD = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tBoxDeviceVer = new System.Windows.Forms.TextBox();
-            this.button6 = new System.Windows.Forms.Button();
             this.tBoxDeviceSN = new System.Windows.Forms.TextBox();
-            this.button5 = new System.Windows.Forms.Button();
-            this.tBoxDeviceModel = new System.Windows.Forms.TextBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.cBoxSERVER = new System.Windows.Forms.ComboBox();
-            this.button2 = new System.Windows.Forms.Button();
             this.tBoxSVCCD = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.tBoxIccid = new System.Windows.Forms.TextBox();
             this.btnICCID = new System.Windows.Forms.Button();
             this.tBoxActionState = new System.Windows.Forms.TextBox();
@@ -99,24 +61,23 @@
             this.btnIMEI = new System.Windows.Forms.Button();
             this.tBoxIMSI = new System.Windows.Forms.TextBox();
             this.btnIMSI = new System.Windows.Forms.Button();
-            this.tBoxManu = new System.Windows.Forms.TextBox();
-            this.btnManufac = new System.Windows.Forms.Button();
-            this.tBoxModel = new System.Windows.Forms.TextBox();
-            this.btnModel = new System.Windows.Forms.Button();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cBoxAutoBS = new System.Windows.Forms.CheckBox();
-            this.cBoxLogSave = new System.Windows.Forms.CheckBox();
-            this.cBoxSendHex = new System.Windows.Forms.CheckBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tSStatusLblLTE = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tSProgressLTE = new System.Windows.Forms.ToolStripProgressBar();
-            this.tSStatusLblLWM2M1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tSStatusLblLWM2M = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tSProgressLwm2m = new System.Windows.Forms.ToolStripProgressBar();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tBoxDeviceModel = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btnModuleInfo = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.lbModelName = new System.Windows.Forms.Label();
+            this.lbModel = new System.Windows.Forms.Label();
+            this.lbMaker = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lbModemVer = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -124,99 +85,14 @@
             this.groupBox4.SuspendLayout();
             this.panel4.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // chBoxRTSEnable
-            // 
-            this.chBoxRTSEnable.AutoSize = true;
-            this.chBoxRTSEnable.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chBoxRTSEnable.Location = new System.Drawing.Point(410, 12);
-            this.chBoxRTSEnable.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.chBoxRTSEnable.Name = "chBoxRTSEnable";
-            this.chBoxRTSEnable.Size = new System.Drawing.Size(45, 17);
-            this.chBoxRTSEnable.TabIndex = 13;
-            this.chBoxRTSEnable.Text = "RTS";
-            this.chBoxRTSEnable.UseVisualStyleBackColor = true;
-            this.chBoxRTSEnable.CheckedChanged += new System.EventHandler(this.ChBoxRTSEnable_CheckedChanged);
-            // 
-            // chBoxDtrEnable
-            // 
-            this.chBoxDtrEnable.AutoSize = true;
-            this.chBoxDtrEnable.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chBoxDtrEnable.Location = new System.Drawing.Point(362, 12);
-            this.chBoxDtrEnable.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.chBoxDtrEnable.Name = "chBoxDtrEnable";
-            this.chBoxDtrEnable.Size = new System.Drawing.Size(46, 17);
-            this.chBoxDtrEnable.TabIndex = 12;
-            this.chBoxDtrEnable.Text = "DTR";
-            this.chBoxDtrEnable.UseVisualStyleBackColor = true;
-            this.chBoxDtrEnable.CheckedChanged += new System.EventHandler(this.ChBoxDtrEnable_CheckedChanged);
-            // 
-            // cBoxParityBits
-            // 
-            this.cBoxParityBits.FormattingEnabled = true;
-            this.cBoxParityBits.Items.AddRange(new object[] {
-            "None",
-            "Odd",
-            "Even"});
-            this.cBoxParityBits.Location = new System.Drawing.Point(299, 10);
-            this.cBoxParityBits.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cBoxParityBits.Name = "cBoxParityBits";
-            this.cBoxParityBits.Size = new System.Drawing.Size(57, 20);
-            this.cBoxParityBits.TabIndex = 5;
-            this.cBoxParityBits.Text = "None";
-            // 
-            // cBoxStopBits
-            // 
-            this.cBoxStopBits.FormattingEnabled = true;
-            this.cBoxStopBits.Items.AddRange(new object[] {
-            "One",
-            "Two"});
-            this.cBoxStopBits.Location = new System.Drawing.Point(235, 10);
-            this.cBoxStopBits.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cBoxStopBits.Name = "cBoxStopBits";
-            this.cBoxStopBits.Size = new System.Drawing.Size(57, 20);
-            this.cBoxStopBits.TabIndex = 4;
-            this.cBoxStopBits.Text = "One";
-            // 
-            // cBoxDataBits
-            // 
-            this.cBoxDataBits.FormattingEnabled = true;
-            this.cBoxDataBits.Items.AddRange(new object[] {
-            "6",
-            "7",
-            "8"});
-            this.cBoxDataBits.Location = new System.Drawing.Point(195, 9);
-            this.cBoxDataBits.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cBoxDataBits.Name = "cBoxDataBits";
-            this.cBoxDataBits.Size = new System.Drawing.Size(33, 20);
-            this.cBoxDataBits.TabIndex = 3;
-            this.cBoxDataBits.Text = "8";
-            // 
-            // cBoxBaudRate
-            // 
-            this.cBoxBaudRate.FormattingEnabled = true;
-            this.cBoxBaudRate.Items.AddRange(new object[] {
-            "2400",
-            "4800",
-            "9600",
-            "38400",
-            "76800",
-            "115200"});
-            this.cBoxBaudRate.Location = new System.Drawing.Point(118, 10);
-            this.cBoxBaudRate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cBoxBaudRate.Name = "cBoxBaudRate";
-            this.cBoxBaudRate.Size = new System.Drawing.Size(70, 20);
-            this.cBoxBaudRate.TabIndex = 2;
-            this.cBoxBaudRate.Text = "115200";
             // 
             // cBoxCOMPORT
             // 
             this.cBoxCOMPORT.FormattingEnabled = true;
-            this.cBoxCOMPORT.Location = new System.Drawing.Point(39, 10);
+            this.cBoxCOMPORT.Location = new System.Drawing.Point(50, 19);
             this.cBoxCOMPORT.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cBoxCOMPORT.Name = "cBoxCOMPORT";
             this.cBoxCOMPORT.Size = new System.Drawing.Size(73, 20);
@@ -227,7 +103,7 @@
             // 
             this.progressBar1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.progressBar1.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.progressBar1.Location = new System.Drawing.Point(10, 10);
+            this.progressBar1.Location = new System.Drawing.Point(146, 21);
             this.progressBar1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(22, 18);
@@ -279,253 +155,53 @@
             this.menuStrip1.Font = new System.Drawing.Font("돋움체", 10F);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.COMCTRLToolStripMenuItem,
-            this.송신ToolStripMenuItem,
-            this.수ToolStripMenuItem,
             this.testToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(733, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1235, 24);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ExitToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
-            this.fileToolStripMenuItem.Text = "파일";
-            // 
-            // ExitToolStripMenuItem
-            // 
-            this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-            this.ExitToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
-            this.ExitToolStripMenuItem.Text = "끝내기";
-            this.ExitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
-            // 
-            // COMCTRLToolStripMenuItem
-            // 
-            this.COMCTRLToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.OpenToolStripMenuItem,
-            this.CloseToolStripMenuItem});
-            this.COMCTRLToolStripMenuItem.Name = "COMCTRLToolStripMenuItem";
-            this.COMCTRLToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
-            this.COMCTRLToolStripMenuItem.Text = "설정";
-            // 
-            // OpenToolStripMenuItem
-            // 
-            this.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem";
-            this.OpenToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.OpenToolStripMenuItem.Text = "COM 연결";
-            this.OpenToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
-            // 
-            // CloseToolStripMenuItem
-            // 
-            this.CloseToolStripMenuItem.Name = "CloseToolStripMenuItem";
-            this.CloseToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.CloseToolStripMenuItem.Text = "COM 해제";
-            this.CloseToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
-            // 
-            // 송신ToolStripMenuItem
-            // 
-            this.송신ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ClearToolStripMenuItem,
-            this.writeToolStripMenuItem});
-            this.송신ToolStripMenuItem.Name = "송신ToolStripMenuItem";
-            this.송신ToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
-            this.송신ToolStripMenuItem.Text = "송신";
-            // 
-            // ClearToolStripMenuItem
-            // 
-            this.ClearToolStripMenuItem.Name = "ClearToolStripMenuItem";
-            this.ClearToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.ClearToolStripMenuItem.Text = "내용 지우기";
-            this.ClearToolStripMenuItem.Click += new System.EventHandler(this.ClearToolStripMenuItem_Click);
-            // 
-            // writeToolStripMenuItem
-            // 
-            this.writeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tSMenuEndLineNone,
-            this.tSMenuEndLineBoth,
-            this.tSMenuEndLineLF,
-            this.tSMenuEndLineCR});
-            this.writeToolStripMenuItem.Name = "writeToolStripMenuItem";
-            this.writeToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.writeToolStripMenuItem.Text = "End Line";
-            // 
-            // tSMenuEndLineNone
-            // 
-            this.tSMenuEndLineNone.Name = "tSMenuEndLineNone";
-            this.tSMenuEndLineNone.Size = new System.Drawing.Size(158, 22);
-            this.tSMenuEndLineNone.Text = "없음";
-            this.tSMenuEndLineNone.Click += new System.EventHandler(this.TSMenuEndLineNone_Click);
-            // 
-            // tSMenuEndLineBoth
-            // 
-            this.tSMenuEndLineBoth.Name = "tSMenuEndLineBoth";
-            this.tSMenuEndLineBoth.Size = new System.Drawing.Size(158, 22);
-            this.tSMenuEndLineBoth.Text = "모두(LF+CR)";
-            this.tSMenuEndLineBoth.Click += new System.EventHandler(this.TSMenuEndLineBoth_Click);
-            // 
-            // tSMenuEndLineLF
-            // 
-            this.tSMenuEndLineLF.Name = "tSMenuEndLineLF";
-            this.tSMenuEndLineLF.Size = new System.Drawing.Size(158, 22);
-            this.tSMenuEndLineLF.Text = "줄바꿈(LF)";
-            this.tSMenuEndLineLF.Click += new System.EventHandler(this.TSMenuEndLineLF_Click);
-            // 
-            // tSMenuEndLineCR
-            // 
-            this.tSMenuEndLineCR.Name = "tSMenuEndLineCR";
-            this.tSMenuEndLineCR.Size = new System.Drawing.Size(158, 22);
-            this.tSMenuEndLineCR.Text = "맨앞줄(CR)";
-            this.tSMenuEndLineCR.Click += new System.EventHandler(this.TSMenuEndLineCR_Click);
-            // 
-            // 수ToolStripMenuItem
-            // 
-            this.수ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ClearRXToolStripMenuItem,
-            this.CursorToolStripMenuItem});
-            this.수ToolStripMenuItem.Name = "수ToolStripMenuItem";
-            this.수ToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
-            this.수ToolStripMenuItem.Text = "수신";
-            // 
-            // ClearRXToolStripMenuItem
-            // 
-            this.ClearRXToolStripMenuItem.Name = "ClearRXToolStripMenuItem";
-            this.ClearRXToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.ClearRXToolStripMenuItem.Text = "내용 지우기";
-            this.ClearRXToolStripMenuItem.Click += new System.EventHandler(this.ClearRXToolStripMenuItem_Click);
-            // 
-            // CursorToolStripMenuItem
-            // 
-            this.CursorToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tSMenuTop,
-            this.tSMenuDown});
-            this.CursorToolStripMenuItem.Name = "CursorToolStripMenuItem";
-            this.CursorToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.CursorToolStripMenuItem.Text = "표시위치";
-            // 
-            // tSMenuTop
-            // 
-            this.tSMenuTop.Name = "tSMenuTop";
-            this.tSMenuTop.Size = new System.Drawing.Size(123, 22);
-            this.tSMenuTop.Text = "위로";
-            this.tSMenuTop.Click += new System.EventHandler(this.TSMenuTop_Click);
-            // 
-            // tSMenuDown
-            // 
-            this.tSMenuDown.Name = "tSMenuDown";
-            this.tSMenuDown.Size = new System.Drawing.Size(123, 22);
-            this.tSMenuDown.Text = "아래로";
-            this.tSMenuDown.Click += new System.EventHandler(this.TSMenuDown_Click);
             // 
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.initinfoToolStripMenuItem,
             this.provisionToolStripMenuItem,
             this.registerToolStripMenuItem,
             this.deregisterToolStripMenuItem,
-            this.resetToolStripMenuItem,
-            this.autobsToolStripMenuItem,
-            this.serverTSMenu});
+            this.resetToolStripMenuItem});
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
             this.testToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.testToolStripMenuItem.Text = "테스트";
             // 
-            // initinfoToolStripMenuItem
-            // 
-            this.initinfoToolStripMenuItem.Name = "initinfoToolStripMenuItem";
-            this.initinfoToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.initinfoToolStripMenuItem.Text = "단말정보 ";
-            this.initinfoToolStripMenuItem.Click += new System.EventHandler(this.InitinfoToolStripMenuItem_Click);
-            // 
             // provisionToolStripMenuItem
             // 
             this.provisionToolStripMenuItem.Name = "provisionToolStripMenuItem";
-            this.provisionToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.provisionToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.provisionToolStripMenuItem.Text = "서버설정(BOOTSTRAP)";
             this.provisionToolStripMenuItem.Click += new System.EventHandler(this.ProvisionToolStripMenuItem_Click);
             // 
             // registerToolStripMenuItem
             // 
             this.registerToolStripMenuItem.Name = "registerToolStripMenuItem";
-            this.registerToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.registerToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.registerToolStripMenuItem.Text = "서버등록(REGISTER)";
             this.registerToolStripMenuItem.Click += new System.EventHandler(this.RegisterToolStripMenuItem_Click);
             // 
             // deregisterToolStripMenuItem
             // 
             this.deregisterToolStripMenuItem.Name = "deregisterToolStripMenuItem";
-            this.deregisterToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.deregisterToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.deregisterToolStripMenuItem.Text = "서버해제(DEREGISTER)";
             this.deregisterToolStripMenuItem.Click += new System.EventHandler(this.DeregisterToolStripMenuItem_Click);
             // 
             // resetToolStripMenuItem
             // 
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.resetToolStripMenuItem.Text = "서버정보초기화";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.ResetToolStripMenuItem_Click);
-            // 
-            // autobsToolStripMenuItem
-            // 
-            this.autobsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.enableToolStripMenuItem,
-            this.disableToolStripMenuItem});
-            this.autobsToolStripMenuItem.Name = "autobsToolStripMenuItem";
-            this.autobsToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.autobsToolStripMenuItem.Text = "자동 실행 설정(AutoBS)";
-            // 
-            // enableToolStripMenuItem
-            // 
-            this.enableToolStripMenuItem.Name = "enableToolStripMenuItem";
-            this.enableToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
-            this.enableToolStripMenuItem.Text = "Enable";
-            this.enableToolStripMenuItem.Click += new System.EventHandler(this.EnableToolStripMenuItem_Click);
-            // 
-            // disableToolStripMenuItem
-            // 
-            this.disableToolStripMenuItem.Name = "disableToolStripMenuItem";
-            this.disableToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
-            this.disableToolStripMenuItem.Text = "Disable";
-            this.disableToolStripMenuItem.Click += new System.EventHandler(this.DisableToolStripMenuItem_Click);
-            // 
-            // serverTSMenu
-            // 
-            this.serverTSMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.devserverToolStripMenuItem,
-            this.cvsserverToolStripMenuItem,
-            this.opserverToolStripMenuItem});
-            this.serverTSMenu.Name = "serverTSMenu";
-            this.serverTSMenu.Size = new System.Drawing.Size(235, 22);
-            this.serverTSMenu.Text = "대상서버설정";
-            // 
-            // devserverToolStripMenuItem
-            // 
-            this.devserverToolStripMenuItem.Name = "devserverToolStripMenuItem";
-            this.devserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.devserverToolStripMenuItem.Text = "개발 서버";
-            this.devserverToolStripMenuItem.Click += new System.EventHandler(this.DevserverToolStripMenuItem_Click);
-            // 
-            // cvsserverToolStripMenuItem
-            // 
-            this.cvsserverToolStripMenuItem.Name = "cvsserverToolStripMenuItem";
-            this.cvsserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.cvsserverToolStripMenuItem.Text = "검증 서버";
-            this.cvsserverToolStripMenuItem.Click += new System.EventHandler(this.CvsserverToolStripMenuItem_Click);
-            // 
-            // opserverToolStripMenuItem
-            // 
-            this.opserverToolStripMenuItem.Name = "opserverToolStripMenuItem";
-            this.opserverToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.opserverToolStripMenuItem.Text = "상용서버";
-            this.opserverToolStripMenuItem.Click += new System.EventHandler(this.OpserverToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -560,21 +236,22 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.groupBox6);
+            this.panel1.Controls.Add(this.groupBox5);
             this.panel1.Controls.Add(this.groupBox4);
             this.panel1.Controls.Add(this.groupBox1);
-            this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 24);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(733, 396);
+            this.panel1.Size = new System.Drawing.Size(1235, 613);
             this.panel1.TabIndex = 10;
             // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.panel4);
             this.groupBox4.Controls.Add(this.groupBox3);
-            this.groupBox4.Location = new System.Drawing.Point(225, 12);
+            this.groupBox4.Location = new System.Drawing.Point(756, 202);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(472, 326);
             this.groupBox4.TabIndex = 12;
@@ -618,16 +295,14 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.tBoxDeviceVer);
-            this.groupBox1.Controls.Add(this.button6);
-            this.groupBox1.Controls.Add(this.tBoxDeviceSN);
-            this.groupBox1.Controls.Add(this.button5);
-            this.groupBox1.Controls.Add(this.tBoxDeviceModel);
-            this.groupBox1.Controls.Add(this.button3);
-            this.groupBox1.Controls.Add(this.cBoxSERVER);
-            this.groupBox1.Controls.Add(this.button2);
-            this.groupBox1.Controls.Add(this.tBoxSVCCD);
-            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.lbModemVer);
+            this.groupBox1.Controls.Add(this.label8);
+            this.groupBox1.Controls.Add(this.lbMaker);
+            this.groupBox1.Controls.Add(this.label7);
+            this.groupBox1.Controls.Add(this.lbModel);
+            this.groupBox1.Controls.Add(this.lbModelName);
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.btnModuleInfo);
             this.groupBox1.Controls.Add(this.tBoxIccid);
             this.groupBox1.Controls.Add(this.btnICCID);
             this.groupBox1.Controls.Add(this.tBoxActionState);
@@ -636,116 +311,41 @@
             this.groupBox1.Controls.Add(this.btnIMEI);
             this.groupBox1.Controls.Add(this.tBoxIMSI);
             this.groupBox1.Controls.Add(this.btnIMSI);
-            this.groupBox1.Controls.Add(this.tBoxManu);
-            this.groupBox1.Controls.Add(this.btnManufac);
-            this.groupBox1.Controls.Add(this.tBoxModel);
-            this.groupBox1.Controls.Add(this.btnModel);
-            this.groupBox1.Location = new System.Drawing.Point(10, 12);
+            this.groupBox1.Location = new System.Drawing.Point(28, 219);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(209, 326);
+            this.groupBox1.Size = new System.Drawing.Size(722, 199);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "모듈 정보";
             // 
             // tBoxDeviceVer
             // 
-            this.tBoxDeviceVer.Location = new System.Drawing.Point(77, 271);
+            this.tBoxDeviceVer.Location = new System.Drawing.Point(890, 22);
             this.tBoxDeviceVer.Name = "tBoxDeviceVer";
             this.tBoxDeviceVer.Size = new System.Drawing.Size(126, 21);
             this.tBoxDeviceVer.TabIndex = 25;
             // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(6, 271);
-            this.button6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(66, 24);
-            this.button6.TabIndex = 24;
-            this.button6.Text = "단말버전";
-            this.button6.UseVisualStyleBackColor = true;
-            // 
             // tBoxDeviceSN
             // 
-            this.tBoxDeviceSN.Location = new System.Drawing.Point(77, 242);
+            this.tBoxDeviceSN.Location = new System.Drawing.Point(634, 22);
             this.tBoxDeviceSN.Name = "tBoxDeviceSN";
             this.tBoxDeviceSN.Size = new System.Drawing.Size(126, 21);
             this.tBoxDeviceSN.TabIndex = 23;
             this.tBoxDeviceSN.Text = "123456";
             // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(6, 242);
-            this.button5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(66, 24);
-            this.button5.TabIndex = 22;
-            this.button5.Text = "단말SN";
-            this.button5.UseVisualStyleBackColor = true;
-            // 
-            // tBoxDeviceModel
-            // 
-            this.tBoxDeviceModel.Location = new System.Drawing.Point(77, 214);
-            this.tBoxDeviceModel.Name = "tBoxDeviceModel";
-            this.tBoxDeviceModel.Size = new System.Drawing.Size(126, 21);
-            this.tBoxDeviceModel.TabIndex = 21;
-            this.tBoxDeviceModel.Text = "LWEMG";
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(6, 214);
-            this.button3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(66, 24);
-            this.button3.TabIndex = 20;
-            this.button3.Text = "단말모델";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // cBoxSERVER
-            // 
-            this.cBoxSERVER.FormattingEnabled = true;
-            this.cBoxSERVER.Items.AddRange(new object[] {
-            "개발",
-            "검증",
-            "상용"});
-            this.cBoxSERVER.Location = new System.Drawing.Point(77, 299);
-            this.cBoxSERVER.Name = "cBoxSERVER";
-            this.cBoxSERVER.Size = new System.Drawing.Size(126, 20);
-            this.cBoxSERVER.TabIndex = 19;
-            this.cBoxSERVER.Text = "개발";
-            this.cBoxSERVER.TextChanged += new System.EventHandler(this.CBoxSERVER_TextChanged);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(6, 298);
-            this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(66, 24);
-            this.button2.TabIndex = 18;
-            this.button2.Text = "서버";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
             // tBoxSVCCD
             // 
-            this.tBoxSVCCD.Location = new System.Drawing.Point(77, 185);
+            this.tBoxSVCCD.Location = new System.Drawing.Point(96, 20);
             this.tBoxSVCCD.Name = "tBoxSVCCD";
             this.tBoxSVCCD.Size = new System.Drawing.Size(126, 21);
             this.tBoxSVCCD.TabIndex = 17;
             this.tBoxSVCCD.Text = "FOTA";
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(6, 185);
-            this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(66, 24);
-            this.button1.TabIndex = 16;
-            this.button1.Text = "SVCCD";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
             // tBoxIccid
             // 
-            this.tBoxIccid.Location = new System.Drawing.Point(77, 97);
+            this.tBoxIccid.Location = new System.Drawing.Point(575, 108);
             this.tBoxIccid.Name = "tBoxIccid";
             this.tBoxIccid.ReadOnly = true;
             this.tBoxIccid.Size = new System.Drawing.Size(126, 21);
@@ -754,7 +354,7 @@
             // 
             // btnICCID
             // 
-            this.btnICCID.Location = new System.Drawing.Point(6, 95);
+            this.btnICCID.Location = new System.Drawing.Point(504, 106);
             this.btnICCID.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnICCID.Name = "btnICCID";
             this.btnICCID.Size = new System.Drawing.Size(66, 24);
@@ -765,7 +365,7 @@
             // 
             // tBoxActionState
             // 
-            this.tBoxActionState.Location = new System.Drawing.Point(77, 153);
+            this.tBoxActionState.Location = new System.Drawing.Point(575, 164);
             this.tBoxActionState.Name = "tBoxActionState";
             this.tBoxActionState.ReadOnly = true;
             this.tBoxActionState.Size = new System.Drawing.Size(126, 21);
@@ -775,7 +375,7 @@
             // button4
             // 
             this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(6, 153);
+            this.button4.Location = new System.Drawing.Point(504, 164);
             this.button4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(66, 24);
@@ -785,7 +385,7 @@
             // 
             // tBoxIMEI
             // 
-            this.tBoxIMEI.Location = new System.Drawing.Point(77, 126);
+            this.tBoxIMEI.Location = new System.Drawing.Point(575, 137);
             this.tBoxIMEI.Name = "tBoxIMEI";
             this.tBoxIMEI.ReadOnly = true;
             this.tBoxIMEI.Size = new System.Drawing.Size(126, 21);
@@ -794,7 +394,7 @@
             // 
             // btnIMEI
             // 
-            this.btnIMEI.Location = new System.Drawing.Point(6, 123);
+            this.btnIMEI.Location = new System.Drawing.Point(504, 134);
             this.btnIMEI.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnIMEI.Name = "btnIMEI";
             this.btnIMEI.Size = new System.Drawing.Size(66, 24);
@@ -805,7 +405,7 @@
             // 
             // tBoxIMSI
             // 
-            this.tBoxIMSI.Location = new System.Drawing.Point(77, 71);
+            this.tBoxIMSI.Location = new System.Drawing.Point(575, 82);
             this.tBoxIMSI.Name = "tBoxIMSI";
             this.tBoxIMSI.ReadOnly = true;
             this.tBoxIMSI.Size = new System.Drawing.Size(126, 21);
@@ -814,7 +414,7 @@
             // 
             // btnIMSI
             // 
-            this.btnIMSI.Location = new System.Drawing.Point(6, 69);
+            this.btnIMSI.Location = new System.Drawing.Point(504, 80);
             this.btnIMSI.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnIMSI.Name = "btnIMSI";
             this.btnIMSI.Size = new System.Drawing.Size(66, 24);
@@ -823,186 +423,165 @@
             this.btnIMSI.UseVisualStyleBackColor = true;
             this.btnIMSI.Click += new System.EventHandler(this.btnIMSI_Click);
             // 
-            // tBoxManu
-            // 
-            this.tBoxManu.Location = new System.Drawing.Point(77, 42);
-            this.tBoxManu.Name = "tBoxManu";
-            this.tBoxManu.ReadOnly = true;
-            this.tBoxManu.Size = new System.Drawing.Size(126, 21);
-            this.tBoxManu.TabIndex = 7;
-            this.tBoxManu.Text = "알 수 없음";
-            // 
-            // btnManufac
-            // 
-            this.btnManufac.Location = new System.Drawing.Point(6, 40);
-            this.btnManufac.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnManufac.Name = "btnManufac";
-            this.btnManufac.Size = new System.Drawing.Size(66, 24);
-            this.btnManufac.TabIndex = 6;
-            this.btnManufac.Text = "제조사";
-            this.btnManufac.UseVisualStyleBackColor = true;
-            this.btnManufac.Click += new System.EventHandler(this.btnManufac_Click);
-            // 
-            // tBoxModel
-            // 
-            this.tBoxModel.Location = new System.Drawing.Point(77, 12);
-            this.tBoxModel.Name = "tBoxModel";
-            this.tBoxModel.ReadOnly = true;
-            this.tBoxModel.Size = new System.Drawing.Size(126, 21);
-            this.tBoxModel.TabIndex = 2;
-            this.tBoxModel.Text = "알 수 없음";
-            // 
-            // btnModel
-            // 
-            this.btnModel.Location = new System.Drawing.Point(6, 12);
-            this.btnModel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnModel.Name = "btnModel";
-            this.btnModel.Size = new System.Drawing.Size(66, 24);
-            this.btnModel.TabIndex = 0;
-            this.btnModel.Text = "모듈모델";
-            this.btnModel.UseVisualStyleBackColor = true;
-            this.btnModel.Click += new System.EventHandler(this.BtnModel_Click);
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.chBoxRTSEnable);
-            this.panel2.Controls.Add(this.groupBox2);
-            this.panel2.Controls.Add(this.chBoxDtrEnable);
-            this.panel2.Controls.Add(this.progressBar1);
-            this.panel2.Controls.Add(this.cBoxCOMPORT);
-            this.panel2.Controls.Add(this.cBoxBaudRate);
-            this.panel2.Controls.Add(this.cBoxDataBits);
-            this.panel2.Controls.Add(this.cBoxParityBits);
-            this.panel2.Controls.Add(this.cBoxStopBits);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 341);
-            this.panel2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.panel2.Name = "panel2";
-            this.panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 2);
-            this.panel2.Size = new System.Drawing.Size(733, 55);
-            this.panel2.TabIndex = 10;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.cBoxAutoBS);
-            this.groupBox2.Controls.Add(this.cBoxLogSave);
-            this.groupBox2.Controls.Add(this.cBoxSendHex);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox2.Location = new System.Drawing.Point(506, 0);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Size = new System.Drawing.Size(227, 53);
-            this.groupBox2.TabIndex = 3;
-            this.groupBox2.TabStop = false;
-            // 
-            // cBoxAutoBS
-            // 
-            this.cBoxAutoBS.AutoSize = true;
-            this.cBoxAutoBS.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cBoxAutoBS.Location = new System.Drawing.Point(56, 12);
-            this.cBoxAutoBS.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.cBoxAutoBS.Name = "cBoxAutoBS";
-            this.cBoxAutoBS.Size = new System.Drawing.Size(70, 17);
-            this.cBoxAutoBS.TabIndex = 14;
-            this.cBoxAutoBS.Text = "AUTO BS";
-            this.cBoxAutoBS.UseVisualStyleBackColor = true;
-            this.cBoxAutoBS.CheckedChanged += new System.EventHandler(this.CBoxAutoBS_CheckedChanged);
-            // 
-            // cBoxLogSave
-            // 
-            this.cBoxLogSave.AutoSize = true;
-            this.cBoxLogSave.Checked = true;
-            this.cBoxLogSave.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cBoxLogSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cBoxLogSave.Location = new System.Drawing.Point(128, 12);
-            this.cBoxLogSave.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.cBoxLogSave.Name = "cBoxLogSave";
-            this.cBoxLogSave.Size = new System.Drawing.Size(79, 17);
-            this.cBoxLogSave.TabIndex = 22;
-            this.cBoxLogSave.Text = "LOG SAVE";
-            this.cBoxLogSave.UseVisualStyleBackColor = true;
-            // 
-            // cBoxSendHex
-            // 
-            this.cBoxSendHex.AutoSize = true;
-            this.cBoxSendHex.Checked = true;
-            this.cBoxSendHex.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cBoxSendHex.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cBoxSendHex.Location = new System.Drawing.Point(7, 12);
-            this.cBoxSendHex.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
-            this.cBoxSendHex.Name = "cBoxSendHex";
-            this.cBoxSendHex.Size = new System.Drawing.Size(47, 17);
-            this.cBoxSendHex.TabIndex = 15;
-            this.cBoxSendHex.Text = "HEX";
-            this.cBoxSendHex.UseVisualStyleBackColor = true;
-            // 
             // timer1
             // 
             this.timer1.Interval = 10000;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1,
-            this.tSStatusLblLTE,
-            this.tSProgressLTE,
-            this.tSStatusLblLWM2M1,
-            this.tSStatusLblLWM2M,
-            this.tSProgressLwm2m});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 398);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(733, 22);
-            this.statusStrip1.TabIndex = 11;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(95, 17);
-            this.toolStripStatusLabel1.Text = "LTE NETWORK : ";
-            // 
-            // tSStatusLblLTE
-            // 
-            this.tSStatusLblLTE.Name = "tSStatusLblLTE";
-            this.tSStatusLblLTE.Size = new System.Drawing.Size(65, 17);
-            this.tSStatusLblLTE.Text = "disconnect";
-            // 
-            // tSProgressLTE
-            // 
-            this.tSProgressLTE.Name = "tSProgressLTE";
-            this.tSProgressLTE.Size = new System.Drawing.Size(150, 16);
-            // 
-            // tSStatusLblLWM2M1
-            // 
-            this.tSStatusLblLWM2M1.Name = "tSStatusLblLWM2M1";
-            this.tSStatusLblLWM2M1.Size = new System.Drawing.Size(112, 17);
-            this.tSStatusLblLWM2M1.Text = "     LWM2M 통신 : ";
-            // 
-            // tSStatusLblLWM2M
-            // 
-            this.tSStatusLblLWM2M.Name = "tSStatusLblLWM2M";
-            this.tSStatusLblLWM2M.Size = new System.Drawing.Size(65, 17);
-            this.tSStatusLblLWM2M.Text = "disconnect";
-            // 
-            // tSProgressLwm2m
-            // 
-            this.tSProgressLwm2m.Name = "tSProgressLwm2m";
-            this.tSProgressLwm2m.Size = new System.Drawing.Size(150, 16);
             // 
             // timer2
             // 
             this.timer2.Interval = 10000;
             this.timer2.Tick += new System.EventHandler(this.Timer2_Tick);
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.cBoxCOMPORT);
+            this.groupBox5.Controls.Add(this.progressBar1);
+            this.groupBox5.Location = new System.Drawing.Point(28, 139);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(330, 53);
+            this.groupBox5.TabIndex = 13;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "COM PORT";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.label4);
+            this.groupBox6.Controls.Add(this.tBoxDeviceVer);
+            this.groupBox6.Controls.Add(this.label3);
+            this.groupBox6.Controls.Add(this.label2);
+            this.groupBox6.Controls.Add(this.label1);
+            this.groupBox6.Controls.Add(this.tBoxDeviceSN);
+            this.groupBox6.Controls.Add(this.tBoxSVCCD);
+            this.groupBox6.Controls.Add(this.tBoxDeviceModel);
+            this.groupBox6.Location = new System.Drawing.Point(28, 19);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(1149, 100);
+            this.groupBox6.TabIndex = 14;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "프로젝트";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(15, 24);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(77, 12);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "서비스 코드 :";
+            // 
+            // tBoxDeviceModel
+            // 
+            this.tBoxDeviceModel.Location = new System.Drawing.Point(375, 20);
+            this.tBoxDeviceModel.Name = "tBoxDeviceModel";
+            this.tBoxDeviceModel.Size = new System.Drawing.Size(126, 21);
+            this.tBoxDeviceModel.TabIndex = 21;
+            this.tBoxDeviceModel.Text = "LWEMG";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(267, 25);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(101, 12);
+            this.label2.TabIndex = 22;
+            this.label2.Text = "디바이스 모델명 :";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(518, 27);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(113, 12);
+            this.label3.TabIndex = 24;
+            this.label3.Text = "디바이스 일련번호 :";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(771, 27);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(89, 12);
+            this.label4.TabIndex = 26;
+            this.label4.Text = "디바이스 버전 :";
+            // 
+            // btnModuleInfo
+            // 
+            this.btnModuleInfo.Location = new System.Drawing.Point(17, 20);
+            this.btnModuleInfo.Name = "btnModuleInfo";
+            this.btnModuleInfo.Size = new System.Drawing.Size(75, 23);
+            this.btnModuleInfo.TabIndex = 16;
+            this.btnModuleInfo.Text = "조회";
+            this.btnModuleInfo.UseVisualStyleBackColor = true;
+            this.btnModuleInfo.Click += new System.EventHandler(this.btnModuleInfo_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(121, 25);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(49, 12);
+            this.label5.TabIndex = 23;
+            this.label5.Text = "모델명 :";
+            // 
+            // lbModelName
+            // 
+            this.lbModelName.AutoSize = true;
+            this.lbModelName.Location = new System.Drawing.Point(176, 25);
+            this.lbModelName.Name = "lbModelName";
+            this.lbModelName.Size = new System.Drawing.Size(0, 12);
+            this.lbModelName.TabIndex = 24;
+            // 
+            // lbModel
+            // 
+            this.lbModel.AutoSize = true;
+            this.lbModel.Location = new System.Drawing.Point(173, 23);
+            this.lbModel.Name = "lbModel";
+            this.lbModel.Size = new System.Drawing.Size(9, 12);
+            this.lbModel.TabIndex = 25;
+            this.lbModel.Text = ".";
+            // 
+            // lbMaker
+            // 
+            this.lbMaker.AutoSize = true;
+            this.lbMaker.Location = new System.Drawing.Point(173, 42);
+            this.lbMaker.Name = "lbMaker";
+            this.lbMaker.Size = new System.Drawing.Size(9, 12);
+            this.lbMaker.TabIndex = 27;
+            this.lbMaker.Text = ".";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(121, 44);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(49, 12);
+            this.label7.TabIndex = 26;
+            this.label7.Text = "제조사 :";
+            // 
+            // lbModemVer
+            // 
+            this.lbModemVer.AutoSize = true;
+            this.lbModemVer.Location = new System.Drawing.Point(173, 69);
+            this.lbModemVer.Name = "lbModemVer";
+            this.lbModemVer.Size = new System.Drawing.Size(9, 12);
+            this.lbModemVer.TabIndex = 29;
+            this.lbModemVer.Text = ".";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(121, 71);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(61, 12);
+            this.label8.TabIndex = 28;
+            this.label8.Text = "모듈버전 :";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(733, 420);
-            this.Controls.Add(this.statusStrip1);
+            this.ClientSize = new System.Drawing.Size(1235, 637);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -1026,12 +605,9 @@
             this.panel4.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1039,93 +615,54 @@
 
         #endregion
         private System.IO.Ports.SerialPort serialPort1;
-        private System.Windows.Forms.ComboBox cBoxParityBits;
-        private System.Windows.Forms.ComboBox cBoxStopBits;
-        private System.Windows.Forms.ComboBox cBoxDataBits;
-        private System.Windows.Forms.ComboBox cBoxBaudRate;
         private System.Windows.Forms.ComboBox cBoxCOMPORT;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.TextBox tBoxDataIN;
         private System.Windows.Forms.Button btnSendData;
         private System.Windows.Forms.TextBox tBoxDataOut;
-        private System.Windows.Forms.CheckBox chBoxRTSEnable;
-        private System.Windows.Forms.CheckBox chBoxDtrEnable;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem COMCTRLToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 송신ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 수ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ExitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem OpenToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem CloseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ClearToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ClearRXToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem writeToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.ToolStripMenuItem CursorToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btnModel;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuEndLineNone;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuEndLineBoth;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuEndLineLF;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuEndLineCR;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuTop;
-        private System.Windows.Forms.ToolStripMenuItem tSMenuDown;
         private System.Windows.Forms.TextBox tBoxActionState;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.TextBox tBoxIMEI;
         private System.Windows.Forms.Button btnIMEI;
         private System.Windows.Forms.TextBox tBoxIMSI;
         private System.Windows.Forms.Button btnIMSI;
-        private System.Windows.Forms.TextBox tBoxManu;
-        private System.Windows.Forms.Button btnManufac;
-        private System.Windows.Forms.TextBox tBoxModel;
         private System.Windows.Forms.TextBox tBoxIccid;
         private System.Windows.Forms.Button btnICCID;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem initinfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem provisionToolStripMenuItem;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox tBoxSVCCD;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.CheckBox cBoxAutoBS;
-        private System.Windows.Forms.ComboBox cBoxSERVER;
         private System.Windows.Forms.ToolStripMenuItem registerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem autobsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem enableToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem disableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deregisterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem serverTSMenu;
-        private System.Windows.Forms.ToolStripMenuItem devserverToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cvsserverToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem opserverToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
-        private System.Windows.Forms.TextBox tBoxDeviceModel;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button btnATCMD;
-        private System.Windows.Forms.CheckBox cBoxSendHex;
-        private System.Windows.Forms.CheckBox cBoxLogSave;
         private System.Windows.Forms.ComboBox cBoxATCMD;
         private System.Windows.Forms.TextBox tBoxDeviceSN;
-        private System.Windows.Forms.Button button5;
         private System.Windows.Forms.TextBox tBoxDeviceVer;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel tSStatusLblLTE;
-        private System.Windows.Forms.ToolStripProgressBar tSProgressLTE;
-        private System.Windows.Forms.ToolStripStatusLabel tSStatusLblLWM2M;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripStatusLabel tSStatusLblLWM2M1;
-        private System.Windows.Forms.ToolStripProgressBar tSProgressLwm2m;
         private System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tBoxDeviceModel;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Button btnModuleInfo;
+        private System.Windows.Forms.Label lbModel;
+        private System.Windows.Forms.Label lbModelName;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lbMaker;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label lbModemVer;
+        private System.Windows.Forms.Label label8;
     }
 }
 
