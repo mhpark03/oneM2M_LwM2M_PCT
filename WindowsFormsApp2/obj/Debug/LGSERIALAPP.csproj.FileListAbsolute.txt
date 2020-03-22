@@ -65,4 +65,3 @@ D:\VisualStudio\workspace\oneM2M_PCT\WindowsFormsApp2\bin\Debug\LGSERIALAPP.pdb
 D:\VisualStudio\workspace\oneM2M_PCT\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.dll
 D:\VisualStudio\workspace\oneM2M_PCT\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.xml
 D:\VisualStudio\workspace\oneM2M_PCT\WindowsFormsApp2\obj\Debug\LGSERIALAPP.csproj.CopyComplete
-D:\VisualStudio\workspace\oneM2M_PCT\WindowsFormsApp2\obj\Debug\LGSERIALAPP.TestCase.resources

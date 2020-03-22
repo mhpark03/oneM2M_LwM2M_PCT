@@ -35,6 +35,9 @@
   <PropertyGroup>
     <ApplicationIcon>icons8-rs-232-male-48.png.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>WindowsFormsApp2.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -58,19 +61,10 @@
     <Compile Include="PCTMain.Designer.cs">
       <DependentUpon>PCTMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="TestCase.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TestCase.Designer.cs">
-      <DependentUpon>TestCase.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="PCTMain.resx">
       <DependentUpon>PCTMain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestCase.resx">
-      <DependentUpon>TestCase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
