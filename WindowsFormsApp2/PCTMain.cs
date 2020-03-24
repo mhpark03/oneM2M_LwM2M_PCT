@@ -141,9 +141,7 @@ namespace WindowsFormsApp2
             autogetNWmode,
         }
 
-        string sendWith;
         string dataIN;
-        string RxDispOrder;
         string serverip = "\"106.103.233.155\"";
         string serverport = "5783";
         int network_chkcnt = 3;
@@ -163,7 +161,6 @@ namespace WindowsFormsApp2
         string oneM2MMEFPort = "80";
         string oneM2MBRKIP = "106.103.230.207";
         string oneM2MBRKPort = "8080";
-        int oneM2Mmode = 0;
 
         Dictionary<string, string> commands = new Dictionary<string, string>();
         Dictionary<char, int> bcdvalues = new Dictionary<char, int>();
@@ -196,11 +193,7 @@ namespace WindowsFormsApp2
                 cBoxCOMPORT.SelectedIndex = 0;
             }
 
-            sendWith = "Both";
-            RxDispOrder = "BOTTOM";
-
-            groupBox1.Enabled = false;
-            groupBox4.Enabled = false;
+            gbModule.Enabled = false;
 
             bcdvalues.Add('0', 0);
             bcdvalues.Add('1', 1);
@@ -336,6 +329,10 @@ namespace WindowsFormsApp2
             commands.Add("getmodemvernt", "AT*ST*INFO?");
             commands.Add("autogetmodemvernt", "AT*ST*INFO?");
 
+            /////   디바이스 초기값 설정
+            dev.entityId = string.Empty;
+            dev.type = string.Empty;
+
             /////   서버 초기값 설정
             svr.enrmtKeyId = string.Empty;
         }
@@ -343,7 +340,20 @@ namespace WindowsFormsApp2
         // COMM PORT 연결
         private void ProgressBar1_Click(object sender, EventArgs e)
         {
-            if (serialPort1.IsOpen)
+            if(cBoxCOMPORT.Items.Count == 0)
+            {
+                string[] ports = SerialPort.GetPortNames();
+                if (ports.Length == 0)
+                {
+                    logPrintInTextBox("연결 가능한 COM PORT가 없습니다.", "");
+                }
+                else
+                {
+                    cBoxCOMPORT.Items.AddRange(ports);
+                    cBoxCOMPORT.SelectedIndex = 0;
+                }
+            }
+            else if(serialPort1.IsOpen)
             {
                 this.doCloseComPort();
             }
@@ -369,12 +379,100 @@ namespace WindowsFormsApp2
         }
 
         // oneM2M 플랫폼서버로 단말 인증 요청
-        private void btnMEFAuth_Click(object sender, EventArgs e)
+        private void btnMEFAuthD_Click(object sender, EventArgs e)
         {
-            Provision();
+            if (isDeviceInfo())
+            {
+                // oneM2M 플랫폼 인증 요청
+                this.sendDataOut(commands["getonem2mmode"]);
+                lbActionState.Text = states.getonem2mmode.ToString();
+                timer1.Start();
+            }
         }
 
+        // oneM2M 플랫폼서버로 CSEBase확인
+        private void btnGetCSED_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+                this.sendDataOut(commands["getCSEbase"]);
+                lbActionState.Text = states.getCSEbase.ToString();
+            }
+        }
+
+        // oneM2M 플랫폼 서버로 remoteCSE 조회
         private void btnGetDeviceCSR_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+                this.sendDataOut(commands["getremoteCSE"]);
+                lbActionState.Text = states.getremoteCSE.ToString();
+            }
+        }
+
+        // oneM2M 플랫폼 서버 remoteCSE 생성
+        private void btnCreateDeviceCSR_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+                this.sendDataOut(commands["setremoteCSE"]);
+                lbActionState.Text = states.setremoteCSE.ToString();
+            }
+        }
+
+        // 플랫폼 서버 remoteCSE 수정 (단말 IP 변경시 poa update 필수)
+
+        private void btnDeviceUpdateCSR_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+                this.sendDataOut(commands["updateremoteCSE"]);
+                lbActionState.Text = states.updateremoteCSE.ToString();
+            }
+        }
+
+        private void btnDelDeviceCSR_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+                //this.sendDataOut(commands["updateremoteCSE"]);
+                //lbActionState.Text = states.updateremoteCSE.ToString();
+            }
+        }
+
+        private void btnSetContainer_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+                //this.sendDataOut(commands["setcontainer"]);
+                //lbActionState.Text = states.setcontainer.ToString();
+            }
+        }
+
+        private void btnDelContainer_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+                //this.sendDataOut(commands["setcontainer"]);
+                //lbActionState.Text = states.setcontainer.ToString();
+            }
+        }
+
+        private void btnSetSubscript_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+                this.sendDataOut(commands["setsubscript"]);
+                lbActionState.Text = states.setsubscript.ToString();
+            }
+        }
+
+        private void btnSendDataOneM2M_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnRcvDataOneM2M_Click(object sender, EventArgs e)
         {
 
         }
@@ -398,41 +496,6 @@ namespace WindowsFormsApp2
         private void tSMenuTxVersion_Click(object sender, EventArgs e)
         {
             DeviceFWVerSendOne(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
-        }
-
-        private void btnCreateDeviceCSR_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnDelDeviceCSR_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnSetContainer_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnDelContainer_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnSendDataOneM2M_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnRcvDataOneM2M_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnDeviceVerOneM2M_Click(object sender, EventArgs e)
-        {
-
         }
 
         // MEF Auth
@@ -556,14 +619,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                // LWM2M bootstrap 자동 요청 순서
-                // (servertype) - endpointpame - mbsps - bootstrap
-                // 플랫폼 서버 타입 설정
-                //AT+QLWM2M="select",2
-                this.sendDataOut(commands["setservertype"]);
-                lbActionState.Text = states.setservertype.ToString();
-
-                timer1.Start();
+                DeviceProvision();
             }
         }
 
@@ -572,17 +628,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if (oneM2Mmode == 0)   //oneM2M : remoteCSE 요청
-                {
-                    // 플랫폼 서버 remoteCSE, container 등록 요청
-                    // getCSEbase - getremoteCSE - setremoteCSE - setcontainer - setsubscript,
-
-                    //this.sendDataOut(commands["getCSEbase"]);
-                    //lbActionState.Text = states.getCSEbase.ToString();
-                    this.sendDataOut(commands["getremoteCSE"]);
-                    lbActionState.Text = states.getremoteCSE.ToString();
-                }
-                else if (lbModel.Text == "BG96")
+                if (dev.model == "BG96")
                 {
                     // 플랫폼 등록 요청
                     //AT+QLWM2M="register"
@@ -612,7 +658,7 @@ namespace WindowsFormsApp2
             if (isDeviceInfo())
             {
 
-                if (lbModel.Text == "BG96")
+                if (dev.model == "BG96")
                 {
                     // 플랫폼 등록해제 요청
                     //AT+QLWM2M="deregister"
@@ -632,7 +678,7 @@ namespace WindowsFormsApp2
         // LwM2M 플랫폼서버로 DEVICE VERSION REPORT
         private void btnDeviceVerLwM2M_Click(object sender, EventArgs e)
         {
-            if (oneM2Mmode == 0)      // oneM2M : MEF Auth인증 요청
+            if (dev.type == "oneM2M")      // oneM2M : MEF Auth인증 요청
                 DeviceFWVerSendOne(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
             else
                 DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
@@ -666,8 +712,7 @@ namespace WindowsFormsApp2
 
                 serialPort1.Open();
                 progressBar1.Value = 100;
-                groupBox1.Enabled = true;
-                groupBox4.Enabled = true;
+                gbModule.Enabled = true;
                 logPrintInTextBox("COM PORT가 연결 되었습니다.", "");
 
                 this.sendDataOut(commands["getcereg"]);
@@ -688,8 +733,7 @@ namespace WindowsFormsApp2
         {
             serialPort1.Close();
             progressBar1.Value = 0;
-            groupBox1.Enabled = false;
-            groupBox4.Enabled = false;
+            gbModule.Enabled = false;
             logPrintInTextBox("COM PORT가 해제 되었습니다.","");
 
         }
@@ -723,18 +767,7 @@ namespace WindowsFormsApp2
                 if (serialPort1.IsOpen)
                 {
                     string sendmsg = dataOUT;
-                    if (sendWith == "Both")     // LF + CR
-                    {
-                        sendmsg = dataOUT + "\r\n";
-                    }
-                    else if (sendWith == "LF")
-                    {
-                        sendmsg = dataOUT + "\r";
-                    }
-                    else if (sendWith == "CR")
-                    {
-                        sendmsg = dataOUT + "\n";
-                    }
+                    sendmsg = dataOUT + "\r\n";
 
                     serialPort1.Write(sendmsg);
                     logPrintInTextBox(sendmsg, "tx");
@@ -787,14 +820,9 @@ namespace WindowsFormsApp2
         {
             string displayMsg = makeLogPrintLine(message,kind);
 
-            if (RxDispOrder == "TOP")
-            {
-                tBoxDataIN.Text = tBoxDataIN.Text.Insert(0, displayMsg);
-            }
-            else
-            {
-                tBoxDataIN.Text += displayMsg;
-            }
+            tBoxDataIN.Text += displayMsg;
+            tBoxDataIN.SelectionStart = tBoxDataIN.TextLength;
+            tBoxDataIN.ScrollToCaret();
 
         }
 
@@ -826,7 +854,7 @@ namespace WindowsFormsApp2
             char[] charValues = dataIN.ToCharArray();
 
             /* Debug를 위해 Hex로 문자열 표시*/
-            
+            /*
             string hexOutput = "";
             foreach (char _eachChar in charValues)
             {
@@ -838,7 +866,7 @@ namespace WindowsFormsApp2
                 hexOutput += String.Format("{0:X}", value);
             }
             logPrintInTextBox(hexOutput, "");
-            
+            */
 
             if (charValues.Length >= 2)
             {
@@ -999,11 +1027,6 @@ namespace WindowsFormsApp2
                     lbActionState.Text = states.idle.ToString();
                     nextcommand = "";
                     timer1.Stop();
-
-                    if (lbModel.Text == ".")
-                    {
-                        isDeviceInfo();     // 모류 발생시 모듈 정보 확인(모델 정보 오류로 인해 전문 오류 발생할 수 있음)
-                    }
                     timer2.Stop();
                     break;
                 case "+ICCID:":
@@ -1017,11 +1040,11 @@ namespace WindowsFormsApp2
 
                     if (lbActionState.Text == states.autogeticcid.ToString())
                     {
-                        if (lbModel.Text == "BG96" || lbMaker.Text == "LIME-I Co., Ltd")
+                        if (dev.model == "BG96" || lbMaker.Text == "LIME-I Co., Ltd")
                         {
                             nextcommand = states.autogetmodemver.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                         }
-                        else if (lbModel.Text == "TPB23")
+                        else if (dev.model == "TPB23")
                         {
                             nextcommand = states.autogetmodemvertpb23.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                         }
@@ -1103,7 +1126,7 @@ namespace WindowsFormsApp2
                     if (ltestatus == "0")
                     {
                         network_chkcnt = 3;             // LTE attach disable일 경우 enable하고 getcereg 3회 확인
-                        if (lbModel.Text == "TPB23")
+                        if (dev.model == "TPB23")
                         {
                             nextcommand = states.setceregtpb23.ToString();
                         }
@@ -1123,7 +1146,7 @@ namespace WindowsFormsApp2
                             {
                                 /*
                                 network_chkcnt = 3;             // LTE attach disable일 경우 enable하고 getcereg 3회 확인
-                                if (lbModel.Text == "TPB23")
+                                if (dev.model == "TPB23")
                                 {
                                     nextcommand = states.setceregtpb23.ToString();
                                 }
@@ -1174,7 +1197,7 @@ namespace WindowsFormsApp2
                     {
                         logPrintInTextBox("oneM2M서버 인증 성공하였습니다.", "");
 
-                        if (lbModel.Text == "알 수 없음")
+                        if (dev.model == ".")
                         {
                             getDeviveInfo();
                         }
@@ -1362,7 +1385,7 @@ namespace WindowsFormsApp2
                     }
                     break;
                 case "$OM_MODEM_UPDATE_FINISH":
-                    if (lbModel.Text == "NTLM3410Y")
+                    if (dev.model == "NTLM3410Y")
                     {
                         this.sendDataOut(commands["modemFWUPfinishLTE"]);
                         lbActionState.Text = states.modemFWUPfinishLTE.ToString();
@@ -1410,7 +1433,7 @@ namespace WindowsFormsApp2
                     }
                     else
                     {
-                        if (lbModel.Text == ".")
+                        if (dev.model == ".")
                         {
                             getDeviveInfo();
                         }
@@ -1686,7 +1709,7 @@ namespace WindowsFormsApp2
                     nextcommand = "";           // 서버 설정 완료
                     break;
                 case states.setserverinfo:
-                    if (lbModel.Text == "BG96")
+                    if (dev.model == "BG96")
                     {
                         nextcommand = "rfreset";           // 서버 변경후 망 재연결
                     }
@@ -1755,7 +1778,7 @@ namespace WindowsFormsApp2
                     }
                     break;
                 case states.setmbsps:
-                    if (lbModel.Text == "BG96")
+                    if (dev.model == "BG96")
                     {
                         // 쿼텔 LWM2M bootstrap 자동 요청 순서
                         // disable - setcdp - servertype - endpointpame - (mbsps) - (enable)
@@ -1937,6 +1960,7 @@ namespace WindowsFormsApp2
                 // autogetmanufac - (autogetmodel) - (autogetimsi) - geticcid
                 case states.autogetmodel:
                     lbModel.Text = str1;
+                    dev.model = str1;
                     this.logPrintInTextBox("모델값이 저장되었습니다.", "");
 
                     setModelConfig(str1);
@@ -2031,6 +2055,7 @@ namespace WindowsFormsApp2
                     break;
                 case states.getmodel:
                     lbModel.Text = str1;
+                    dev.model = str1;
                     lbActionState.Text = states.idle.ToString();
                     timer1.Stop();
                     this.logPrintInTextBox("모델값이 저장되었습니다.", "");
@@ -2072,56 +2097,91 @@ namespace WindowsFormsApp2
                 tbSvcCd.Text = "CATM";
                 tBoxDeviceModel.Text = "AMM5400LG";
                 tBoxDeviceSN.Text = "TEST";
-                oneM2Mmode = 0;
+                dev.type = "oneM2M";
             }
             else if (lbMaker.Text == "QUALCOMM INCORPORATED")        //텔라딘/oneM2M 모듈
             {
                 tbSvcCd.Text = "CATM";
                 tBoxDeviceModel.Text = "AMM5400LG";
                 tBoxDeviceSN.Text = "TEST";
-                oneM2Mmode = 0;
+                dev.type = "oneM2M";
             }
             else if (lbMaker.Text == "LIME-I Co., Ltd")        //라임아이/oneM2M 모듈
             {
                 tbSvcCd.Text = "CATM";
                 tBoxDeviceModel.Text = "LML-D";
                 tBoxDeviceSN.Text = "TEST";
-                oneM2Mmode = 0;
+                dev.type = "oneM2M";
             }
             else if (model.StartsWith("NTLM3", System.StringComparison.CurrentCultureIgnoreCase))         //NTmore/oneM2M 모듈
             {
                 tbSvcCd.Text = "CATM";
                 tBoxDeviceModel.Text = "NTM_Simulator";
                 tBoxDeviceSN.Text = "TEST";
-                oneM2Mmode = 0;
+                dev.type = "oneM2M";
             }
             else if (model == "BG96")                                                                   //쿼텔/LwM2M 모듈
             {
                 tbSvcCd.Text = "CATM";
                 tBoxDeviceModel.Text = "LWEMG";
                 tBoxDeviceSN.Text = "123456";
-                oneM2Mmode = 1;
+                dev.type = "LwM2M";
             }
             else if (model == "TPB23")                                                                   //화웨이/LwM2M 모듈
             {
                 tbSvcCd.Text = "CATM";
                 tBoxDeviceModel.Text = "TPB23";
                 tBoxDeviceSN.Text = "123456";
-                oneM2Mmode = 1;
+                dev.type = "LwM2M";
             }
             else if (model == "GDM7243R1")                                                                   //바인테크/GCT/LwM2M 모듈
             {
                 tbSvcCd.Text = "CATM";
                 tBoxDeviceModel.Text = "VTLM-102G";
                 tBoxDeviceSN.Text = "123456";
-                oneM2Mmode = 1;
+                dev.type = "LwM2M";
             }
             else                                                                                        //default/LwM2M 메뉴 활성화
             {
                 tbSvcCd.Text = "CATM";
                 tBoxDeviceModel.Text = "LWEMG";
                 tBoxDeviceSN.Text = "123456";
-                oneM2Mmode = 1;
+                dev.type = "LwM2M";
+            }
+
+            setControlPanel();
+        }
+
+        private void setControlPanel()
+        {
+            if (dev.type == "oneM2M")                     // oneM2M Device
+            {
+                gbLwM2MDevice.Enabled = false;
+                gbOneM2MDevice.Enabled = true;
+
+                if (svr.enrmtKeyId != string.Empty)
+                    gbOneM2MServer.Enabled = true;
+                else
+                    gbOneM2MServer.Enabled = false;
+                gbLwM2MServer.Enabled = false;
+            }
+            else if (dev.type == "LwM2M")                // LwM2M Device
+            {
+                gbLwM2MDevice.Enabled = true;
+                gbOneM2MDevice.Enabled = false;
+
+                if (svr.enrmtKeyId != string.Empty)
+                    gbLwM2MServer.Enabled = true;
+                else
+                    gbLwM2MServer.Enabled = false;
+                gbOneM2MServer.Enabled = false;
+            }
+            else                                    // Device information None
+            {
+                gbLwM2MDevice.Enabled = false;
+                gbLwM2MServer.Enabled = false;
+                gbOneM2MDevice.Enabled = false;
+                gbOneM2MServer.Enabled = false;
             }
         }
 
@@ -2146,23 +2206,12 @@ namespace WindowsFormsApp2
 
             lbActionState.Text = states.idle.ToString();
         }
-
-        // menubar에서 LWM2M 플랫폼 디바이스 등록을 요청 (bootstrap)
-        private void Provision()
+        // LWM2M 플랫폼 디바이스 등록을 요청 (bootstrap)
+        private void DeviceProvision()
         {
             if (isDeviceInfo())
             {
-                if (oneM2Mmode == 0)      // oneM2M : MEF Auth인증 요청
-                {
-                    // 모듈이 oneM2M 모드인지 확인하고 플랫폼 인증 요청
-                    this.sendDataOut(commands["getonem2mmode"]);
-                    lbActionState.Text = states.getonem2mmode.ToString();
-
-                    // 플랫폼 서버 MEF AUTH 요청
-                    //this.sendDataOut(commands["setmefauthnt"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + tBoxIMSI.Text);
-                    //tBoxActionState.Text = states.setmefauthnt.ToString();
-                }
-                else if (lbModel.Text == "BG96")       //쿼텔
+                if (dev.model == "BG96")       //쿼텔
                 {
                     // 쿼텔 LWM2M bootstrap 자동 요청 순서
                     // (disable) - setcdp - servertype - endpointpame - mbsps - enable
@@ -2174,7 +2223,7 @@ namespace WindowsFormsApp2
                     this.sendDataOut(commands["disable_bg96"]);
                     lbActionState.Text = states.disable_bg96.ToString();
                 }
-                else if (lbModel.Text == "TPB23")
+                else if (dev.model == "TPB23")
                 {
                     // LWM2M bootstrap 자동 요청 순서 (V150)
                     // setncdp - setepnstpb23 - setmbspstpb23 - bootstrapmodetpb23 - bootstraptpb23
@@ -2255,19 +2304,19 @@ namespace WindowsFormsApp2
                 oneM2MBRKPort = "80";
 
                 // 플랫폼 서버의 IP/port 설정
-                if (oneM2Mmode == 0)
+                if (dev.type == "oneM2M")
                 {
                     //AT$OM_SVR_INFO=<svr>,<ip>,<port>
                     this.sendDataOut(commands["setmefserverinfo"] + oneM2MMEFIP + "," + oneM2MMEFPort);
                     lbActionState.Text = states.setmefserverinfo.ToString();
                 }
-                else if (lbModel.Text == "BG96")
+                else if (dev.model == "BG96")
                 {
                     //AT+QLWM2M="cdp",<ip>,<port>
                     this.sendDataOut(commands["setserverinfo"] + "\"" + serverip + "\"," + serverport);
                     lbActionState.Text = states.setserverinfo.ToString();
                 }
-                else if (lbModel.Text == "TPB23")
+                else if (dev.model == "TPB23")
                 {
                     //AT+NCDP=<ip>   TPB23모델
                     this.sendDataOut(commands["setserverinfotpb23"] + "\"" + serverip + "\"," + serverport);
@@ -2299,7 +2348,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                if (oneM2Mmode == 0)      // oneM2M
+                if (dev.type == "oneM2M")      // oneM2M
                 {
                     // Data send to SERVER (string original)
                     //AT$OM_C_INS_REQ=<object>,<length>,<data>
@@ -2308,7 +2357,7 @@ namespace WindowsFormsApp2
 
                     timer1.Start();
                 }
-                else if (lbModel.Text == "BG96")
+                else if (dev.model == "BG96")
                 {
                         // Data send to SERVER (string original)
                         //AT+QLWM2M="uldata",<object>,<length>,<data>
@@ -2417,7 +2466,7 @@ namespace WindowsFormsApp2
 
         private void Button6_Click(object sender, EventArgs e)
         {
-            if (oneM2Mmode == 0)      // oneM2M : MEF Auth인증 요청
+            if (dev.type == "oneM2M")      // oneM2M : MEF Auth인증 요청
                 DeviceFWVerSendOne(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
             else
                 DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
@@ -2481,7 +2530,7 @@ namespace WindowsFormsApp2
 
                 logPrintInTextBox(text + " 로 FOTA응답하였습니다.", "");
 
-                if (lbModel.Text == "BG96")
+                if (dev.model == "BG96")
                 {
                     // Data send to SERVER (string to BCD convert)
                     //AT+QLWM2M="uldata,"fwVr=1.0.0|fwSt=1|fwRt=0"
@@ -2508,7 +2557,7 @@ namespace WindowsFormsApp2
         private void BtnFOTAConti_Click(object sender, EventArgs e)
         {
             device_fota_index = "2";      // 이어받기 index 임의로 2설정
-            if (oneM2Mmode == 0)      // oneM2M : MEF Auth인증 요청
+            if (dev.type == "oneM2M")      // oneM2M : MEF Auth인증 요청
                 DeviceFWVerSendOne(tBoxDeviceVer.Text, "2", device_fota_reseult);
             else
                 DeviceFWVerSend(tBoxDeviceVer.Text, "2", device_fota_reseult);
@@ -2549,6 +2598,9 @@ namespace WindowsFormsApp2
                 string nameCSR = svr.entityId.Replace("-", "");
                 svr.remoteCSEName = "csr-" + nameCSR;
                 //LogWrite("svr.remoteCSEName = " + svr.remoteCSEName);
+
+                setControlPanel();
+                gbServer.Enabled = true;
             }
         }
 
@@ -2938,8 +2990,8 @@ namespace WindowsFormsApp2
         {
             BeginInvoke(new Action(() =>
             {
-                if (tbLog.TextLength > 5000)
-                    tbLog.Text = string.Empty;
+                //if (tbLog.TextLength > 5000)
+                //    tbLog.Text = string.Empty;
                 tbLog.AppendText(Environment.NewLine);
                 tbLog.AppendText(DateTime.Now.ToString("MM/dd HH:mm:ss ") + data);
                 tbLog.SelectionStart = tbLog.TextLength;
@@ -2951,8 +3003,8 @@ namespace WindowsFormsApp2
         {
             BeginInvoke(new Action(() =>
             {
-                if (tbLog.TextLength > 5000)
-                    tbLog.Text = string.Empty;
+                //if (tbLog.TextLength > 5000)
+                //    tbLog.Text = string.Empty;
                 tbLog.AppendText(Environment.NewLine);
                 data = data.Replace("><", ">" + Environment.NewLine + "<");         // xml tag 위치에 줄바꿈 삽입
                 tbLog.AppendText(" " + data);
@@ -3103,24 +3155,30 @@ namespace WindowsFormsApp2
 
     public class Device
     {
-        public string imsi { get; set; } // 디바이스 전화번호
-        public string iccid { get; set; } // 디바이스 ICCID
-        public string entityId { get; set; } // oneM2M 디바이스 EntityID
+        public string imsi { get; set; }            // 디바이스 전화번호
+        public string iccid { get; set; }           // 디바이스 ICCID
+        public string entityId { get; set; }        // oneM2M 디바이스 EntityID
+
+        public string maker { get; set; }           // 모듈 제조사
+        public string model { get; set; }           // 모듈 모델명
+        public string version { get; set; }         // 모듈 펌웨어 버전
+
+        public string type { get; set; }            // 플랫폼 연동 방식 (None/oneM2M/LwM2M)
     }
 
     public class ServiceServer
     {
-        public string svcSvrCd { get; set; } // 서비스 서버의 시퀀스
-        public string svcCd { get; set; } // 서비스 서버의 서비스코드
-        public string svcSvrNum { get; set; } // 서비스 서버의 Num ber
+        public string svcSvrCd { get; set; }        // 서비스 서버의 시퀀스
+        public string svcCd { get; set; }           // 서비스 서버의 서비스코드
+        public string svcSvrNum { get; set; }       // 서비스 서버의 Num ber
 
-        public string enrmtKey { get; set; } // oneM2M 인증 KeyID를 생성하기 위한 Key
-        public string entityId { get; set; } // oneM2M에서 사용하는 서버 ID
-        public string token { get; set; } // 인증구간 통신을 위해 발급하는 Token
+        public string enrmtKey { get; set; }        // oneM2M 인증 KeyID를 생성하기 위한 Key
+        public string entityId { get; set; }        // oneM2M에서 사용하는 서버 ID
+        public string token { get; set; }           // 인증구간 통신을 위해 발급하는 Token
 
-        public string enrmtKeyId { get; set; } // MEF 인증 결과를 통해 생성하는 ID
+        public string enrmtKeyId { get; set; }      // MEF 인증 결과를 통해 생성하는 ID
 
-        public string remoteCSEName { get; set; } // RemoteCSE 리소스 이름
+        public string remoteCSEName { get; set; }   // RemoteCSE 리소스 이름
     }
 
     public class ReqHeader
