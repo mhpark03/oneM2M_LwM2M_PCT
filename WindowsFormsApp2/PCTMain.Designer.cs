@@ -33,6 +33,8 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
+            this.gbTCResult = new System.Windows.Forms.GroupBox();
+            this.tbTCResult = new System.Windows.Forms.TextBox();
             this.gbServerLog = new System.Windows.Forms.GroupBox();
             this.tbLog = new System.Windows.Forms.TextBox();
             this.btnTestPage = new System.Windows.Forms.Button();
@@ -128,9 +130,8 @@
             this.tBoxDataIN = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.gbTCResult = new System.Windows.Forms.GroupBox();
-            this.tbTCResult = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
+            this.gbTCResult.SuspendLayout();
             this.gbServerLog.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -144,7 +145,6 @@
             this.gbModule.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.gbDeviceLog.SuspendLayout();
-            this.gbTCResult.SuspendLayout();
             this.SuspendLayout();
             // 
             // cBoxCOMPORT
@@ -186,6 +186,25 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1510, 678);
             this.panel1.TabIndex = 10;
+            // 
+            // gbTCResult
+            // 
+            this.gbTCResult.Controls.Add(this.tbTCResult);
+            this.gbTCResult.Location = new System.Drawing.Point(500, 488);
+            this.gbTCResult.Name = "gbTCResult";
+            this.gbTCResult.Size = new System.Drawing.Size(472, 182);
+            this.gbTCResult.TabIndex = 37;
+            this.gbTCResult.TabStop = false;
+            this.gbTCResult.Text = "TestCase Message";
+            // 
+            // tbTCResult
+            // 
+            this.tbTCResult.Location = new System.Drawing.Point(0, 25);
+            this.tbTCResult.Multiline = true;
+            this.tbTCResult.Name = "tbTCResult";
+            this.tbTCResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbTCResult.Size = new System.Drawing.Size(466, 146);
+            this.tbTCResult.TabIndex = 35;
             // 
             // gbServerLog
             // 
@@ -658,6 +677,7 @@
             this.btnModemFOTA.TabIndex = 24;
             this.btnModemFOTA.Text = "모듈 FOTA 조회";
             this.btnModemFOTA.UseVisualStyleBackColor = true;
+            this.btnModemFOTA.Click += new System.EventHandler(this.btnModemFOTA_Click);
             // 
             // btnDeviceFOTA
             // 
@@ -667,6 +687,7 @@
             this.btnDeviceFOTA.TabIndex = 23;
             this.btnDeviceFOTA.Text = "디바이스 FOTA 조회";
             this.btnDeviceFOTA.UseVisualStyleBackColor = true;
+            this.btnDeviceFOTA.Click += new System.EventHandler(this.btnDeviceFOTA_Click);
             // 
             // btnGetDeviceCSR
             // 
@@ -1163,25 +1184,6 @@
             this.timer2.Interval = 10000;
             this.timer2.Tick += new System.EventHandler(this.Timer2_Tick);
             // 
-            // gbTCResult
-            // 
-            this.gbTCResult.Controls.Add(this.tbTCResult);
-            this.gbTCResult.Location = new System.Drawing.Point(500, 488);
-            this.gbTCResult.Name = "gbTCResult";
-            this.gbTCResult.Size = new System.Drawing.Size(472, 182);
-            this.gbTCResult.TabIndex = 37;
-            this.gbTCResult.TabStop = false;
-            this.gbTCResult.Text = "TestCase Message";
-            // 
-            // tbTCResult
-            // 
-            this.tbTCResult.Location = new System.Drawing.Point(0, 25);
-            this.tbTCResult.Multiline = true;
-            this.tbTCResult.Name = "tbTCResult";
-            this.tbTCResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbTCResult.Size = new System.Drawing.Size(466, 146);
-            this.tbTCResult.TabIndex = 35;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -1198,6 +1200,8 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panel1.ResumeLayout(false);
+            this.gbTCResult.ResumeLayout(false);
+            this.gbTCResult.PerformLayout();
             this.gbServerLog.ResumeLayout(false);
             this.gbServerLog.PerformLayout();
             this.groupBox11.ResumeLayout(false);
@@ -1221,8 +1225,6 @@
             this.groupBox6.PerformLayout();
             this.gbDeviceLog.ResumeLayout(false);
             this.gbDeviceLog.PerformLayout();
-            this.gbTCResult.ResumeLayout(false);
-            this.gbTCResult.PerformLayout();
             this.ResumeLayout(false);
 
         }

@@ -239,6 +239,7 @@ namespace WindowsFormsApp2
 
         ServiceServer svr = new ServiceServer();
         Device dev = new Device();
+        TCResult tc = new TCResult();
 
         public Form1()
         {
@@ -342,7 +343,7 @@ namespace WindowsFormsApp2
             commands.Add("setserverinfotpb23", "AT+NCDP=");
             commands.Add("setncdp", "AT+NCDP=");
             commands.Add("bootstrapmodetpb23", "AT+MBOOTSTRAPMODE=1");
-            commands.Add("setepnstpb23", "AT+MLWEPNS=ASN_CSE-D-");
+            commands.Add("setepnstpb23", "AT+MLWEPNS=");
             commands.Add("setmbspstpb23", "AT+MLWMBSPS=serviceCode=");
             commands.Add("bootstraptpb23", "AT+MLWGOBOOTSTRAP=1");
             commands.Add("registertpb23", "AT+MLWSREGIND=0");
@@ -443,6 +444,10 @@ namespace WindowsFormsApp2
 
             /////   서버 초기값 설정
             svr.enrmtKeyId = string.Empty;
+
+            tc.state = string.Empty;
+            tc.lwm2m = new string[(int)lwm2mtc.tc0603 + 1];
+            tc.onem2m = new string[(int)onem2mtc.tc021204 + 1];
         }
 
         // COMM PORT 연결
@@ -474,6 +479,8 @@ namespace WindowsFormsApp2
         // 모듈 정보 읽기
         private void btnModuleInfo_Click(object sender, EventArgs e)
         {
+            startLwM2MTC("tc0201");
+
             getDeviveInfo();
         }
 
@@ -481,9 +488,9 @@ namespace WindowsFormsApp2
         private void btnATCMD_Click(object sender, EventArgs e)
         {
             if (cBoxATCMD.Text.Length != 0)
-            {
                 DataOutandstore(cBoxATCMD.Text);
-            }
+            else
+                logPrintInTextBox("전송할 명령어가 없습니다.", "");
         }
 
         // oneM2M 플랫폼서버로 단말 인증 요청
@@ -529,7 +536,6 @@ namespace WindowsFormsApp2
         }
 
         // 플랫폼 서버 remoteCSE 수정 (단말 IP 변경시 poa update 필수)
-
         private void btnDeviceUpdateCSR_Click(object sender, EventArgs e)
         {
             if (isDeviceInfo())
@@ -539,6 +545,7 @@ namespace WindowsFormsApp2
             }
         }
 
+        // 플랫폼 서버 remoteCSE 삭제
         private void btnDelDeviceCSR_Click(object sender, EventArgs e)
         {
             if (isDeviceInfo())
@@ -548,6 +555,7 @@ namespace WindowsFormsApp2
             }
         }
 
+        // 플랫폼 서버 폴더 생성
         private void btnSetContainer_Click(object sender, EventArgs e)
         {
             if (isDeviceInfo())
@@ -557,6 +565,7 @@ namespace WindowsFormsApp2
             }
         }
 
+        // 플랫폼 서버 폴더 삭제
         private void btnDelContainer_Click(object sender, EventArgs e)
         {
             if (isDeviceInfo())
@@ -566,6 +575,7 @@ namespace WindowsFormsApp2
             }
         }
 
+        // 플랫폼 서버 구독 신청
         private void btnSetSubscript_Click(object sender, EventArgs e)
         {
             if (isDeviceInfo())
@@ -575,16 +585,19 @@ namespace WindowsFormsApp2
             }
         }
 
+        // 플랫폼 서버 데이터 전송
         private void btnSendDataOneM2M_Click(object sender, EventArgs e)
         {
 
         }
 
+        // 플랫폼 서버 저장 데이터 수신
         private void btnRcvDataOneM2M_Click(object sender, EventArgs e)
         {
 
         }
 
+        // 디바이스 버전 보고
         private void btnoneM2MDeviceVer_Click(object sender, EventArgs e)
         {
             if (isDeviceInfo())
@@ -596,15 +609,8 @@ namespace WindowsFormsApp2
             }
         }
 
-        private void TSMenuModemVer_Click(object sender, EventArgs e)
-        {
-            this.sendDataOut(commands["getmodemSvrVer"]);
-            lbActionState.Text = states.getmodemSvrVer.ToString();
-
-            timer1.Start();
-        }
-
-        private void TSMenuDeviceVer_Click(object sender, EventArgs e)
+        // 디바이스 버전 체크 (업버전이 있으면 다운로드)
+        private void btnDeviceFOTA_Click(object sender, EventArgs e)
         {
             this.sendDataOut(commands["getdeviceSvrVer"]);
             lbActionState.Text = states.getdeviceSvrVer.ToString();
@@ -612,11 +618,23 @@ namespace WindowsFormsApp2
             timer1.Start();
         }
 
+        // 모듈 버전 체크 (업버전이 있으면 다운로드)
+        private void btnModemFOTA_Click(object sender, EventArgs e)
+        {
+            this.sendDataOut(commands["getmodemSvrVer"]);
+            lbActionState.Text = states.getmodemSvrVer.ToString();
+
+            timer1.Start();
+        }
+
+
         // LwM2M 플랫폼서버로 BOOTSTRAP 요청
         private void btnBootstrap_Click(object sender, EventArgs e)
         {
             if (isDeviceInfo())
             {
+                startLwM2MTC("tc0202");
+
                 DeviceProvision();
             }
         }
@@ -626,6 +644,8 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
+                startLwM2MTC("tc0301");
+
                 if (dev.model == "BG96")
                 {
                     // 플랫폼 등록 요청
@@ -658,6 +678,8 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
+                startLwM2MTC("tc0401");
+
                 if (dev.model == "BG96")
                 {
                     // 플랫폼 등록해제 요청
@@ -684,6 +706,7 @@ namespace WindowsFormsApp2
             }
         }
 
+        // LwM2M 플랫폼 설정 해제
         private void btnLwM2MDisable_Click(object sender, EventArgs e)
         {
             if (isDeviceInfo())
@@ -702,6 +725,11 @@ namespace WindowsFormsApp2
             }
         }
 
+        /// <summary>
+        /// 서비스 서버 관련 동작
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         // MEF Auth
         private void btnMEFAuthS_Click(object sender, EventArgs e)
         {
@@ -798,6 +826,8 @@ namespace WindowsFormsApp2
             LogWrite("----------DATA SEND----------");
             if (svr.enrmtKeyId != string.Empty)
             {
+                startLwM2MTC("tc0502");
+
                 SendDataToPlatform("LwM2M");
             }
             else
@@ -815,6 +845,7 @@ namespace WindowsFormsApp2
             else
                 LogWrite("서버인증파라미터 세팅하세요");
         }
+
         // serial port에서 data 수신이 될 때, 발생하는 이벤트 함수
         private void SerialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -944,6 +975,18 @@ namespace WindowsFormsApp2
             {
                 MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        // 시험절차서 시험 결과를 tbTCResult에 표시.
+        public void logPrintTC(string message)
+        {
+            BeginInvoke(new Action(() =>
+            {
+                tbTCResult.AppendText(Environment.NewLine);
+                tbTCResult.AppendText(DateTime.Now.ToString("hh:mm:ss.fff") + " : " + message);
+                tbTCResult.SelectionStart = tbTCResult.TextLength;
+                tbTCResult.ScrollToCaret();
+            }));
         }
 
         // 송수신 명령/응답 값과 동작 설명을 textbox에 삽입하고 앱 종료시 로그파일로 저장한다.
@@ -1167,7 +1210,7 @@ namespace WindowsFormsApp2
 
                     if (lbActionState.Text == states.autogeticcid.ToString())
                     {
-                        if (dev.model == "BG96" || lbMaker.Text == "LIME-I Co., Ltd")
+                        if (dev.model == "BG96" || dev.maker == "LIME-I Co., Ltd")
                         {
                             nextcommand = states.autogetmodemver.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                         }
@@ -1184,16 +1227,11 @@ namespace WindowsFormsApp2
                 case "ICCID:":
                     // AT+ICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
                     // OK 응답이 따라온다
-                    if (str2.Length > 19)
-                        lbIccid.Text = str2.Substring(str2.Length - 20, 19);
-                    else
-                        lbIccid.Text = str2;
-                    dev.iccid = lbIccid.Text;
-                    logPrintInTextBox("ICCID값이 저장되었습니다.", "");
+                    setDeviceEntityID(str2);
 
                     if (lbActionState.Text == states.autogeticcid.ToString())
                     {
-                        if (lbMaker.Text == "QUALCOMM INCORPORATED" || lbMaker.Text == "LIME-I Co., Ltd")
+                        if (dev.maker == "QUALCOMM INCORPORATED" || dev.maker == "LIME-I Co., Ltd")
                         {
                             nextcommand = states.autogetmodemver.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                         }
@@ -1206,12 +1244,7 @@ namespace WindowsFormsApp2
                 case "+MUICCID:":
                     // AT+MUICCID (NB TPB23모델)의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
                     // OK 응답이 따라온다
-                    if (str2.Length > 19)
-                        lbIccid.Text = str2.Substring(str2.Length - 20, 19);
-                    else
-                        lbIccid.Text = str2;
-                    dev.iccid = lbIccid.Text;
-                    logPrintInTextBox("ICCID값이 저장되었습니다.", "");
+                    setDeviceEntityID(str2);
 
                     if (lbActionState.Text == states.autogeticcidtpb23.ToString())
                     {
@@ -1228,12 +1261,7 @@ namespace WindowsFormsApp2
                 case "@ICCID:":
                     // AT@ICCID?의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
                     // OK 응답이 따라온다
-                    if (str2.Length > 19)
-                        lbIccid.Text = str2.Substring(str2.Length - 20, 19);
-                    else
-                        lbIccid.Text = str2;
-                    dev.iccid = lbIccid.Text;
-                    logPrintInTextBox("ICCID값이 저장되었습니다.", "");
+                    setDeviceEntityID(str2);
 
                     if (lbActionState.Text == states.autogeticcidamtel.ToString())
                     {
@@ -1475,6 +1503,7 @@ namespace WindowsFormsApp2
                 case "*ST*INFO:":
                     string[] modeminfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
                     lbModemVer.Text = modeminfos[1];
+                    dev.version = lbModemVer.Text;
                     logPrintInTextBox("MODEM의 버전을 저장하였습니다.", "");
                     break;
                 case "$OM_DEV_FWDL_START=":
@@ -1482,7 +1511,7 @@ namespace WindowsFormsApp2
                     logPrintInTextBox("FOTA 이미지 크기는 " + str2 + "입니다.", "");
                     break;
                 case "$BIN_DATA=":
-                    if (lbMaker.Text == "AM Telecom")        //AMTEL 모듈은 OK가 오지 않음
+                    if (dev.maker == "AM Telecom")        //AMTEL 모듈은 OK가 오지 않음
                     {
                         string[] oneM2Minfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
                         oneM2Mrcvsize += Convert.ToUInt32(oneM2Minfos[0]);
@@ -1555,6 +1584,16 @@ namespace WindowsFormsApp2
                 case "+QLWEVENT:":
                     // 모듈이 LWM2M서버에 접속/등록하는 단계에서 발생하는 이벤트,
                     // OK 응답 발생하지 않음
+                    // +QLWEVENT=<type>
+
+                    if (tc.state == "tc0202" && str2.StartsWith(" 3", System.StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        endLwM2MTC();
+                        startLwM2MTC("tc0301");       // BG96모델은 Bootstrap 이후 Register 동작 연결됨
+                    }
+                    else if (tc.state == "tc0301"&& str2.StartsWith(" 5", System.StringComparison.CurrentCultureIgnoreCase))
+                        endLwM2MTC();
+
                     if (nextcommand == states.getcereg.ToString())
                         nextcommand = "";
                     timer2.Stop();
@@ -1563,13 +1602,16 @@ namespace WindowsFormsApp2
                     // 모듈이 LWM2M서버 연동 상태 이벤트,
                     // OK 응답 발생하지 않음
                     // AT+MLWEVTIND=<type>
-                    int type = Convert.ToInt32(str2);
                     switch (str2)
                     {
                         case "0":
+                            if (tc.state == "tc0301")
+                                endLwM2MTC();
                             logPrintInTextBox("registration completed", " ");
                             break;
                         case "1":
+                            if (tc.state == "tc0401")
+                                endLwM2MTC();
                             logPrintInTextBox("deregistration completed", " ");
                             break;
                         case "2":
@@ -1579,6 +1621,8 @@ namespace WindowsFormsApp2
                             logPrintInTextBox("10250 object subscription completed", " ");
                             break;
                         case "4":
+                            if (tc.state == "tc0202")
+                                endLwM2MTC();
                             logPrintInTextBox("Bootstrap finished", " ");
                             break;
                         case "5":
@@ -1641,6 +1685,8 @@ namespace WindowsFormsApp2
                             if (Convert.ToInt32(words[2]) == (words[3].Length - 2))    // data size 비교 (양쪽 끝의 " 크기 빼고)
                             {
                                 logPrintInTextBox(words[3] + "를 수신하였습니다.", "");
+                                if (tc.state == "tc0502" && words[3] == tbLwM2MData.Text)
+                                    endLwM2MTC();
                             }
                             else
                             {
@@ -1655,6 +1701,8 @@ namespace WindowsFormsApp2
                                 string hexInPut = words[3].Substring(1, words[3].Length - 2);
                                 string receiveDataIN = BcdToString(hexInPut.ToCharArray());
                                 logPrintInTextBox("\"" + receiveDataIN + "\"를 수신하였습니다.", "");
+                                if (tc.state == "tc0502" && receiveDataIN == tbLwM2MData.Text)
+                                    endLwM2MTC();
                             }
                             else
                             {
@@ -1755,11 +1803,28 @@ namespace WindowsFormsApp2
                     break;
                 case "FW_VER: ":
                     lbModemVer.Text = str2;
+                    dev.version = str2;
                     logPrintInTextBox("모뎀 버전이 저장되었습니다.", "");
                     break;
                 default:
                     break;
             }
+        }
+
+        private void startLwM2MTC(string tcindex)
+        {
+            tc.state = tcindex;
+            logPrintTC(lwm2mtclist[tcindex] + " [시작]");
+            lwm2mtc index = (lwm2mtc)Enum.Parse(typeof(lwm2mtc), tcindex);
+            tc.lwm2m[(int)index] = "FAIL";             // 시험 결과 초기 값(FAIL) 설정, 테스트 후 결과 수정
+        }
+
+        private void endLwM2MTC()
+        {
+            lwm2mtc state = (lwm2mtc)Enum.Parse(typeof(lwm2mtc), tc.state);
+            logPrintTC(lwm2mtclist[state.ToString()] + " [성공]");
+            tc.lwm2m[(int) state] = "PASS";             // 시험 결과 저장
+            tc.state = string.Empty;
         }
 
         private void setDeviceEntityID(string str)
@@ -1780,6 +1845,9 @@ namespace WindowsFormsApp2
 
                 dev.entityId = "ASN_CSE-D-" + epn + "-" + tbSvcCd.Text;
                 logPrintInTextBox("EntityID = "+dev.entityId, "");
+
+                if (tc.state == "tc0201")
+                    endLwM2MTC();
             }
         }
 
@@ -1943,12 +2011,7 @@ namespace WindowsFormsApp2
                     // (setncdp) - (setepnstpb23) - setmbspstpb23 - bootstrapmodetpb23 - bootstraptpb23
                     // End Point Name Parameter 설정
                     //AT+MLWEPNS="LWM2M 서버 entityID"
-                    String md5value = getMd5Hash(dev.imsi + dev.iccid);
-                    logPrintInTextBox(md5value, "");
-
-                    string epn = md5value.Substring(0, 5) + md5value.Substring(md5value.Length - 5, 5);
-
-                    this.sendDataOut(commands["setepnstpb23"] + epn + "-" + tbSvcCd.Text);
+                    this.sendDataOut(commands["setepnstpb23"] + dev.entityId);
                     lbActionState.Text = states.setepnstpb23.ToString();
 
                     timer1.Start();
@@ -2069,6 +2132,7 @@ namespace WindowsFormsApp2
                 // (autogetmanufac) - (autogetmodel) - autogetimsi - geticcid
                 case states.autogetmanufac:
                     lbMaker.Text = str1;
+                    dev.maker = str1;
                     this.logPrintInTextBox("제조사값이 저장되었습니다.", "");
                     if (str1 == "AM Telecom" || str1 == "QUALCOMM INCORPORATED"
                         || str1 == "LIME-I Co., Ltd")        //AMTEL 모듈은 OK가 오지 않음
@@ -2114,7 +2178,7 @@ namespace WindowsFormsApp2
                         lbIMSI.Text = ctn;
                         dev.imsi = ctn;
 
-                        if (lbMaker.Text == "AM Telecom")        //AMTEL 모듈은 OK가 오지 않음
+                        if (dev.maker == "AM Telecom")        //AMTEL 모듈은 OK가 오지 않음
                         {
                             lbActionState.Text = states.autogeticcidamtel.ToString();
                             nextcommand = states.autogeticcidamtel.ToString();
@@ -2200,6 +2264,7 @@ namespace WindowsFormsApp2
                     break;
                 case states.getmanufac:
                     lbMaker.Text = str1;
+                    dev.maker = str1;
                     lbActionState.Text = states.idle.ToString();
                     timer1.Stop();
                     this.logPrintInTextBox("제조사값이 저장되었습니다.", "");
@@ -2207,6 +2272,7 @@ namespace WindowsFormsApp2
                 case states.getmodemver:
                 case states.getmodemvertpb23:
                     lbModemVer.Text = str1;
+                    dev.version = str1;
                     lbActionState.Text = states.idle.ToString();
                     timer1.Stop();
                     this.logPrintInTextBox("모뎀버전이 저장되었습니다.", "");
@@ -2214,6 +2280,7 @@ namespace WindowsFormsApp2
                 case states.autogetmodemver:
                 case states.autogetmodemvertpb23:
                     lbModemVer.Text = str1;
+                    dev.version = str1;
                     this.logPrintInTextBox("모뎀버전이 저장되었습니다.", "");
                     break;
                 default:
@@ -2223,21 +2290,21 @@ namespace WindowsFormsApp2
 
         private void setModelConfig(string model)
         {
-            if (lbMaker.Text == "AM Telecom")        //AMTEL/oneM2M 모듈
+            if (dev.maker == "AM Telecom")        //AMTEL/oneM2M 모듈
             {
                 tbSvcCd.Text = "CATM";
                 tBoxDeviceModel.Text = "AMM5400LG";
                 tBoxDeviceSN.Text = "TEST";
                 dev.type = "oneM2M";
             }
-            else if (lbMaker.Text == "QUALCOMM INCORPORATED")        //텔라딘/oneM2M 모듈
+            else if (dev.maker == "QUALCOMM INCORPORATED")        //텔라딘/oneM2M 모듈
             {
                 tbSvcCd.Text = "CATM";
                 tBoxDeviceModel.Text = "AMM5400LG";
                 tBoxDeviceSN.Text = "TEST";
                 dev.type = "oneM2M";
             }
-            else if (lbMaker.Text == "LIME-I Co., Ltd")        //라임아이/oneM2M 모듈
+            else if (dev.maker == "LIME-I Co., Ltd")        //라임아이/oneM2M 모듈
             {
                 tbSvcCd.Text = "CATM";
                 tBoxDeviceModel.Text = "LML-D";
@@ -3088,7 +3155,7 @@ namespace WindowsFormsApp2
                 //if (tbLog.TextLength > 5000)
                 //    tbLog.Text = string.Empty;
                 tbLog.AppendText(Environment.NewLine);
-                tbLog.AppendText(DateTime.Now.ToString("MM/dd HH:mm:ss ") + data);
+                tbLog.AppendText(DateTime.Now.ToString("hh:mm:ss.fff") + " : " + data);
                 tbLog.SelectionStart = tbLog.TextLength;
                 tbLog.ScrollToCaret();
             }));
@@ -3246,6 +3313,13 @@ namespace WindowsFormsApp2
                 LogWrite(ex.ToString());
             }
         }
+    }
+
+    public class TCResult
+    {
+        public string state { get; set; }            // 테스트 중인 항목
+        public string[] lwm2m { get; set; }           // LwM2M 항목별 시험결과
+        public string[] onem2m { get; set; }           // oneM2M 항목별 시험결과
     }
 
     public class Device
