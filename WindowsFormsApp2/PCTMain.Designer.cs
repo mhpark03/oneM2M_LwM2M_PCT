@@ -638,6 +638,7 @@
             this.tbContainer.Name = "tbContainer";
             this.tbContainer.Size = new System.Drawing.Size(249, 21);
             this.tbContainer.TabIndex = 28;
+            this.tbContainer.Text = "TEST";
             // 
             // btnSetContainer
             // 

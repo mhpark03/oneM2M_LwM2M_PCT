@@ -31,11 +31,13 @@ namespace WindowsFormsApp2
             autogetmanufac,
             autogetimsi,
             autogeticcid,
+
             bootstrap,
             setserverinfo,
             setserverinfotpb23,
             setmefserverinfo,
             sethttpserverinfo,
+            getserverinfo,
             setncdp,
             setservertype,
             setepns,
@@ -65,6 +67,7 @@ namespace WindowsFormsApp2
             getremoteCSE,
             setremoteCSE,
             updateremoteCSE,
+            delremoteCSE,
             setcontainer,
             setsubscript,
             getonem2mdata,
@@ -220,10 +223,10 @@ namespace WindowsFormsApp2
         UInt32 oneM2Mtotalsize = 0;
         UInt32 oneM2Mrcvsize = 0;
 
-        string oneM2MMEFIP = "106.103.230.209";
+        string oneM2MMEFIP = "106.103.234.198";
         string oneM2MMEFPort = "80";
-        string oneM2MBRKIP = "106.103.230.207";
-        string oneM2MBRKPort = "8080";
+        string oneM2MBRKIP = "106.103.234.117";
+        string oneM2MBRKPort = "80";
 
         Dictionary<string, string> commands = new Dictionary<string, string>();
         Dictionary<char, int> bcdvalues = new Dictionary<char, int>();
@@ -336,6 +339,7 @@ namespace WindowsFormsApp2
             commands.Add("getremoteCSE", "AT$OM_R_CSE_REQ");
             commands.Add("setremoteCSE", "AT$OM_C_CSE_REQ");
             commands.Add("updateremoteCSE", "AT$OM_U_CSE_REQ");
+            commands.Add("delremoteCSE", "AT$OM_D_CSE_REQ");
             commands.Add("setcontainer", "AT$OM_C_CON_REQ=");
             commands.Add("setsubscript", "AT$OM_C_SUB_REQ=");
             commands.Add("getonem2mdata", "AT$OM_R_INS_REQ=");
@@ -354,6 +358,7 @@ namespace WindowsFormsApp2
 
             commands.Add("setmefserverinfo", "AT$OM_SVR_INFO=1,");
             commands.Add("sethttpserverinfo", "AT$OM_SVR_INFO=2,");
+            commands.Add("getserverinfo", "AT$OM_SVR_INFO?");
 
             commands.Add("getmodemSvrVer", "AT$OM_MODEM_FWUP_REQ");
             commands.Add("setmodemver", "AT$OM_C_MODEM_FWUP_REQ");
@@ -499,8 +504,10 @@ namespace WindowsFormsApp2
             if (isDeviceInfo())
             {
                 // oneM2M 플랫폼 인증 요청
-                this.sendDataOut(commands["getonem2mmode"]);
-                lbActionState.Text = states.getonem2mmode.ToString();
+                startoneM2MTC("tc020101");
+                //AT$OM_SVR_INFO=<svr>,<ip>,<port>
+                this.sendDataOut(commands["setmefserverinfo"] + oneM2MMEFIP + "," + oneM2MMEFPort);
+                lbActionState.Text = states.setmefserverinfo.ToString();
                 timer1.Start();
             }
         }
@@ -510,6 +517,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
+                startoneM2MTC("tc020401");
                 this.sendDataOut(commands["getCSEbase"]);
                 lbActionState.Text = states.getCSEbase.ToString();
             }
@@ -520,6 +528,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
+                startoneM2MTC("tc020501");
                 this.sendDataOut(commands["getremoteCSE"]);
                 lbActionState.Text = states.getremoteCSE.ToString();
             }
@@ -550,8 +559,9 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                //this.sendDataOut(commands["updateremoteCSE"]);
-                //lbActionState.Text = states.updateremoteCSE.ToString();
+                startoneM2MTC("tc021204");
+                this.sendDataOut(commands["delremoteCSE"]);
+                lbActionState.Text = states.delremoteCSE.ToString();
             }
         }
 
@@ -560,9 +570,17 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                //this.sendDataOut(commands["setcontainer"]);
-                //lbActionState.Text = states.setcontainer.ToString();
+                if (tbContainer.TextLength > 0)
+                {
+                    startoneM2MTC("tc020502");
+                    this.sendDataOut(commands["setcontainer"] + tbContainer.Text);
+                    lbActionState.Text = states.setcontainer.ToString();
+                }
+                else
+                    logPrintInTextBox("폴더명을 입력핫요.", "");
             }
+            else
+                logPrintInTextBox("디바이스 상태 확인바랍니다.","");
         }
 
         // 플랫폼 서버 폴더 삭제
@@ -992,20 +1010,21 @@ namespace WindowsFormsApp2
         // 송수신 명령/응답 값과 동작 설명을 textbox에 삽입하고 앱 종료시 로그파일로 저장한다.
         public void logPrintInTextBox(string message, string kind)
         {
-            string displayMsg = makeLogPrintLine(message,kind);
+            string displayMsg = makeLogPrintLine(kind);
 
-            tBoxDataIN.Text += displayMsg;
+            tBoxDataIN.AppendText(Environment.NewLine);
+            tBoxDataIN.AppendText(displayMsg+message);
             tBoxDataIN.SelectionStart = tBoxDataIN.TextLength;
             tBoxDataIN.ScrollToCaret();
 
         }
 
         // 명령어에 대해 동작시각과 방향을 포함하여 저장한다.
-        private string makeLogPrintLine(string msg, string kind)
+        private string makeLogPrintLine(string kind)
         {
             string msg_form;
             DateTime currenttime = DateTime.Now;
-            msg_form = currenttime.ToString("hh:mm:ss.fff") + " : ";
+            msg_form = currenttime.ToString("hh:mm:ss.fff : ");
             if(kind == "tx")
             {
                 msg_form += "==> : ";
@@ -1018,7 +1037,6 @@ namespace WindowsFormsApp2
             {
                 msg_form += "     : ";
             }
-            msg_form = msg_form  + msg + "\r\n";
             return msg_form;
         }
 
@@ -1105,6 +1123,7 @@ namespace WindowsFormsApp2
                 "+QLWDLDATA:",
                 "+QLWOBSERVE:",
 
+                "$OM_SVR_INFO=",
                 "$OM_B_CSE_RSP=",
                 "$OM_R_CSE_RSP=",
                 "$OM_C_CSE_RSP=",
@@ -1348,6 +1367,21 @@ namespace WindowsFormsApp2
 
                     lbActionState.Text = states.idle.ToString();
                     timer1.Stop();
+                    break;                    
+                case "$OM_SVR_INFO=":
+                    // oneM2M server 정보 확인
+                    string[] servers = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+
+                    if (servers[0]==oneM2MMEFIP && servers[1]== oneM2MMEFPort && servers[2]== oneM2MBRKIP && servers[3]== oneM2MBRKPort)
+                    {
+                        logPrintInTextBox("oneM2M서버 설정이 완료되었습니다.", "");
+
+                        if (tc.state == "tc020101")
+                        {
+                            endoneM2MTC();
+                            startoneM2MTC("tc020102");
+                        }
+                    }
                     break;
                 case "$OM_AUTH_RSP=":
                     // oneM2M 인증 결과
@@ -1355,14 +1389,15 @@ namespace WindowsFormsApp2
                     {
                         logPrintInTextBox("oneM2M서버 인증 성공하였습니다.", "");
 
-                        if (dev.model == ".")
-                        {
-                            getDeviveInfo();
-                        }
-                        else if (lbActionState.Text == "fotamefauthnt")
+                        if (lbActionState.Text == "fotamefauthnt")
                         {
                             this.sendDataOut(commands["deviceFWUPfinish"]);
                             lbActionState.Text = states.deviceFWUPfinish.ToString();
+                        }
+                        else
+                        {
+                            if (tc.state == "tc020201")
+                                endoneM2MTC();
                         }
                     }
                     else
@@ -1377,34 +1412,13 @@ namespace WindowsFormsApp2
                 case "$OM_B_CSE_RSP=":
                     // oneM2M CSEBase 조회 결과
                     if (str2 == "2000")
-                    {
-                        // 플랫폼 서버 remoteCSE, container 등록 요청
-                        // (getCSEbase) - (getremoteCSE) - setremoteCSE - setcontainer - setsubscript,
-
-                        this.sendDataOut(commands["getremoteCSE"]);
-                        lbActionState.Text = states.getremoteCSE.ToString();
-                    }
+                        endoneM2MTC();
                     else
-                    {
                         logPrintInTextBox("oneM2M서버 인증 정보 확인이 필요합니다.", "");
-                    }
                     break;
                 case "$OM_R_CSE_RSP=":
                     // oneM2M remoteCSE 조회 결과, 4004이면 생성/2000 또는 2004이면 container 확인
-                    if (str2 == "2004" || str2 == "2000")
-                    {
-                        // 플랫폼 서버 remoteCSE, container 등록 요청
-                        // getCSEbase - (getremoteCSE) - setremoteCSE - (setcontainer) - setsubscript,
-
-                        //this.sendDataOut(commands["setcontainer"]+tBoxDeviceSN.Text);
-                        //lbActionState.Text = states.setcontainer.ToString();
-
-                        // getCSEbase - (getremoteCSE) - (updateremoteCSE) - setcontainer - setsubscript,
-
-                        this.sendDataOut(commands["updateremoteCSE"]);
-                        lbActionState.Text = states.updateremoteCSE.ToString();
-                    }
-                    else
+                    if (str2 == "4105")
                     {
                         // 플랫폼 서버 remoteCSE, container 등록 요청
                         // getCSEbase - (getremoteCSE) - (setremoteCSE) - setcontainer - setsubscript,
@@ -1417,11 +1431,8 @@ namespace WindowsFormsApp2
                     // oneM2M remoteCSE 생성 결과, 2001이면 container 생성 요청
                     if (str2 == "2001" || str2 == "2000" || str2 == "4105")
                     {
-                        // 플랫폼 서버 remoteCSE, container 등록 요청
-                        // getCSEbase - getremoteCSE - (setremoteCSE) - (setcontainer) - setsubscript,
-
-                        this.sendDataOut(commands["setcontainer"] + tBoxDeviceSN.Text);
-                        lbActionState.Text = states.setcontainer.ToString();
+                        if (tc.state == "tc020501")
+                            endoneM2MTC();
                     }
                     else
                     {
@@ -1432,11 +1443,7 @@ namespace WindowsFormsApp2
                     // oneM2M remoteCSE 업데이트 결과, 2004이면 container 생성 요청
                     if (str2 == "2004" || str2 == "2000")
                     {
-                        // 플랫폼 서버 remoteCSE, container 등록 요청
-                        // getCSEbase - getremoteCSE - (updateremoteCSE) - (setcontainer) - setsubscript,
 
-                        this.sendDataOut(commands["setcontainer"] + tBoxDeviceSN.Text);
-                        lbActionState.Text = states.setcontainer.ToString();
                     }
                     else
                     {
@@ -1771,6 +1778,11 @@ namespace WindowsFormsApp2
                 case "$LGTMPF=":
                     if (str2 == "5")
                     {
+                        if(tc.state=="tc020102")
+                        {
+                            endoneM2MTC();
+                            startoneM2MTC("tc020201");
+                        }
                         // 플랫폼 서버 MEF AUTH 요청
                         this.sendDataOut(commands["setmefauthnt"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + dev.imsi);
                         lbActionState.Text = states.setmefauthnt.ToString();
@@ -1824,6 +1836,22 @@ namespace WindowsFormsApp2
             lwm2mtc state = (lwm2mtc)Enum.Parse(typeof(lwm2mtc), tc.state);
             logPrintTC(lwm2mtclist[state.ToString()] + " [성공]");
             tc.lwm2m[(int) state] = "PASS";             // 시험 결과 저장
+            tc.state = string.Empty;
+        }
+
+        private void startoneM2MTC(string tcindex)
+        {
+            tc.state = tcindex;
+            logPrintTC(onem2mtclist[tcindex] + " [시작]");
+            onem2mtc index = (onem2mtc)Enum.Parse(typeof(onem2mtc), tcindex);
+            tc.onem2m[(int)index] = "FAIL";             // 시험 결과 초기 값(FAIL) 설정, 테스트 후 결과 수정
+        }
+
+        private void endoneM2MTC()
+        {
+            onem2mtc state = (onem2mtc)Enum.Parse(typeof(onem2mtc), tc.state);
+            logPrintTC(onem2mtclist[state.ToString()] + " [성공]");
+            tc.onem2m[(int)state] = "PASS";             // 시험 결과 저장
             tc.state = string.Empty;
         }
 
@@ -1907,7 +1935,18 @@ namespace WindowsFormsApp2
                     nextcommand = "skip";
                     break;
                 case states.sethttpserverinfo:
-                    nextcommand = "";           // 서버 설정 완료
+                    this.sendDataOut(commands["getserverinfo"]);
+                    lbActionState.Text = states.getserverinfo.ToString();
+
+                    timer1.Start();
+                    nextcommand = "skip";
+                    break;
+                case states.getserverinfo:
+                    this.sendDataOut(commands["getonem2mmode"]);
+                    lbActionState.Text = states.getonem2mmode.ToString();
+                    
+                    timer1.Start();
+                    nextcommand = "skip";
                     break;
                 case states.setserverinfo:
                     if (dev.model == "BG96")
@@ -2492,11 +2531,6 @@ namespace WindowsFormsApp2
             {
                 serverip = "106.103.233.155";
                 serverport = "5783";
-
-                oneM2MMEFIP = "106.103.234.198";
-                oneM2MMEFPort = "80";
-                oneM2MBRKIP = "106.103.234.117";
-                oneM2MBRKPort = "80";
 
                 // 플랫폼 서버의 IP/port 설정
                 if (dev.type == "oneM2M")
