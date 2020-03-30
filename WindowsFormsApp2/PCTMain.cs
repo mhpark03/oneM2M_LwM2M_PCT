@@ -94,7 +94,6 @@ namespace WindowsFormsApp2
             updateMDLFOTAtpb23,
             lwm2mresettpb23,
             sendmsgstrtpb23,
-            sendmsghextpb23,
             sendmsgvertpb23,
 
             geticcidamtel,
@@ -783,6 +782,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
+                startLwM2MTC("tc0603");
                 DeviceFWVerSend(tBoxDeviceVer.Text, device_fota_state, device_fota_reseult);
             }
         }
@@ -1582,7 +1582,7 @@ namespace WindowsFormsApp2
                         {
                             if (tc.state == "tc020701" && rcvdatas[2] == lbSvroneM2MData.Text)
                                 endoneM2MTC("tc020701");
-                            lbRcvData.Text = rcvdatas[2];
+                            lboneM2MRcvData.Text = rcvdatas[2];
                             logPrintInTextBox(rcvdatas[2] + "를 수신하였습니다.", "");
                         }
                         else
@@ -1741,8 +1741,15 @@ namespace WindowsFormsApp2
                         endLwM2MTC(tc.state);
                         startLwM2MTC("tc0301");       // BG96모델은 Bootstrap 이후 Register 동작 연결됨
                     }
-                    else if (tc.state == "tc0301"&& str2.StartsWith(" 5", System.StringComparison.CurrentCultureIgnoreCase))
+                    else if (tc.state == "tc0301" && str2.StartsWith(" 5", System.StringComparison.CurrentCultureIgnoreCase))
                         endLwM2MTC(tc.state);
+                    else if (str2.StartsWith("6", System.StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (tc.state == string.Empty)
+                            startLwM2MTC("tc0602");         // 서버에서 모듈 FOTA 요청
+                        else if (tc.state == "tc0602")
+                            endLwM2MTC("tc0602");           // 서버에 업데이트 버전 보고 완료
+                    }
 
                     if (nextcommand == states.getcereg.ToString())
                         nextcommand = "";
@@ -1801,6 +1808,9 @@ namespace WindowsFormsApp2
                         {
                             //received hex data make to ascii code
                             string receiveDataIN = BcdToString(rxdatas[1].ToCharArray());
+                            lbLwM2MRcvData.Text = receiveDataIN;
+                            if (tc.state == "tc0502" && receiveDataIN == lbSvrLwM2MData.Text)
+                                endLwM2MTC(tc.state);
                             logPrintInTextBox("\"" + receiveDataIN + "\"를 수신하였습니다.", "");
                         }
                         else
@@ -1835,6 +1845,7 @@ namespace WindowsFormsApp2
                             if (Convert.ToInt32(words[2]) == (words[3].Length - 2))    // data size 비교 (양쪽 끝의 " 크기 빼고)
                             {
                                 logPrintInTextBox(words[3] + "를 수신하였습니다.", "");
+                                lbLwM2MRcvData.Text = words[3];
                                 if (tc.state == "tc0502" && words[3] == lbSvrLwM2MData.Text)
                                     endLwM2MTC(tc.state);
                             }
@@ -1851,6 +1862,7 @@ namespace WindowsFormsApp2
                                 string hexInPut = words[3].Substring(1, words[3].Length - 2);
                                 string receiveDataIN = BcdToString(hexInPut.ToCharArray());
                                 logPrintInTextBox("\"" + receiveDataIN + "\"를 수신하였습니다.", "");
+                                lbLwM2MRcvData.Text = receiveDataIN;
                                 if (tc.state == "tc0502" && receiveDataIN == lbSvrLwM2MData.Text)
                                     endLwM2MTC(tc.state);
                             }
@@ -2048,6 +2060,8 @@ namespace WindowsFormsApp2
 
                     if (device_total_index == device_fota_index)
                     {
+                        if (tc.state == "tc0603")
+                            endLwM2MTC("tc0603");
                         device_total_index = "0";
                         device_fota_index = "0";
                         device_fota_state = "1";        // fota receive sucess
@@ -2281,6 +2295,15 @@ namespace WindowsFormsApp2
                     break;
                 case states.nbpsmode:
                     nextcommand = states.rfoff.ToString();
+                    break;
+                case states.sendmsgstr:
+                case states.sendmsghex:
+                case states.sendmsgstrtpb23:
+                    endLwM2MTC("tc0501");
+                    break;
+                case states.deregister:
+                case states.deregistertpb23:
+                    endLwM2MTC("tc0401");
                     break;
                 default:
                     break;
@@ -2705,17 +2728,6 @@ namespace WindowsFormsApp2
             }
         }
 
-        private void TBoxDataOut_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                //입력 Text값을 플랫폼 서버로 전송
-                this.sendDataToServer();
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-        }
-
         private void sendDataToServer()
         {
             if (isDeviceInfo())
@@ -2724,17 +2736,19 @@ namespace WindowsFormsApp2
                 lbDevLwM2MData.Text = txData;
                 if (dev.model == "BG96")
                 {
-                        // Data send to SERVER (string original)
-                        //AT+QLWM2M="uldata",<object>,<length>,<data>
-                        this.sendDataOut(commands["sendmsgstr"] + txData.Length + ",\"" + txData + "\"");
-                        lbActionState.Text = states.sendmsgstr.ToString();
+                    // Data send to SERVER (string original)
+                    //AT+QLWM2M="uldata",<object>,<length>,<data>
+                    startLwM2MTC("tc0501");
+                    this.sendDataOut(commands["sendmsgstr"] + txData.Length + ",\"" + txData + "\"");
+                    lbActionState.Text = states.sendmsgstr.ToString();
 
-                        timer1.Start();
+                    timer1.Start();
                 }
                 else
                 {
                     // Data send to SERVER (string original)
                     //AT+MLWULDATA=<length>,<data>
+                    startLwM2MTC("tc0501");
                     string hexOutput = StringToBCD(txData.ToCharArray());
 
                     this.sendDataOut(commands["sendmsgstrtpb23"] + hexOutput.Length / 2 + "," + hexOutput);

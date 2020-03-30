@@ -47,6 +47,7 @@
             this.lbEntityId = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.gbLwM2MServer = new System.Windows.Forms.GroupBox();
+            this.lbSvrLwM2MData = new System.Windows.Forms.Label();
             this.lbLwM2MRxData = new System.Windows.Forms.Label();
             this.btnDeviceStatusCheck = new System.Windows.Forms.Button();
             this.btnLwM2MData = new System.Windows.Forms.Button();
@@ -60,16 +61,28 @@
             this.btnSetRemoteCSE = new System.Windows.Forms.Button();
             this.btnGetRemoteCSE = new System.Windows.Forms.Button();
             this.gbOneM2MServer = new System.Windows.Forms.GroupBox();
+            this.lbdevicepoa = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.btnDeviceCheck = new System.Windows.Forms.Button();
+            this.lbSvroneM2MData = new System.Windows.Forms.Label();
             this.lboneM2MRxData = new System.Windows.Forms.Label();
             this.btnDataRetrive = new System.Windows.Forms.Button();
             this.btnSendtoDeviceoneM2M = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.gbOneM2MDevice = new System.Windows.Forms.GroupBox();
+            this.btnDelSubscript = new System.Windows.Forms.Button();
+            this.lbSendedData = new System.Windows.Forms.Label();
+            this.btnDelRxContainer = new System.Windows.Forms.Button();
+            this.btnSetRxContainer = new System.Windows.Forms.Button();
             this.btnoneM2MDeviceVer = new System.Windows.Forms.Button();
             this.btnSetSubscript = new System.Windows.Forms.Button();
             this.btnMEFAuthD = new System.Windows.Forms.Button();
             this.btnDeviceUpdateCSR = new System.Windows.Forms.Button();
-            this.lbRcvData = new System.Windows.Forms.Label();
+            this.lboneM2MRcvData = new System.Windows.Forms.Label();
             this.btnRcvDataOneM2M = new System.Windows.Forms.Button();
             this.btnDelContainer = new System.Windows.Forms.Button();
             this.btnSetContainer = new System.Windows.Forms.Button();
@@ -87,6 +100,7 @@
             this.cBoxATCMD = new System.Windows.Forms.ComboBox();
             this.btnATCMD = new System.Windows.Forms.Button();
             this.gbLwM2MDevice = new System.Windows.Forms.GroupBox();
+            this.lbDevLwM2MData = new System.Windows.Forms.Label();
             this.btnLwM2MDisable = new System.Windows.Forms.Button();
             this.btnDeviceVerLwM2M = new System.Windows.Forms.Button();
             this.btnDeregister = new System.Windows.Forms.Button();
@@ -124,20 +138,8 @@
             this.tBoxDataIN = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.btnDelRxContainer = new System.Windows.Forms.Button();
-            this.btnSetRxContainer = new System.Windows.Forms.Button();
-            this.lbSendedData = new System.Windows.Forms.Label();
-            this.btnDelSubscript = new System.Windows.Forms.Button();
-            this.lbSvroneM2MData = new System.Windows.Forms.Label();
-            this.lbSvrLwM2MData = new System.Windows.Forms.Label();
-            this.lbDevLwM2MData = new System.Windows.Forms.Label();
-            this.btnDeviceCheck = new System.Windows.Forms.Button();
-            this.lbdevicepoa = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
+            this.lbLwM2MRcvData = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.gbTCResult.SuspendLayout();
             this.gbServerLog.SuspendLayout();
@@ -339,6 +341,16 @@
             this.gbLwM2MServer.TabStop = false;
             this.gbLwM2MServer.Text = "LwM2M Device DATA";
             // 
+            // lbSvrLwM2MData
+            // 
+            this.lbSvrLwM2MData.AutoSize = true;
+            this.lbSvrLwM2MData.Location = new System.Drawing.Point(163, 81);
+            this.lbSvrLwM2MData.Name = "lbSvrLwM2MData";
+            this.lbSvrLwM2MData.Size = new System.Drawing.Size(49, 12);
+            this.lbSvrLwM2MData.TabIndex = 40;
+            this.lbSvrLwM2MData.Text = "No data";
+            this.lbSvrLwM2MData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // lbLwM2MRxData
             // 
             this.lbLwM2MRxData.Location = new System.Drawing.Point(163, 35);
@@ -481,6 +493,80 @@
             this.gbOneM2MServer.TabStop = false;
             this.gbOneM2MServer.Text = "oneM2M Device DATA";
             // 
+            // lbdevicepoa
+            // 
+            this.lbdevicepoa.Location = new System.Drawing.Point(221, 17);
+            this.lbdevicepoa.Name = "lbdevicepoa";
+            this.lbdevicepoa.Size = new System.Drawing.Size(164, 16);
+            this.lbdevicepoa.TabIndex = 41;
+            this.lbdevicepoa.Text = "svr.enrmtKey";
+            this.lbdevicepoa.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label12
+            // 
+            this.label12.Location = new System.Drawing.Point(134, 17);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(78, 16);
+            this.label12.TabIndex = 42;
+            this.label12.Text = "poa =";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label13
+            // 
+            this.label13.Location = new System.Drawing.Point(221, 52);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(164, 16);
+            this.label13.TabIndex = 43;
+            this.label13.Text = "svr.token";
+            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label14
+            // 
+            this.label14.Location = new System.Drawing.Point(134, 52);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(78, 16);
+            this.label14.TabIndex = 44;
+            this.label14.Text = "modem ver =";
+            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label15
+            // 
+            this.label15.Location = new System.Drawing.Point(221, 33);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(164, 16);
+            this.label15.TabIndex = 45;
+            this.label15.Text = "svr.entityId";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label16
+            // 
+            this.label16.Location = new System.Drawing.Point(134, 33);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(78, 16);
+            this.label16.TabIndex = 46;
+            this.label16.Text = "device ver =";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnDeviceCheck
+            // 
+            this.btnDeviceCheck.Location = new System.Drawing.Point(16, 17);
+            this.btnDeviceCheck.Name = "btnDeviceCheck";
+            this.btnDeviceCheck.Size = new System.Drawing.Size(118, 50);
+            this.btnDeviceCheck.TabIndex = 40;
+            this.btnDeviceCheck.Text = "디바이스 리소스";
+            this.btnDeviceCheck.UseVisualStyleBackColor = true;
+            this.btnDeviceCheck.Click += new System.EventHandler(this.btnDeviceCheck_Click);
+            // 
+            // lbSvroneM2MData
+            // 
+            this.lbSvroneM2MData.AutoSize = true;
+            this.lbSvroneM2MData.Location = new System.Drawing.Point(163, 111);
+            this.lbSvroneM2MData.Name = "lbSvroneM2MData";
+            this.lbSvroneM2MData.Size = new System.Drawing.Size(49, 12);
+            this.lbSvroneM2MData.TabIndex = 39;
+            this.lbSvroneM2MData.Text = "No data";
+            this.lbSvroneM2MData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // lboneM2MRxData
             // 
             this.lboneM2MRxData.Location = new System.Drawing.Point(163, 73);
@@ -533,7 +619,7 @@
             this.gbOneM2MDevice.Controls.Add(this.btnSetSubscript);
             this.gbOneM2MDevice.Controls.Add(this.btnMEFAuthD);
             this.gbOneM2MDevice.Controls.Add(this.btnDeviceUpdateCSR);
-            this.gbOneM2MDevice.Controls.Add(this.lbRcvData);
+            this.gbOneM2MDevice.Controls.Add(this.lboneM2MRcvData);
             this.gbOneM2MDevice.Controls.Add(this.btnRcvDataOneM2M);
             this.gbOneM2MDevice.Controls.Add(this.btnDelContainer);
             this.gbOneM2MDevice.Controls.Add(this.btnSetContainer);
@@ -551,6 +637,46 @@
             this.gbOneM2MDevice.TabIndex = 25;
             this.gbOneM2MDevice.TabStop = false;
             this.gbOneM2MDevice.Text = "oneM2M";
+            // 
+            // btnDelSubscript
+            // 
+            this.btnDelSubscript.Location = new System.Drawing.Point(323, 77);
+            this.btnDelSubscript.Name = "btnDelSubscript";
+            this.btnDelSubscript.Size = new System.Drawing.Size(75, 20);
+            this.btnDelSubscript.TabIndex = 39;
+            this.btnDelSubscript.Text = "구독삭제";
+            this.btnDelSubscript.UseVisualStyleBackColor = true;
+            this.btnDelSubscript.Click += new System.EventHandler(this.btnDelSubscript_Click);
+            // 
+            // lbSendedData
+            // 
+            this.lbSendedData.AutoSize = true;
+            this.lbSendedData.Location = new System.Drawing.Point(150, 167);
+            this.lbSendedData.Name = "lbSendedData";
+            this.lbSendedData.Size = new System.Drawing.Size(49, 12);
+            this.lbSendedData.TabIndex = 38;
+            this.lbSendedData.Text = "No data";
+            this.lbSendedData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnDelRxContainer
+            // 
+            this.btnDelRxContainer.Location = new System.Drawing.Point(120, 77);
+            this.btnDelRxContainer.Name = "btnDelRxContainer";
+            this.btnDelRxContainer.Size = new System.Drawing.Size(88, 20);
+            this.btnDelRxContainer.TabIndex = 37;
+            this.btnDelRxContainer.Text = "수신폴더삭제";
+            this.btnDelRxContainer.UseVisualStyleBackColor = true;
+            this.btnDelRxContainer.Click += new System.EventHandler(this.btnDelRxContainer_Click);
+            // 
+            // btnSetRxContainer
+            // 
+            this.btnSetRxContainer.Location = new System.Drawing.Point(13, 77);
+            this.btnSetRxContainer.Name = "btnSetRxContainer";
+            this.btnSetRxContainer.Size = new System.Drawing.Size(92, 20);
+            this.btnSetRxContainer.TabIndex = 36;
+            this.btnSetRxContainer.Text = "수신폴더생성";
+            this.btnSetRxContainer.UseVisualStyleBackColor = true;
+            this.btnSetRxContainer.Click += new System.EventHandler(this.btnSetRxContainer_Click);
             // 
             // btnoneM2MDeviceVer
             // 
@@ -592,15 +718,15 @@
             this.btnDeviceUpdateCSR.UseVisualStyleBackColor = true;
             this.btnDeviceUpdateCSR.Click += new System.EventHandler(this.btnDeviceUpdateCSR_Click);
             // 
-            // lbRcvData
+            // lboneM2MRcvData
             // 
-            this.lbRcvData.AutoSize = true;
-            this.lbRcvData.Location = new System.Drawing.Point(146, 111);
-            this.lbRcvData.Name = "lbRcvData";
-            this.lbRcvData.Size = new System.Drawing.Size(101, 12);
-            this.lbRcvData.TabIndex = 31;
-            this.lbRcvData.Text = "No received data";
-            this.lbRcvData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lboneM2MRcvData.AutoSize = true;
+            this.lboneM2MRcvData.Location = new System.Drawing.Point(146, 111);
+            this.lboneM2MRcvData.Name = "lboneM2MRcvData";
+            this.lboneM2MRcvData.Size = new System.Drawing.Size(101, 12);
+            this.lboneM2MRcvData.TabIndex = 31;
+            this.lboneM2MRcvData.Text = "No received data";
+            this.lboneM2MRcvData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnRcvDataOneM2M
             // 
@@ -768,6 +894,8 @@
             // 
             // gbLwM2MDevice
             // 
+            this.gbLwM2MDevice.Controls.Add(this.label17);
+            this.gbLwM2MDevice.Controls.Add(this.lbLwM2MRcvData);
             this.gbLwM2MDevice.Controls.Add(this.lbDevLwM2MData);
             this.gbLwM2MDevice.Controls.Add(this.btnLwM2MDisable);
             this.gbLwM2MDevice.Controls.Add(this.btnDeviceVerLwM2M);
@@ -782,6 +910,16 @@
             this.gbLwM2MDevice.TabIndex = 15;
             this.gbLwM2MDevice.TabStop = false;
             this.gbLwM2MDevice.Text = "LwM2M";
+            // 
+            // lbDevLwM2MData
+            // 
+            this.lbDevLwM2MData.AutoSize = true;
+            this.lbDevLwM2MData.Location = new System.Drawing.Point(150, 83);
+            this.lbDevLwM2MData.Name = "lbDevLwM2MData";
+            this.lbDevLwM2MData.Size = new System.Drawing.Size(49, 12);
+            this.lbDevLwM2MData.TabIndex = 39;
+            this.lbDevLwM2MData.Text = "No data";
+            this.lbDevLwM2MData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnLwM2MDisable
             // 
@@ -835,7 +973,7 @@
             // 
             // btnSendData
             // 
-            this.btnSendData.Location = new System.Drawing.Point(13, 63);
+            this.btnSendData.Location = new System.Drawing.Point(13, 77);
             this.btnSendData.Name = "btnSendData";
             this.btnSendData.Size = new System.Drawing.Size(127, 20);
             this.btnSendData.TabIndex = 19;
@@ -1152,139 +1290,25 @@
             this.timer2.Interval = 10000;
             this.timer2.Tick += new System.EventHandler(this.Timer2_Tick);
             // 
-            // btnDelRxContainer
+            // lbLwM2MRcvData
             // 
-            this.btnDelRxContainer.Location = new System.Drawing.Point(120, 77);
-            this.btnDelRxContainer.Name = "btnDelRxContainer";
-            this.btnDelRxContainer.Size = new System.Drawing.Size(88, 20);
-            this.btnDelRxContainer.TabIndex = 37;
-            this.btnDelRxContainer.Text = "수신폴더삭제";
-            this.btnDelRxContainer.UseVisualStyleBackColor = true;
-            this.btnDelRxContainer.Click += new System.EventHandler(this.btnDelRxContainer_Click);
+            this.lbLwM2MRcvData.AutoSize = true;
+            this.lbLwM2MRcvData.Location = new System.Drawing.Point(146, 61);
+            this.lbLwM2MRcvData.Name = "lbLwM2MRcvData";
+            this.lbLwM2MRcvData.Size = new System.Drawing.Size(101, 12);
+            this.lbLwM2MRcvData.TabIndex = 40;
+            this.lbLwM2MRcvData.Text = "No received data";
+            this.lbLwM2MRcvData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // btnSetRxContainer
+            // label17
             // 
-            this.btnSetRxContainer.Location = new System.Drawing.Point(13, 77);
-            this.btnSetRxContainer.Name = "btnSetRxContainer";
-            this.btnSetRxContainer.Size = new System.Drawing.Size(92, 20);
-            this.btnSetRxContainer.TabIndex = 36;
-            this.btnSetRxContainer.Text = "수신폴더생성";
-            this.btnSetRxContainer.UseVisualStyleBackColor = true;
-            this.btnSetRxContainer.Click += new System.EventHandler(this.btnSetRxContainer_Click);
-            // 
-            // lbSendedData
-            // 
-            this.lbSendedData.AutoSize = true;
-            this.lbSendedData.Location = new System.Drawing.Point(150, 167);
-            this.lbSendedData.Name = "lbSendedData";
-            this.lbSendedData.Size = new System.Drawing.Size(49, 12);
-            this.lbSendedData.TabIndex = 38;
-            this.lbSendedData.Text = "No data";
-            this.lbSendedData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // btnDelSubscript
-            // 
-            this.btnDelSubscript.Location = new System.Drawing.Point(323, 77);
-            this.btnDelSubscript.Name = "btnDelSubscript";
-            this.btnDelSubscript.Size = new System.Drawing.Size(75, 20);
-            this.btnDelSubscript.TabIndex = 39;
-            this.btnDelSubscript.Text = "구독삭제";
-            this.btnDelSubscript.UseVisualStyleBackColor = true;
-            this.btnDelSubscript.Click += new System.EventHandler(this.btnDelSubscript_Click);
-            // 
-            // lbSvroneM2MData
-            // 
-            this.lbSvroneM2MData.AutoSize = true;
-            this.lbSvroneM2MData.Location = new System.Drawing.Point(163, 111);
-            this.lbSvroneM2MData.Name = "lbSvroneM2MData";
-            this.lbSvroneM2MData.Size = new System.Drawing.Size(49, 12);
-            this.lbSvroneM2MData.TabIndex = 39;
-            this.lbSvroneM2MData.Text = "No data";
-            this.lbSvroneM2MData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lbSvrLwM2MData
-            // 
-            this.lbSvrLwM2MData.AutoSize = true;
-            this.lbSvrLwM2MData.Location = new System.Drawing.Point(163, 81);
-            this.lbSvrLwM2MData.Name = "lbSvrLwM2MData";
-            this.lbSvrLwM2MData.Size = new System.Drawing.Size(49, 12);
-            this.lbSvrLwM2MData.TabIndex = 40;
-            this.lbSvrLwM2MData.Text = "No data";
-            this.lbSvrLwM2MData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lbDevLwM2MData
-            // 
-            this.lbDevLwM2MData.AutoSize = true;
-            this.lbDevLwM2MData.Location = new System.Drawing.Point(150, 69);
-            this.lbDevLwM2MData.Name = "lbDevLwM2MData";
-            this.lbDevLwM2MData.Size = new System.Drawing.Size(49, 12);
-            this.lbDevLwM2MData.TabIndex = 39;
-            this.lbDevLwM2MData.Text = "No data";
-            this.lbDevLwM2MData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // btnDeviceCheck
-            // 
-            this.btnDeviceCheck.Location = new System.Drawing.Point(16, 17);
-            this.btnDeviceCheck.Name = "btnDeviceCheck";
-            this.btnDeviceCheck.Size = new System.Drawing.Size(118, 50);
-            this.btnDeviceCheck.TabIndex = 40;
-            this.btnDeviceCheck.Text = "디바이스 리소스";
-            this.btnDeviceCheck.UseVisualStyleBackColor = true;
-            this.btnDeviceCheck.Click += new System.EventHandler(this.btnDeviceCheck_Click);
-            // 
-            // lbdevicepoa
-            // 
-            this.lbdevicepoa.Location = new System.Drawing.Point(221, 17);
-            this.lbdevicepoa.Name = "lbdevicepoa";
-            this.lbdevicepoa.Size = new System.Drawing.Size(164, 16);
-            this.lbdevicepoa.TabIndex = 41;
-            this.lbdevicepoa.Text = "svr.enrmtKey";
-            this.lbdevicepoa.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label12
-            // 
-            this.label12.Location = new System.Drawing.Point(134, 17);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(78, 16);
-            this.label12.TabIndex = 42;
-            this.label12.Text = "poa =";
-            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label13
-            // 
-            this.label13.Location = new System.Drawing.Point(221, 52);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(164, 16);
-            this.label13.TabIndex = 43;
-            this.label13.Text = "svr.token";
-            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label14
-            // 
-            this.label14.Location = new System.Drawing.Point(134, 52);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(78, 16);
-            this.label14.TabIndex = 44;
-            this.label14.Text = "modem ver =";
-            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label15
-            // 
-            this.label15.Location = new System.Drawing.Point(221, 33);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(164, 16);
-            this.label15.TabIndex = 45;
-            this.label15.Text = "svr.entityId";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label16
-            // 
-            this.label16.Location = new System.Drawing.Point(134, 33);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(78, 16);
-            this.label16.TabIndex = 46;
-            this.label16.Text = "device ver =";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(39, 61);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(81, 12);
+            this.label17.TabIndex = 41;
+            this.label17.Text = "데이터 수신 : ";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Form1
             // 
@@ -1385,7 +1409,7 @@
         private System.Windows.Forms.Button btnSetContainer;
         private System.Windows.Forms.Button btnDelDeviceCSR;
         private System.Windows.Forms.Button btnCreateDeviceCSR;
-        private System.Windows.Forms.Label lbRcvData;
+        private System.Windows.Forms.Label lboneM2MRcvData;
         private System.Windows.Forms.Button btnDeviceUpdateCSR;
         private System.Windows.Forms.GroupBox gbLwM2MServer;
         private System.Windows.Forms.Label lbLwM2MRxData;
@@ -1441,6 +1465,8 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Button btnDeviceCheck;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label lbLwM2MRcvData;
     }
 }
 
