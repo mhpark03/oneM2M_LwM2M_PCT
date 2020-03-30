@@ -162,6 +162,7 @@ namespace WindowsFormsApp2
             tc0601,
             tc0602,
             tc0603,
+            tcend,
         }
 
         private enum onem2mtc
@@ -205,6 +206,7 @@ namespace WindowsFormsApp2
             tc021202,
             tc021203,
             tc021204,
+            tcend,
 
         }
 
@@ -416,13 +418,14 @@ namespace WindowsFormsApp2
             lwm2mtclist.Add("tc0601", "6.1 펌웨어 체크 동작 확인");
             lwm2mtclist.Add("tc0602", "6.2 모듈 펌웨어 업그레이드 시험");
             lwm2mtclist.Add("tc0603", "6.3 단말 펌웨어 업그레이드 시험");
+            lwm2mtclist.Add("tcend", "LwM2M 시험절차서");
 
             onem2mtclist.Add("tc020101", "2.1.1 oneM2M URL 설정");
             onem2mtclist.Add("tc020102", "2.1.2 oneM2M 플랫폼 동작 설정");
             onem2mtclist.Add("tc020201", "2.2.1 MEF 인증 (at command oneM2M연동 모두 확인)");
             onem2mtclist.Add("tc020301", "2.3.1 단말 IP 송신");
             onem2mtclist.Add("tc020401", "2.4.1 CSEBase 조회");
-            onem2mtclist.Add("tc020501", "2.5.1 remoteCSE 생성요청 (remoteCSE 조회, at command, oneM2M연동 모두 확인)");
+            onem2mtclist.Add("tc020501", "2.5.1 remoteCSE 생성요청 (remoteCSE 조회/at command oneM2M연동 모두 확인)");
             onem2mtclist.Add("tc020502", "2.5.2 데이터 폴더 생성");
             onem2mtclist.Add("tc020503", "2.5.3 구독 등록");
             onem2mtclist.Add("tc020504", "2.5.4 데이터 생성");
@@ -441,10 +444,11 @@ namespace WindowsFormsApp2
             onem2mtclist.Add("tc021102", "2.11.2 Modem FW update Noti");
             onem2mtclist.Add("tc021103", "2.11.3 Modem FW update start");
             onem2mtclist.Add("tc021104", "2.11.4 Modem FW update Finish");
-            onem2mtclist.Add("tc021201", "2.12.1 데이터 삭제 (delete contentInstance)");
-            onem2mtclist.Add("tc021202", "2.12.2 구독 등록 삭제 (Delete subscription)");
-            onem2mtclist.Add("tc021203", "2.12.3 데이터 폴더 삭제 (Delete container)");
-            onem2mtclist.Add("tc021204", "2.12.4 remoteCSE 삭제 (delete remoteCSE)");
+            onem2mtclist.Add("tc021201", "2.12.1 데이터 삭제)");
+            onem2mtclist.Add("tc021202", "2.12.2 구독 등록 삭제");
+            onem2mtclist.Add("tc021203", "2.12.3 데이터 폴더 삭제");
+            onem2mtclist.Add("tc021204", "2.12.4 remoteCSE 삭제");
+            onem2mtclist.Add("tcend", "oneM2M 시험절차서");
 
             /////   디바이스 초기값 설정
             dev.entityId = string.Empty;
@@ -454,8 +458,8 @@ namespace WindowsFormsApp2
             svr.enrmtKeyId = string.Empty;
 
             tc.state = string.Empty;
-            tc.lwm2m = new string[(int)lwm2mtc.tc0603 + 1];
-            tc.onem2m = new string[(int)onem2mtc.tc021204 + 1];
+            tc.lwm2m = new string[(int)lwm2mtc.tcend + 1];
+            tc.onem2m = new string[(int)onem2mtc.tcend + 1];
         }
 
         // COMM PORT 연결
@@ -1580,8 +1584,13 @@ namespace WindowsFormsApp2
                         int rxsize = Convert.ToInt32(rcvdatas[1]);
                         if (rxsize == rcvdatas[2].Length)
                         {
-                            if (tc.state == "tc020701" && rcvdatas[2] == lbSvroneM2MData.Text)
-                                endoneM2MTC("tc020701");
+                            if (tc.state == "tc020701")
+                            {
+                                if (svr.enrmtKeyId == string.Empty)
+                                    endoneM2MTC("tc020701");
+                                else if(rcvdatas[2] == lbSvroneM2MData.Text)
+                                    endoneM2MTC("tc020701");
+                            }
                             lboneM2MRcvData.Text = rcvdatas[2];
                             logPrintInTextBox(rcvdatas[2] + "를 수신하였습니다.", "");
                         }
@@ -1983,14 +1992,14 @@ namespace WindowsFormsApp2
             tc.state = tcindex;
             logPrintTC(lwm2mtclist[tcindex] + " [시작]");
             lwm2mtc index = (lwm2mtc)Enum.Parse(typeof(lwm2mtc), tcindex);
-            tc.lwm2m[(int)index] = ",FAIL";             // 시험 결과 초기 값(FAIL) 설정, 테스트 후 결과 수정
+            tc.lwm2m[(int)index] = "FAIL";             // 시험 결과 초기 값(FAIL) 설정, 테스트 후 결과 수정
         }
 
         private void endLwM2MTC(string tcindex)
         {
             lwm2mtc state = (lwm2mtc)Enum.Parse(typeof(lwm2mtc), tcindex);
             logPrintTC(lwm2mtclist[state.ToString()] + " [성공]");
-            tc.lwm2m[(int) state] = ",PASS";             // 시험 결과 저장
+            tc.lwm2m[(int) state] = "PASS";             // 시험 결과 저장
             tc.state = string.Empty;
         }
 
@@ -1999,14 +2008,14 @@ namespace WindowsFormsApp2
             tc.state = tcindex;
             logPrintTC(onem2mtclist[tcindex] + " [시작]");
             onem2mtc index = (onem2mtc)Enum.Parse(typeof(onem2mtc), tcindex);
-            tc.onem2m[(int)index] = tcindex + ",FAIL";             // 시험 결과 초기 값(FAIL) 설정, 테스트 후 결과 수정
+            tc.onem2m[(int)index] = "FAIL";             // 시험 결과 초기 값(FAIL) 설정, 테스트 후 결과 수정
         }
 
         private void endoneM2MTC(string tcindex)
         {
             onem2mtc state = (onem2mtc)Enum.Parse(typeof(onem2mtc), tcindex);
             logPrintTC(onem2mtclist[state.ToString()] + " [성공]");
-            tc.onem2m[(int)state] = tcindex + ",PASS";             // 시험 결과 저장
+            tc.onem2m[(int)state] = "PASS";             // 시험 결과 저장
             tc.state = string.Empty;
         }
 
@@ -2803,6 +2812,15 @@ namespace WindowsFormsApp2
 
             Directory.CreateDirectory(pathname);
 
+            if (tbTCResult.Text != "")
+            {
+                filename = "TestResult_" + currenttime.ToString("MMdd_hhmmss") + ".csv";
+                resultFileWrite(pathname, filename);
+
+                filename = "tcresult_log_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
+                logFileWrite(pathname, filename, tbTCResult.Text);
+            }
+
             if (tBoxDataIN.Text != "")
             {
                 filename = "device_log_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
@@ -2813,22 +2831,6 @@ namespace WindowsFormsApp2
             {
                 filename = "server_log_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
                 logFileWrite(pathname, filename, tbLog.Text);
-            }
-
-            if (tbTCResult.Text != "")
-            {
-                filename = "tcresult_log_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
-                logFileWrite(pathname, filename, tbTCResult.Text);
-                if(dev.type == "oneM2M")
-                {
-                    filename = "oneM2M_log_" + currenttime.ToString("MMdd_hhmmss") + ".csv";
-                    resultFileWrite(pathname, filename);
-                }
-                else if (dev.type == "LwM2M")
-                {
-                    filename = "LwM2M_log_" + currenttime.ToString("MMdd_hhmmss") + ".csv";
-                    resultFileWrite(pathname, filename);
-                }
             }
         }
 
@@ -2856,58 +2858,56 @@ namespace WindowsFormsApp2
 
         private void resultFileWrite(string pathname, string filename)
         {
-            // Create a file to write to.
-            FileStream fs = null;
             try
             {
-                fs = new FileStream(pathname + filename, FileMode.Create, FileAccess.Write);
+                // Create a file to write to.
+                FileStream fs = new FileStream(pathname + filename, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096);
+
                 // Create a file to write to.
                 StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
 
-                string devinfo = "모델명," + dev.model + Environment.NewLine;
-                char[] msg = devinfo.ToCharArray();
-                sw.Write(msg, 0, devinfo.Length);
+                string devinfo = "모델명," + dev.model;
+                sw.WriteLine(devinfo);
+                devinfo = "제조사," + dev.maker;
+                sw.WriteLine(devinfo);
+                devinfo = "버전," + dev.version;
+                sw.WriteLine(devinfo);
+                sw.WriteLine("시험일," + DateTime.Now.ToString("MM/dd hh:mm:ss"));
+                sw.WriteLine("EntityID," + dev.entityId);
+                sw.WriteLine(string.Empty);
 
-                devinfo = "제조사," + dev.maker + Environment.NewLine;
-                msg = devinfo.ToCharArray();
-                sw.Write(msg, 0, devinfo.Length);
-
-                devinfo = "버전," + dev.version + Environment.NewLine + Environment.NewLine;
-                msg = devinfo.ToCharArray();
-                sw.Write(msg, 0, devinfo.Length);
-
-                string[] tcresult;
+                string tcresult;
                 if (dev.type == "oneM2M")
-                    tcresult = tc.onem2m;
-                else
-                    tcresult = tc.lwm2m;
-
-                foreach (string text in tcresult)
                 {
-                    if(text != null)
+                    foreach (string tcindex in Enum.GetNames(typeof(onem2mtc)))
                     {
-                        string report = string.Empty;
-                        string[] words = text.Split(',');    // 결과 데이터를 한 문장씩 나누어 array에 저장
+                        devinfo = onem2mtclist[tcindex] + ",";
+                        onem2mtc index = (onem2mtc)Enum.Parse(typeof(onem2mtc), tcindex);
+                        tcresult = tc.onem2m[(int)index];
+                        if (tcresult == null)
+                            devinfo += "Not TEST";
+                        else
+                            devinfo += tcresult;
+                        sw.WriteLine(devinfo);
 
-                        if (words.Length > 1)
-                        {
-                            if (words[1] == "PASS" || words[1] == "FAIL")
-                            {
-                                if (dev.type == "oneM2M")
-                                    report = onem2mtclist[words[0]];
-                                else
-                                    report = lwm2mtclist[words[0]];
-                                report += "," + words[1] + Environment.NewLine;
-
-                                char[] logmsg = report.ToCharArray();
-                                sw.Write(logmsg, 0, report.Length);
-                            }
-                        }
+                    }
+                }
+                else
+                {
+                    foreach (string tcindex in Enum.GetNames(typeof(lwm2mtc)))
+                    {
+                        devinfo = lwm2mtclist[tcindex] + ",";
+                        lwm2mtc indexl = (lwm2mtc)Enum.Parse(typeof(lwm2mtc), tcindex);
+                        tcresult = tc.lwm2m[(int)indexl];
+                        if (tcresult == null)
+                            devinfo += "Not TEST";
+                        else
+                            devinfo += tcresult;
+                        sw.WriteLine(devinfo);
                     }
                 }
 
-                sw.Close();
-                fs.Close();
+                sw.WriteLine(string.Empty);
             }
             catch (Exception err)
             {
