@@ -1471,7 +1471,7 @@ namespace WindowsFormsApp2
                     // oneM2M 인증 결과
                     if (str2 == "2000")
                     {
-                        logPrintInTextBox("oneM2M서버 인증 성공하였습니다."+lbActionState.Text, "");
+                        logPrintInTextBox("oneM2M서버 인증 성공하였습니다.", "");
 
                         if (tc.state == "tc021004")
                         {
@@ -1983,14 +1983,14 @@ namespace WindowsFormsApp2
             tc.state = tcindex;
             logPrintTC(lwm2mtclist[tcindex] + " [시작]");
             lwm2mtc index = (lwm2mtc)Enum.Parse(typeof(lwm2mtc), tcindex);
-            tc.lwm2m[(int)index] = "FAIL";             // 시험 결과 초기 값(FAIL) 설정, 테스트 후 결과 수정
+            tc.lwm2m[(int)index] = ",FAIL";             // 시험 결과 초기 값(FAIL) 설정, 테스트 후 결과 수정
         }
 
         private void endLwM2MTC(string tcindex)
         {
             lwm2mtc state = (lwm2mtc)Enum.Parse(typeof(lwm2mtc), tcindex);
             logPrintTC(lwm2mtclist[state.ToString()] + " [성공]");
-            tc.lwm2m[(int) state] = "PASS";             // 시험 결과 저장
+            tc.lwm2m[(int) state] = ",PASS";             // 시험 결과 저장
             tc.state = string.Empty;
         }
 
@@ -1999,14 +1999,14 @@ namespace WindowsFormsApp2
             tc.state = tcindex;
             logPrintTC(onem2mtclist[tcindex] + " [시작]");
             onem2mtc index = (onem2mtc)Enum.Parse(typeof(onem2mtc), tcindex);
-            tc.onem2m[(int)index] = "FAIL";             // 시험 결과 초기 값(FAIL) 설정, 테스트 후 결과 수정
+            tc.onem2m[(int)index] = tcindex + ",FAIL";             // 시험 결과 초기 값(FAIL) 설정, 테스트 후 결과 수정
         }
 
         private void endoneM2MTC(string tcindex)
         {
             onem2mtc state = (onem2mtc)Enum.Parse(typeof(onem2mtc), tcindex);
             logPrintTC(onem2mtclist[state.ToString()] + " [성공]");
-            tc.onem2m[(int)state] = "PASS";             // 시험 결과 저장
+            tc.onem2m[(int)state] = tcindex + ",PASS";             // 시험 결과 저장
             tc.state = string.Empty;
         }
 
@@ -2029,7 +2029,12 @@ namespace WindowsFormsApp2
                 dev.entityId = "ASN_CSE-D-" + epn + "-" + tbSvcCd.Text;
                 logPrintInTextBox("EntityID = "+dev.entityId, "");
 
-                if (tc.state == "tc0201")
+                if (dev.type == "oneM2M")
+                {
+                    tbTCResult.Text = string.Empty;
+                    tc.state = string.Empty;
+                }
+                else if (tc.state == "tc0201")
                     endLwM2MTC(tc.state);
             }
         }
@@ -2792,32 +2797,121 @@ namespace WindowsFormsApp2
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(tBoxDataIN.Text != "")
+            string pathname = @"c:\temp\seriallog\";
+            DateTime currenttime = DateTime.Now;
+            string filename = null;
+
+            Directory.CreateDirectory(pathname);
+
+            if (tBoxDataIN.Text != "")
             {
-                string pathname = @"c:\temp\seriallog\";
-                DateTime currenttime = DateTime.Now;
-                string filename = "lwm2m_log_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
+                filename = "device_log_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
+                logFileWrite(pathname, filename, tBoxDataIN.Text);
+            }
 
-                Directory.CreateDirectory(pathname);
+            if (tbLog.Text != "")
+            {
+                filename = "server_log_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
+                logFileWrite(pathname, filename, tbLog.Text);
+            }
 
+            if (tbTCResult.Text != "")
+            {
+                filename = "tcresult_log_" + currenttime.ToString("MMdd_hhmmss") + ".txt";
+                logFileWrite(pathname, filename, tbTCResult.Text);
+                if(dev.type == "oneM2M")
+                {
+                    filename = "oneM2M_log_" + currenttime.ToString("MMdd_hhmmss") + ".csv";
+                    resultFileWrite(pathname, filename);
+                }
+                else if (dev.type == "LwM2M")
+                {
+                    filename = "LwM2M_log_" + currenttime.ToString("MMdd_hhmmss") + ".csv";
+                    resultFileWrite(pathname, filename);
+                }
+            }
+        }
+
+        private void logFileWrite(string path, string filename, string text)
+        {
+            // Create a file to write to.
+            FileStream fs = null;
+            try
+            {
+                fs = new FileStream(path + filename, FileMode.Create, FileAccess.Write);
                 // Create a file to write to.
-                FileStream fs = null;
-                try
-                {
-                    fs = new FileStream(pathname + filename, FileMode.Create, FileAccess.Write);
-                    // Create a file to write to.
-                    StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
 
-                    char[] logmsg = tBoxDataIN.Text.ToCharArray();
-                    sw.Write(logmsg, 0, tBoxDataIN.TextLength);
+                char[] logmsg = text.ToCharArray();
+                sw.Write(logmsg, 0, text.Length);
 
-                    sw.Close();
-                    fs.Close();
-                }
-                catch (Exception err)
+                sw.Close();
+                fs.Close();
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void resultFileWrite(string pathname, string filename)
+        {
+            // Create a file to write to.
+            FileStream fs = null;
+            try
+            {
+                fs = new FileStream(pathname + filename, FileMode.Create, FileAccess.Write);
+                // Create a file to write to.
+                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+
+                string devinfo = "모델명," + dev.model + Environment.NewLine;
+                char[] msg = devinfo.ToCharArray();
+                sw.Write(msg, 0, devinfo.Length);
+
+                devinfo = "제조사," + dev.maker + Environment.NewLine;
+                msg = devinfo.ToCharArray();
+                sw.Write(msg, 0, devinfo.Length);
+
+                devinfo = "버전," + dev.version + Environment.NewLine + Environment.NewLine;
+                msg = devinfo.ToCharArray();
+                sw.Write(msg, 0, devinfo.Length);
+
+                string[] tcresult;
+                if (dev.type == "oneM2M")
+                    tcresult = tc.onem2m;
+                else
+                    tcresult = tc.lwm2m;
+
+                foreach (string text in tcresult)
                 {
-                    MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if(text != null)
+                    {
+                        string report = string.Empty;
+                        string[] words = text.Split(',');    // 결과 데이터를 한 문장씩 나누어 array에 저장
+
+                        if (words.Length > 1)
+                        {
+                            if (words[1] == "PASS" || words[1] == "FAIL")
+                            {
+                                if (dev.type == "oneM2M")
+                                    report = onem2mtclist[words[0]];
+                                else
+                                    report = lwm2mtclist[words[0]];
+                                report += "," + words[1] + Environment.NewLine;
+
+                                char[] logmsg = report.ToCharArray();
+                                sw.Write(logmsg, 0, report.Length);
+                            }
+                        }
+                    }
                 }
+
+                sw.Close();
+                fs.Close();
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

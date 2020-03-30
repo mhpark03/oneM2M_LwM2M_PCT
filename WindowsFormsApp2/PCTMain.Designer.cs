@@ -100,6 +100,8 @@
             this.cBoxATCMD = new System.Windows.Forms.ComboBox();
             this.btnATCMD = new System.Windows.Forms.Button();
             this.gbLwM2MDevice = new System.Windows.Forms.GroupBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.lbLwM2MRcvData = new System.Windows.Forms.Label();
             this.lbDevLwM2MData = new System.Windows.Forms.Label();
             this.btnLwM2MDisable = new System.Windows.Forms.Button();
             this.btnDeviceVerLwM2M = new System.Windows.Forms.Button();
@@ -138,8 +140,6 @@
             this.tBoxDataIN = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.lbLwM2MRcvData = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.gbTCResult.SuspendLayout();
             this.gbServerLog.SuspendLayout();
@@ -336,7 +336,7 @@
             this.gbLwM2MServer.Enabled = false;
             this.gbLwM2MServer.Location = new System.Drawing.Point(21, 420);
             this.gbLwM2MServer.Name = "gbLwM2MServer";
-            this.gbLwM2MServer.Size = new System.Drawing.Size(397, 135);
+            this.gbLwM2MServer.Size = new System.Drawing.Size(397, 108);
             this.gbLwM2MServer.TabIndex = 33;
             this.gbLwM2MServer.TabStop = false;
             this.gbLwM2MServer.Text = "LwM2M Device DATA";
@@ -911,6 +911,26 @@
             this.gbLwM2MDevice.TabStop = false;
             this.gbLwM2MDevice.Text = "LwM2M";
             // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(39, 61);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(81, 12);
+            this.label17.TabIndex = 41;
+            this.label17.Text = "데이터 수신 : ";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lbLwM2MRcvData
+            // 
+            this.lbLwM2MRcvData.AutoSize = true;
+            this.lbLwM2MRcvData.Location = new System.Drawing.Point(146, 61);
+            this.lbLwM2MRcvData.Name = "lbLwM2MRcvData";
+            this.lbLwM2MRcvData.Size = new System.Drawing.Size(101, 12);
+            this.lbLwM2MRcvData.TabIndex = 40;
+            this.lbLwM2MRcvData.Text = "No received data";
+            this.lbLwM2MRcvData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // lbDevLwM2MData
             // 
             this.lbDevLwM2MData.AutoSize = true;
@@ -1290,26 +1310,6 @@
             this.timer2.Interval = 10000;
             this.timer2.Tick += new System.EventHandler(this.Timer2_Tick);
             // 
-            // lbLwM2MRcvData
-            // 
-            this.lbLwM2MRcvData.AutoSize = true;
-            this.lbLwM2MRcvData.Location = new System.Drawing.Point(146, 61);
-            this.lbLwM2MRcvData.Name = "lbLwM2MRcvData";
-            this.lbLwM2MRcvData.Size = new System.Drawing.Size(101, 12);
-            this.lbLwM2MRcvData.TabIndex = 40;
-            this.lbLwM2MRcvData.Text = "No received data";
-            this.lbLwM2MRcvData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(39, 61);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(81, 12);
-            this.label17.TabIndex = 41;
-            this.label17.Text = "데이터 수신 : ";
-            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -1322,7 +1322,7 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(748, 452);
             this.Name = "Form1";
-            this.Text = "LGU+ ATcommand TEST";
+            this.Text = "oneM2M/LwM2M Device PCT";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panel1.ResumeLayout(false);
