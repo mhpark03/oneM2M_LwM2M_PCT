@@ -1223,7 +1223,7 @@ namespace WindowsFormsApp2
                 "$OM_DEV_FWUP_RSP=",
                 "$OM_PUSH_DEV_FWUP_RSP=",
                 "$OM_DEV_FWDL_FINISH",
-                "$OM_DEV_FWUP_FINISH",
+                "$OM_DEV_FWUP_FINISH=",
                 "$LGTMPF=",
 
                 "*ST*INFO:",
@@ -1526,7 +1526,7 @@ namespace WindowsFormsApp2
                 case "$OM_U_CSE_RSP=":
                     // oneM2M remoteCSE 업데이트 결과, 2004이면 remoteCSE (poa) 업데이트 성공
                     if (str2 == "2004" && tc.state == "tc020501")
-                        endoneM2MTC("tc020501");
+                        endoneM2MTC(tc.state);
                     break;
                 case "$OM_POA_NOTI=":
                     // oneM2M remoteCSE 업데이트 결과, 2004이면 remoteCSE (poa) 업데이트 성공
@@ -1546,12 +1546,12 @@ namespace WindowsFormsApp2
                 case "$OM_C_SUB_RSP=":
                     // oneM2M subscription 신청 결과
                     if (str2 == "2001" && tc.state == "tc020503")
-                        endoneM2MTC("tc020503");
+                        endoneM2MTC(tc.state);
                     break;
                 case "$OM_D_SUB_RSP=":
                     // oneM2M subscription 삭제 결과
                     if (str2 == "2002" && tc.state == "tc021202")
-                        endoneM2MTC("tc021202");
+                        endoneM2MTC(tc.state);
                     break;
                 case "$OM_C_INS_RSP=":
                     // 플랫폼 서버에 data 송신
@@ -1562,7 +1562,7 @@ namespace WindowsFormsApp2
                         if (svr.enrmtKeyId != string.Empty)
                             RetriveDataToPlatform();
                         else
-                            endoneM2MTC("tc020504");
+                            endoneM2MTC(tc.state);
                     }
                     break;
                 case "$OM_NOTI_IND=":
@@ -1587,9 +1587,9 @@ namespace WindowsFormsApp2
                             if (tc.state == "tc020701")
                             {
                                 if (svr.enrmtKeyId == string.Empty)
-                                    endoneM2MTC("tc020701");
+                                    endoneM2MTC(tc.state);
                                 else if(rcvdatas[2] == lbSvroneM2MData.Text)
-                                    endoneM2MTC("tc020701");
+                                    endoneM2MTC(tc.state);
                             }
                             lboneM2MRcvData.Text = rcvdatas[2];
                             logPrintInTextBox(rcvdatas[2] + "를 수신하였습니다.", "");
@@ -1640,12 +1640,12 @@ namespace WindowsFormsApp2
                     {
                         if (tc.state == "tc021101")
                         {
-                            endoneM2MTC("tc021101");
+                            endoneM2MTC(tc.state);
                             startoneM2MTC("tc021103");
                         }
                         else if (tc.state == string.Empty)
                         {
-                            endoneM2MTC("tc021102");
+                            endoneM2MTC(tc.state);
                             startoneM2MTC("tc021103");
                         }
                         logPrintInTextBox("수신한 MODEM의 버전은 " + modemverinfos[1] + "입니다. 업데이트를 시도합니다.", "");
@@ -1665,7 +1665,7 @@ namespace WindowsFormsApp2
                 case "$OM_MODEM_UPDATE_FINISH":
                     if (tc.state == "tc021103")
                     {
-                        endoneM2MTC("tc021103");
+                        endoneM2MTC(tc.state);
                         startoneM2MTC("tc021104");
                     }
                     else if (tc.state == string.Empty)
@@ -1684,7 +1684,19 @@ namespace WindowsFormsApp2
                     break;
                 case "$OM_MODEM_FWUP_FINISH=":
                     if (tc.state == "tc021104" && str2 == "2004")
-                        endoneM2MTC("tc021104");
+                    {
+                        if (svr.enrmtKeyId != string.Empty)
+                        {
+                            RetriveMverToPlatform();
+
+                            this.sendDataOut(commands["getmodemver"]);
+                            lbActionState.Text = states.getmodemver.ToString();
+
+                            timer1.Start();
+                        }
+                        else
+                            endoneM2MTC(tc.state);
+                    }
                     break;
                 case "$OM_DEV_FWUP_RSP=":
                 case "$OM_PUSH_DEV_FWUP_RSP=":
@@ -1693,12 +1705,12 @@ namespace WindowsFormsApp2
                     {
                         if (tc.state == "tc021001")
                         {
-                            endoneM2MTC("tc021001");
+                            endoneM2MTC(tc.state);
                             startoneM2MTC("tc021003");
                         }
                         else if (tc.state == string.Empty)
                         {
-                            endoneM2MTC("tc021002");
+                            endoneM2MTC(tc.state);
                             startoneM2MTC("tc021003");
                         }
                         tBoxDeviceVer.Text = deviceverinfos[1];
@@ -1713,7 +1725,7 @@ namespace WindowsFormsApp2
                     else if (deviceverinfos[0] == "9001")
                     {
                         if (tc.state == "tc021001")
-                            endoneM2MTC("tc021001");
+                            endoneM2MTC(tc.state);
                         logPrintInTextBox("현재 DEVICE 버전이 최신버전입니다.", "");
                     }
                     else
@@ -1726,7 +1738,7 @@ namespace WindowsFormsApp2
 
                     if (tc.state == "tc021003" && oneM2Mrcvsize == oneM2Mtotalsize)
                     {
-                        endoneM2MTC("tc021003");
+                        endoneM2MTC(tc.state);
                         startoneM2MTC("tc021004");
                     }
                     else if (tc.state == string.Empty)
@@ -1736,9 +1748,20 @@ namespace WindowsFormsApp2
                     this.sendDataOut(commands["fotamefauthnt"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + dev.imsi);
                     lbActionState.Text = states.fotamefauthnt.ToString();
                     break;
-                case "$OM_DEV_FWUP_FINISH":
+                case "$OM_DEV_FWUP_FINISH=":
                     if (tc.state == "tc021004" && str2 == "2004")
-                        endoneM2MTC("tc021004");
+                    {
+                        if (svr.enrmtKeyId != string.Empty)
+                        {
+                            RetrivePoaToPlatform();
+                            RetriveDverToPlatform();
+                            RetriveMverToPlatform();
+                            if (tBoxDeviceVer.Text == lbdevicever.Text && lbModemVer.Text == lbmodemfwrver.Text)
+                                    endoneM2MTC(tc.state);
+                        }
+                        else
+                            endoneM2MTC(tc.state);
+                    }
                     break;
                 case "+QLWEVENT:":
                     // 모듈이 LWM2M서버에 접속/등록하는 단계에서 발생하는 이벤트,
@@ -2495,6 +2518,9 @@ namespace WindowsFormsApp2
                     lbActionState.Text = states.idle.ToString();
                     timer1.Stop();
                     this.logPrintInTextBox("모뎀버전이 저장되었습니다.", "");
+
+                    if (tc.state == "tc021104" && lbModemVer.Text == lbmodemfwrver.Text)
+                        endoneM2MTC(tc.state);
                     break;
                 case states.autogetmodemver:
                 case states.autogetmodemvertpb23:
@@ -3290,9 +3316,9 @@ namespace WindowsFormsApp2
                 XmlNodeList xnList = xDoc.SelectNodes("/*"); //접근할 노드
                 foreach (XmlNode xn in xnList)
                 {
-                    value = xn["poa"].InnerText; // data value
+                    value = xn["vr"].InnerText; // data value
                 }
-                lbdevicepoa.Text = value;
+                lbdevicever.Text = value;
             }
         }
 
@@ -3322,9 +3348,9 @@ namespace WindowsFormsApp2
                 XmlNodeList xnList = xDoc.SelectNodes("/*"); //접근할 노드
                 foreach (XmlNode xn in xnList)
                 {
-                    value = xn["poa"].InnerText; // data value
+                    value = xn["vr"].InnerText; // data value
                 }
-                lbdevicepoa.Text = value;
+                lbmodemfwrver.Text = value;
             }
         }
 
