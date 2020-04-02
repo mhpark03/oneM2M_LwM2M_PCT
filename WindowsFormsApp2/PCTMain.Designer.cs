@@ -1028,7 +1028,7 @@
             // lbIccid
             // 
             this.lbIccid.AutoSize = true;
-            this.lbIccid.Location = new System.Drawing.Point(287, 67);
+            this.lbIccid.Location = new System.Drawing.Point(274, 67);
             this.lbIccid.Name = "lbIccid";
             this.lbIccid.Size = new System.Drawing.Size(9, 12);
             this.lbIccid.TabIndex = 33;
@@ -1037,7 +1037,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(239, 67);
+            this.label11.Location = new System.Drawing.Point(226, 67);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(45, 12);
             this.label11.TabIndex = 32;
@@ -1047,7 +1047,7 @@
             // lbIMSI
             // 
             this.lbIMSI.AutoSize = true;
-            this.lbIMSI.Location = new System.Drawing.Point(127, 67);
+            this.lbIMSI.Location = new System.Drawing.Point(114, 67);
             this.lbIMSI.Name = "lbIMSI";
             this.lbIMSI.Size = new System.Drawing.Size(9, 12);
             this.lbIMSI.TabIndex = 31;
@@ -1056,7 +1056,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(85, 67);
+            this.label9.Location = new System.Drawing.Point(72, 67);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(39, 12);
             this.label9.TabIndex = 30;
@@ -1066,7 +1066,7 @@
             // lbModemVer
             // 
             this.lbModemVer.AutoSize = true;
-            this.lbModemVer.Location = new System.Drawing.Point(287, 44);
+            this.lbModemVer.Location = new System.Drawing.Point(274, 44);
             this.lbModemVer.Name = "lbModemVer";
             this.lbModemVer.Size = new System.Drawing.Size(9, 12);
             this.lbModemVer.TabIndex = 29;
@@ -1075,7 +1075,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(223, 44);
+            this.label8.Location = new System.Drawing.Point(210, 44);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(61, 12);
             this.label8.TabIndex = 28;
@@ -1085,7 +1085,7 @@
             // lbMaker
             // 
             this.lbMaker.AutoSize = true;
-            this.lbMaker.Location = new System.Drawing.Point(137, 23);
+            this.lbMaker.Location = new System.Drawing.Point(124, 23);
             this.lbMaker.Name = "lbMaker";
             this.lbMaker.Size = new System.Drawing.Size(9, 12);
             this.lbMaker.TabIndex = 27;
@@ -1094,7 +1094,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(85, 25);
+            this.label7.Location = new System.Drawing.Point(72, 25);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(49, 12);
             this.label7.TabIndex = 26;
@@ -1104,7 +1104,7 @@
             // lbModel
             // 
             this.lbModel.AutoSize = true;
-            this.lbModel.Location = new System.Drawing.Point(137, 42);
+            this.lbModel.Location = new System.Drawing.Point(124, 42);
             this.lbModel.Name = "lbModel";
             this.lbModel.Size = new System.Drawing.Size(9, 12);
             this.lbModel.TabIndex = 25;
@@ -1121,7 +1121,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(85, 44);
+            this.label5.Location = new System.Drawing.Point(72, 44);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(49, 12);
             this.label5.TabIndex = 23;
@@ -1132,7 +1132,7 @@
             // 
             this.btnModuleInfo.Location = new System.Drawing.Point(17, 26);
             this.btnModuleInfo.Name = "btnModuleInfo";
-            this.btnModuleInfo.Size = new System.Drawing.Size(61, 49);
+            this.btnModuleInfo.Size = new System.Drawing.Size(49, 49);
             this.btnModuleInfo.TabIndex = 16;
             this.btnModuleInfo.Text = "조회";
             this.btnModuleInfo.UseVisualStyleBackColor = true;
