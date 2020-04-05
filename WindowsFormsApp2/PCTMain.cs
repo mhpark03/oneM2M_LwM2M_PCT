@@ -145,6 +145,8 @@ namespace WindowsFormsApp2
             autogetmodemvernt,
             getmodemvergct,
             autogetmodemvergct,
+            getmodemvertld,
+            autogetmodemvertld,
             getNWmode,
             autogetNWmode,
         }
@@ -414,6 +416,8 @@ namespace WindowsFormsApp2
             commands.Add("autogetmodemvernt", "AT*ST*INFO?");
             commands.Add("getmodemvergct", "AT%GSWV1");
             commands.Add("autogetmodemvergct", "AT%GSWV1");
+            commands.Add("getmodemvertld", "AT$$VER?");
+            commands.Add("autogetmodemvertld", "AT$$VER?");
 
             lwm2mtclist.Add("tc0201", "2.1 LWM2M 단말 초기 설정 동작 확인 시험");
             lwm2mtclist.Add("tc0202", "2.2 Bootstrap 절차 및 AT command 확인 시험");
@@ -1495,6 +1499,13 @@ namespace WindowsFormsApp2
                             endoneM2MTC(tc.state);
                             startoneM2MTC("tc020102");
                         }
+                    }
+                    else
+                    {
+                        logPrintInTextBox("oneM2M 서버 설정 확인바랍니다.", "");
+                        timer2.Stop();
+                        nextcommand = "";
+                        lbActionState.Text = states.idle.ToString();
                     }
                     break;
                 case "$OM_AUTH_RSP=":
@@ -3278,7 +3289,7 @@ namespace WindowsFormsApp2
         {
             ReqHeader header = new ReqHeader();
             //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847";
-            if(dev.model == "TM800")
+            if(dev.maker == "QUALCOMM INCORPORATED")
                 header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + dev.imsi + "/nod-m2m_" + dev.imsi + "/fwr-m2m_D_" + dev.imsi;
             else
                 header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + dev.imsi + "/nod-m2m_" + dev.imsi + "/fwr-m2m_D" + dev.imsi;
@@ -3313,8 +3324,8 @@ namespace WindowsFormsApp2
         {
             ReqHeader header = new ReqHeader();
             //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847";
-            if (dev.model == "TM800")
-                header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + dev.imsi + "/nod-m2m_" + dev.imsi + "/fwr-m2m_M_" + dev.imsi;
+            if (dev.maker == "QUALCOMM INCORPORATED")
+                header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + dev.imsi + "/nod-m2m_" + dev.imsi + "/fwr-m2m_" + dev.imsi;
             else
                 header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + dev.imsi + "/nod-m2m_" + dev.imsi + "/fwr-m2m_M" + dev.imsi;
             header.Method = "GET";
