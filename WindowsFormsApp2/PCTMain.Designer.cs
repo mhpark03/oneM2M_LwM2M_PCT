@@ -138,8 +138,6 @@
             this.gbDeviceLog = new System.Windows.Forms.GroupBox();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.tBoxDataIN = new System.Windows.Forms.TextBox();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.gbTCResult.SuspendLayout();
             this.gbServerLog.SuspendLayout();
@@ -1028,7 +1026,7 @@
             // lbIccid
             // 
             this.lbIccid.AutoSize = true;
-            this.lbIccid.Location = new System.Drawing.Point(274, 67);
+            this.lbIccid.Location = new System.Drawing.Point(267, 67);
             this.lbIccid.Name = "lbIccid";
             this.lbIccid.Size = new System.Drawing.Size(9, 12);
             this.lbIccid.TabIndex = 33;
@@ -1037,7 +1035,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(226, 67);
+            this.label11.Location = new System.Drawing.Point(219, 67);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(45, 12);
             this.label11.TabIndex = 32;
@@ -1066,7 +1064,7 @@
             // lbModemVer
             // 
             this.lbModemVer.AutoSize = true;
-            this.lbModemVer.Location = new System.Drawing.Point(274, 44);
+            this.lbModemVer.Location = new System.Drawing.Point(267, 44);
             this.lbModemVer.Name = "lbModemVer";
             this.lbModemVer.Size = new System.Drawing.Size(9, 12);
             this.lbModemVer.TabIndex = 29;
@@ -1075,7 +1073,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(210, 44);
+            this.label8.Location = new System.Drawing.Point(203, 44);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(61, 12);
             this.label8.TabIndex = 28;
@@ -1300,16 +1298,6 @@
             this.tBoxDataIN.Size = new System.Drawing.Size(469, 162);
             this.tBoxDataIN.TabIndex = 22;
             // 
-            // timer1
-            // 
-            this.timer1.Interval = 10000;
-            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
-            // 
-            // timer2
-            // 
-            this.timer2.Interval = 10000;
-            this.timer2.Tick += new System.EventHandler(this.Timer2_Tick);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -1361,12 +1349,10 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox gbModule;
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.TextBox tbSvcCd;
         private System.Windows.Forms.GroupBox gbDeviceLog;
         private System.Windows.Forms.TextBox tBoxDeviceSN;
         private System.Windows.Forms.TextBox tBoxDeviceVer;
-        private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
