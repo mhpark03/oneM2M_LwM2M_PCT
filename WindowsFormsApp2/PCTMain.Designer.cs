@@ -1262,7 +1262,7 @@
             this.tbSvcSvrCd.Name = "tbSvcSvrCd";
             this.tbSvcSvrCd.Size = new System.Drawing.Size(100, 21);
             this.tbSvcSvrCd.TabIndex = 7;
-            this.tbSvcSvrCd.Text = "300";
+            this.tbSvcSvrCd.Text = "111";
             this.tbSvcSvrCd.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // gbDeviceLog
