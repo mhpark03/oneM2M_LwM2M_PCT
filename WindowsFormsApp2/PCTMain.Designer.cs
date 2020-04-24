@@ -74,6 +74,7 @@
             this.btnSendtoDeviceoneM2M = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.gbOneM2MDevice = new System.Windows.Forms.GroupBox();
+            this.btnoneM2MModuleVer = new System.Windows.Forms.Button();
             this.btnDelSubscript = new System.Windows.Forms.Button();
             this.lbSendedData = new System.Windows.Forms.Label();
             this.btnDelRxContainer = new System.Windows.Forms.Button();
@@ -609,6 +610,7 @@
             // 
             // gbOneM2MDevice
             // 
+            this.gbOneM2MDevice.Controls.Add(this.btnoneM2MModuleVer);
             this.gbOneM2MDevice.Controls.Add(this.btnDelSubscript);
             this.gbOneM2MDevice.Controls.Add(this.lbSendedData);
             this.gbOneM2MDevice.Controls.Add(this.btnDelRxContainer);
@@ -635,6 +637,17 @@
             this.gbOneM2MDevice.TabIndex = 25;
             this.gbOneM2MDevice.TabStop = false;
             this.gbOneM2MDevice.Text = "oneM2M";
+            // 
+            // btnoneM2MModuleVer
+            // 
+            this.btnoneM2MModuleVer.Font = new System.Drawing.Font("굴림", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnoneM2MModuleVer.Location = new System.Drawing.Point(204, 189);
+            this.btnoneM2MModuleVer.Name = "btnoneM2MModuleVer";
+            this.btnoneM2MModuleVer.Size = new System.Drawing.Size(101, 20);
+            this.btnoneM2MModuleVer.TabIndex = 40;
+            this.btnoneM2MModuleVer.Text = "ModemFW 보고";
+            this.btnoneM2MModuleVer.UseVisualStyleBackColor = true;
+            this.btnoneM2MModuleVer.Click += new System.EventHandler(this.btnoneM2MModuleVer_Click);
             // 
             // btnDelSubscript
             // 
@@ -678,11 +691,12 @@
             // 
             // btnoneM2MDeviceVer
             // 
-            this.btnoneM2MDeviceVer.Location = new System.Drawing.Point(13, 189);
+            this.btnoneM2MDeviceVer.Font = new System.Drawing.Font("굴림", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnoneM2MDeviceVer.Location = new System.Drawing.Point(6, 189);
             this.btnoneM2MDeviceVer.Name = "btnoneM2MDeviceVer";
-            this.btnoneM2MDeviceVer.Size = new System.Drawing.Size(121, 20);
+            this.btnoneM2MDeviceVer.Size = new System.Drawing.Size(98, 20);
             this.btnoneM2MDeviceVer.TabIndex = 35;
-            this.btnoneM2MDeviceVer.Text = "디바이스 버전 보고";
+            this.btnoneM2MDeviceVer.Text = "DeviceFW 보고";
             this.btnoneM2MDeviceVer.UseVisualStyleBackColor = true;
             this.btnoneM2MDeviceVer.Click += new System.EventHandler(this.btnoneM2MDeviceVer_Click);
             // 
@@ -778,21 +792,22 @@
             // 
             // btnModemFOTA
             // 
-            this.btnModemFOTA.Location = new System.Drawing.Point(281, 189);
+            this.btnModemFOTA.Location = new System.Drawing.Point(305, 189);
             this.btnModemFOTA.Name = "btnModemFOTA";
-            this.btnModemFOTA.Size = new System.Drawing.Size(119, 20);
+            this.btnModemFOTA.Size = new System.Drawing.Size(106, 20);
             this.btnModemFOTA.TabIndex = 24;
-            this.btnModemFOTA.Text = "모듈 FOTA 조회";
+            this.btnModemFOTA.Text = "ModemFW 조회";
             this.btnModemFOTA.UseVisualStyleBackColor = true;
             this.btnModemFOTA.Click += new System.EventHandler(this.btnModemFOTA_Click);
             // 
             // btnDeviceFOTA
             // 
-            this.btnDeviceFOTA.Location = new System.Drawing.Point(140, 189);
+            this.btnDeviceFOTA.Font = new System.Drawing.Font("굴림", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnDeviceFOTA.Location = new System.Drawing.Point(104, 189);
             this.btnDeviceFOTA.Name = "btnDeviceFOTA";
-            this.btnDeviceFOTA.Size = new System.Drawing.Size(135, 20);
+            this.btnDeviceFOTA.Size = new System.Drawing.Size(99, 20);
             this.btnDeviceFOTA.TabIndex = 23;
-            this.btnDeviceFOTA.Text = "디바이스 FOTA 조회";
+            this.btnDeviceFOTA.Text = "DeviceFW 조회";
             this.btnDeviceFOTA.UseVisualStyleBackColor = true;
             this.btnDeviceFOTA.Click += new System.EventHandler(this.btnDeviceFOTA_Click);
             // 
@@ -1453,6 +1468,7 @@
         private System.Windows.Forms.Button btnDeviceCheck;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label lbLwM2MRcvData;
+        private System.Windows.Forms.Button btnoneM2MModuleVer;
     }
 }
 

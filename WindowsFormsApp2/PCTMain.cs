@@ -65,6 +65,7 @@ namespace WindowsFormsApp2
             setonem2mmode,
             setmefauthnt,
             fotamefauthnt,
+            mfotamefauth,
             getCSEbase,
             getremoteCSE,
             setremoteCSE,
@@ -352,6 +353,7 @@ namespace WindowsFormsApp2
             commands.Add("setonem2mmode", "AT$LGTMPF=5");
             commands.Add("setmefauthnt", "AT$OM_AUTH_REQ=");
             commands.Add("fotamefauthnt", "AT$OM_AUTH_REQ=");
+            commands.Add("mfotamefauth", "AT$OM_AUTH_REQ=");
             commands.Add("getCSEbase", "AT$OM_B_CSE_REQ");
             commands.Add("getremoteCSE", "AT$OM_R_CSE_REQ");
             commands.Add("setremoteCSE", "AT$OM_C_CSE_REQ");
@@ -722,6 +724,18 @@ namespace WindowsFormsApp2
             startoneM2MTC("tc021001");
             this.sendDataOut(commands["getdeviceSvrVer"]);
             lbActionState.Text = states.getdeviceSvrVer.ToString();
+        }
+
+        // 모듈 버전 보고
+        private void btnoneM2MModuleVer_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+                startoneM2MTC("tc021104");
+                // 디바이스 펌웨어 버전 등록을 위해 플랫폼 서버 MEF AUTH 요청
+                this.sendDataOut(commands["mfotamefauth"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + dev.imsi);
+                lbActionState.Text = states.mfotamefauth.ToString();
+            }
         }
 
         // 모듈 버전 체크 (업버전이 있으면 다운로드)
@@ -1496,10 +1510,23 @@ namespace WindowsFormsApp2
                     {
                         logPrintInTextBox("oneM2M서버 인증 성공하였습니다.", "");
 
-                        if (tc.state == "tc021004")
+                        if (tc.state == "tc021004")         // Device FW 완료 보고
                         {
                             this.sendDataOut(commands["deviceFWUPfinish"]);
                             lbActionState.Text = states.deviceFWUPfinish.ToString();
+                        }
+                        else if (tc.state == "tc021104")    // Modem FW 완료 보고
+                        {
+                            if (dev.model == "NTLM3410Y")
+                            {
+                                this.sendDataOut(commands["modemFWUPfinishLTE"]);
+                                lbActionState.Text = states.modemFWUPfinishLTE.ToString();
+                            }
+                            else
+                            {
+                                this.sendDataOut(commands["modemFWUPfinish"]);
+                                lbActionState.Text = states.modemFWUPfinish.ToString();
+                            }
                         }
                         else if (tc.state == "tc020201")
                             endoneM2MTC(tc.state);
@@ -1695,16 +1722,10 @@ namespace WindowsFormsApp2
                     else if (tc.state == string.Empty)
                         startoneM2MTC("tc021104");
 
-                    if (dev.model == "NTLM3410Y")
-                    {
-                        this.sendDataOut(commands["modemFWUPfinishLTE"]);
-                        lbActionState.Text = states.modemFWUPfinishLTE.ToString();
-                    }
-                    else
-                    {
-                        this.sendDataOut(commands["modemFWUPfinish"]);
-                        lbActionState.Text = states.modemFWUPfinish.ToString();
-                    }
+
+                    // 디바이스는 업데이트 작업 및 재부팅한 후에 신규 펌웨어 버전 등록을 위해 플랫폼 서버 MEF AUTH 요청
+                    this.sendDataOut(commands["mfotamefauth"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + dev.imsi);
+                    lbActionState.Text = states.mfotamefauth.ToString();
                     break;
                 case "$OM_MODEM_FWUP_FINISH=":
                     if (tc.state == "tc021104" && str2 == "2004")
