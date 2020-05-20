@@ -63,7 +63,7 @@ namespace WindowsFormsApp2
 
             getonem2mmode,
             setonem2mmode,
-            setmefauthnt,
+            setmefauth,
             fotamefauthnt,
             mfotamefauth,
             getCSEbase,
@@ -154,6 +154,75 @@ namespace WindowsFormsApp2
             autogetmodemverwr,
             getNWmode,
             autogetNWmode,
+
+            lwm2mtc0201,
+            lwm2mtc0202,
+            lwm2mtc0203,
+
+            lwm2mtc0301,
+            lwm2mtc0302,
+            lwm2mtc0303,
+
+            lwm2mtc0401,
+
+            lwm2mtc0501,
+            lwm2mtc0502,
+
+            lwm2mtc0601,
+            lwm2mtc0602,
+            lwm2mtc0603,
+
+            onem2mtc0201011,
+            onem2mtc0201012,
+            onem2mtc0201013,
+            onem2mtc0201021,
+            onem2mtc0201022,
+            onem2mtc0201023,
+
+            onem2mtc020201,
+
+            onem2mtc020301,
+
+            onem2mtc020401,
+
+            onem2mtc020501,
+            onem2mtc0205021,
+            onem2mtc0205022,
+            onem2mtc0205023,
+            onem2mtc0205024,
+            onem2mtc020503,
+            onem2mtc020504,
+            onem2mtc020505,
+
+            onem2mtc020601,
+
+            onem2mtc020701,
+
+            onem2mtc020801,
+
+            onem2mtc020901,
+            onem2mtc020902,
+            onem2mtc020903,
+            onem2mtc020904,
+
+            onem2mtc021001,
+            onem2mtc021002,
+            onem2mtc021003,
+            onem2mtc021004,
+
+            onem2mtc021101,
+            onem2mtc021102,
+            onem2mtc021103,
+            onem2mtc021104,
+
+            onem2mtc021201,
+            onem2mtc021202,
+            onem2mtc0212031,
+            onem2mtc0212032,
+            onem2mtc0212033,
+            onem2mtc0212041,
+            onem2mtc0212042,
+
         }
 
         private enum lwm2mtc
@@ -192,6 +261,7 @@ namespace WindowsFormsApp2
             tc020502,
             tc020503,
             tc020504,
+            tc020505,
 
             tc020601,
 
@@ -313,7 +383,7 @@ namespace WindowsFormsApp2
             commands.Add("setcereg", "AT+CEREG=1");
             commands.Add("setceregtpb23", "AT+CEREG=3");
             commands.Add("getcereg", "AT+CEREG?");
-            commands.Add("reset", "AT+CFUN=3,3");
+            commands.Add("reset", "AT+CFUN=1,1");
 
             commands.Add("resettpb23", "AT+NRB");
 
@@ -350,8 +420,10 @@ namespace WindowsFormsApp2
             commands.Add("sendonemsgstr", "AT$OM_C_INS_REQ=");
 
             commands.Add("getonem2mmode", "AT$LGTMPF?");
+            commands.Add("onem2mtc0201023", "AT$LGTMPF?");
             commands.Add("setonem2mmode", "AT$LGTMPF=5");
-            commands.Add("setmefauthnt", "AT$OM_AUTH_REQ=");
+            commands.Add("onem2mtc0201022", "AT$LGTMPF=5");
+            commands.Add("setmefauth", "AT$OM_AUTH_REQ=");
             commands.Add("fotamefauthnt", "AT$OM_AUTH_REQ=");
             commands.Add("mfotamefauth", "AT$OM_AUTH_REQ=");
             commands.Add("getCSEbase", "AT$OM_B_CSE_REQ");
@@ -445,12 +517,13 @@ namespace WindowsFormsApp2
             onem2mtclist.Add("tc020101", "2.1.1 oneM2M URL 설정");
             onem2mtclist.Add("tc020102", "2.1.2 oneM2M 플랫폼 동작 설정");
             onem2mtclist.Add("tc020201", "2.2.1 MEF 인증 (at command oneM2M연동 모두 확인)");
-            onem2mtclist.Add("tc020301", "2.3.1 단말 IP 송신");
+            onem2mtclist.Add("tc020301", "2.3.1 단말 IP 송신(remoteCSE조회)");
             onem2mtclist.Add("tc020401", "2.4.1 CSEBase 조회");
-            onem2mtclist.Add("tc020501", "2.5.1 remoteCSE 생성요청 (remoteCSE 조회/at command oneM2M연동 모두 확인)");
+            onem2mtclist.Add("tc020501", "2.5.1 remoteCSE 생성요청");
             onem2mtclist.Add("tc020502", "2.5.2 데이터 폴더 생성");
             onem2mtclist.Add("tc020503", "2.5.3 구독 등록");
             onem2mtclist.Add("tc020504", "2.5.4 데이터 생성");
+            onem2mtclist.Add("tc020505", "2.5.5 remoteCSE 업데이트요청");
             onem2mtclist.Add("tc020601", "2.6.1 데이터 수신");
             onem2mtclist.Add("tc020701", "2.7.1 데이터 읽기");
             onem2mtclist.Add("tc020801", "2.8.1 M2MM(단말) IP 변경");
@@ -560,7 +633,7 @@ namespace WindowsFormsApp2
         {
             if (isDeviceInfo())
             {
-                startoneM2MTC("tc020501");
+                startoneM2MTC("tc020301");
                 this.sendDataOut(commands["getremoteCSE"]);
                 lbActionState.Text = states.getremoteCSE.ToString();
             }
@@ -715,6 +788,7 @@ namespace WindowsFormsApp2
                 // 디바이스 펌웨어 버전 등록을 위해 플랫폼 서버 MEF AUTH 요청
                 this.sendDataOut(commands["fotamefauthnt"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + dev.imsi);
                 lbActionState.Text = states.fotamefauthnt.ToString();
+                nextcommand = "skip";
             }
         }
 
@@ -735,6 +809,7 @@ namespace WindowsFormsApp2
                 // 디바이스 펌웨어 버전 등록을 위해 플랫폼 서버 MEF AUTH 요청
                 this.sendDataOut(commands["mfotamefauth"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + dev.imsi);
                 lbActionState.Text = states.mfotamefauth.ToString();
+                nextcommand = "skip";
             }
         }
 
@@ -1240,6 +1315,7 @@ namespace WindowsFormsApp2
                 "$OM_B_CSE_RSP=",
                 "$OM_R_CSE_RSP=",
                 "$OM_C_CSE_RSP=",
+                "$OM_D_CSE_RSP=",
                 "$OM_C_CON_RSP=",
                 "$OM_D_CON_RSP=",
                 "$OM_C_SUB_RSP=",
@@ -1529,7 +1605,15 @@ namespace WindowsFormsApp2
                             }
                         }
                         else if (tc.state == "tc020201")
+                        {
                             endoneM2MTC(tc.state);
+                            if(lbActionState.Text == states.onem2mtc020201.ToString())
+                            {
+                                startoneM2MTC("tc020301");
+                                this.sendDataOut(commands["getremoteCSE"]);
+                                lbActionState.Text = states.onem2mtc020301.ToString();
+                            }
+                        }
                     }
                     else
                     {
@@ -1551,6 +1635,11 @@ namespace WindowsFormsApp2
                     // oneM2M remoteCSE 조회 결과, 4004이면 생성/2000 또는 2004이면 container 확인
                     if (str2 == "4004")
                     {
+                        if(tc.state == "tc020301")
+                        {
+                            endoneM2MTC(tc.state);
+                            startoneM2MTC("tc020501");
+                        }
                         // 플랫폼 서버 remoteCSE 등록 요청
 
                         this.sendDataOut(commands["setremoteCSE"]);
@@ -1558,10 +1647,20 @@ namespace WindowsFormsApp2
                     }
                     else if (str2 == "2000")
                     {
+                        if (tc.state == "tc020301")
+                        {
+                            endoneM2MTC(tc.state);
+                            startoneM2MTC("tc020505");
+                        }
                         // 플랫폼 서버 remoteCSE 업데이트 요청
 
                         this.sendDataOut(commands["updateremoteCSE"]);
-                        lbActionState.Text = states.updateremoteCSE.ToString();
+                        if (lbActionState.Text == states.onem2mtc020301.ToString())
+                        {
+                            lbActionState.Text = states.onem2mtc020505.ToString();
+                        }
+                        else
+                            lbActionState.Text = states.updateremoteCSE.ToString();
                     }
                     break;
                 case "$OM_C_CSE_RSP=":
@@ -1570,14 +1669,48 @@ namespace WindowsFormsApp2
                     {
                         if (tc.state == "tc020501")
                             endoneM2MTC(tc.state);
+
+                        if (lbActionState.Text == states.onem2mtc020501.ToString())
+                        {
+                            startoneM2MTC("tc020502");
+                            this.sendDataOut(commands["setcontainer"] + "DtoS");
+                            lbActionState.Text = states.onem2mtc0205021.ToString();
+                        }
+                    }
+                    else
+                        logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
+                    break;
+                case "$OM_D_CSE_RSP=":
+                    // oneM2M remoteCSE 삭제 결과, 2002이면 성공
+                    if (str2 == "2002")
+                    {
+                        if (tc.state == "tc021204")
+                            endoneM2MTC(tc.state);
+
+                        if (lbActionState.Text == states.onem2mtc0212041.ToString())
+                        {
+                            startoneM2MTC("tc020501");
+                            this.sendDataOut(commands["setremoteCSE"]);
+                            lbActionState.Text = states.onem2mtc020501.ToString();
+                        }
                     }
                     else
                         logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
                     break;
                 case "$OM_U_CSE_RSP=":
                     // oneM2M remoteCSE 업데이트 결과, 2004이면 remoteCSE (poa) 업데이트 성공
-                    if (str2 == "2004" && tc.state == "tc020501")
-                        endoneM2MTC(tc.state);
+                    if (str2 == "2004")
+                    {
+                        if (tc.state == "tc020505")
+                            endoneM2MTC(tc.state);
+
+                        if (lbActionState.Text == states.onem2mtc020505.ToString())
+                        {
+                            startoneM2MTC("tc021204");
+                            this.sendDataOut(commands["delremoteCSE"]);
+                            lbActionState.Text = states.onem2mtc0212041.ToString();
+                        }
+                    }
                     break;
                 case "$OM_POA_NOTI=":
                     // oneM2M remoteCSE 업데이트 결과, 2004이면 remoteCSE (poa) 업데이트 성공
@@ -1586,34 +1719,125 @@ namespace WindowsFormsApp2
                     break;
                 case "$OM_C_CON_RSP=":
                     // oneM2M container 생성 결과, 2001이면 성공
-                    if (str2 == "2001" && tc.state == "tc020502")
-                        endoneM2MTC(tc.state);
+                    if (str2 == "2001")
+                    {
+                        if (tc.state == "tc020502")
+                            endoneM2MTC(tc.state);
+
+                        if (lbActionState.Text == states.onem2mtc0205021.ToString() || lbActionState.Text == states.onem2mtc0205023.ToString())
+                        {
+                            startoneM2MTC("tc020502");
+                            this.sendDataOut(commands["setcontainer"] + "StoD");
+                            lbActionState.Text = states.onem2mtc0205022.ToString();
+                        }
+                        else if (lbActionState.Text == states.onem2mtc0205022.ToString() || lbActionState.Text == states.onem2mtc0205024.ToString())
+                        {
+                            startoneM2MTC("tc020503");
+                            this.sendDataOut(commands["setsubscript"] + "StoD");
+                            lbActionState.Text = states.onem2mtc020503.ToString();
+                        }
+                    }
+                    else if (str2 == "4105")
+                    {
+                        if (lbActionState.Text == states.onem2mtc0205021.ToString())
+                        {
+                            startoneM2MTC("tc021203");
+                            this.sendDataOut(commands["delcontainer"] + "StoD");
+                            lbActionState.Text = states.onem2mtc0212031.ToString();
+                        }
+                        else if (lbActionState.Text == states.onem2mtc0205022.ToString())
+                        {
+                            startoneM2MTC("tc021203");
+                            this.sendDataOut(commands["delcontainer"] + "DtoS");
+                            lbActionState.Text = states.onem2mtc0212032.ToString();
+                        }
+                    }
                     break;
                 case "$OM_D_CON_RSP=":
                     // oneM2M container 삭제 결과, 2002이면 성공
-                    if (str2 == "2002" && tc.state == "tc021203")
-                        endoneM2MTC(tc.state);
+                    if (str2 == "2002")
+                    {
+                        if (tc.state == "tc021203")
+                            endoneM2MTC(tc.state);
+
+                        if (lbActionState.Text == states.onem2mtc0212031.ToString())
+                        {
+                            startoneM2MTC("tc020502");
+                            this.sendDataOut(commands["setcontainer"] + "StoD");
+                            lbActionState.Text = states.onem2mtc0205023.ToString();
+                        }
+                        else if (lbActionState.Text == states.onem2mtc0212032.ToString())
+                        {
+                            startoneM2MTC("tc020502");
+                            this.sendDataOut(commands["setcontainer"] + "DtoS");
+                            lbActionState.Text = states.onem2mtc0205024.ToString();
+                        }
+                        else if (lbActionState.Text == states.onem2mtc0212033.ToString())
+                        {
+                            startoneM2MTC("tc0212042");
+                            this.sendDataOut(commands["delremoteCSE"]);
+                            lbActionState.Text = states.onem2mtc0212042.ToString();
+                        }
+                    }
                     break;
                 case "$OM_C_SUB_RSP=":
                     // oneM2M subscription 신청 결과
-                    if (str2 == "2001" && tc.state == "tc020503")
-                        endoneM2MTC(tc.state);
+                    if (str2 == "2001")
+                    {
+                        if (tc.state == "tc020503")
+                            endoneM2MTC(tc.state);
+
+                        if (lbActionState.Text == states.onem2mtc020503.ToString())
+                        {
+                            startoneM2MTC("tc020504");
+                            // Data send to SERVER (string original)
+                            //AT$OM_C_INS_REQ=<object>,<length>,<data>
+                            string txData = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " oneM2M device";
+                            this.sendDataOut(commands["sendonemsgstr"] + "StoD" + "," + txData.Length + "," + txData);
+                            lbActionState.Text = states.onem2mtc020504.ToString();
+                            lbSendedData.Text = txData;
+                        }
+                    }
                     break;
                 case "$OM_D_SUB_RSP=":
                     // oneM2M subscription 삭제 결과
-                    if (str2 == "2002" && tc.state == "tc021202")
-                        endoneM2MTC(tc.state);
+                    if (str2 == "2002")
+                    {
+                        if (tc.state == "tc021202")
+                        {
+                            endoneM2MTC(tc.state);
+
+                            if (lbActionState.Text == states.onem2mtc021202.ToString())
+                            {
+                                startoneM2MTC("tc021203");
+                                lbActionState.Text = states.onem2mtc0212033.ToString();
+                            }
+                        }
+                    }
                     break;
                 case "$OM_C_INS_RSP=":
                     // 플랫폼 서버에 data 송신
 
                     string[] rxwords = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
-                    if (rxwords[0] == "2001" && tc.state == "tc020504")
+                    if (rxwords[0] == "2001")
                     {
-                        if (svr.enrmtKeyId != string.Empty)
-                            RetriveDataToPlatform();
-                        else
-                            endoneM2MTC(tc.state);
+                        if (tc.state == "tc020504")
+                        {
+                            if (svr.enrmtKeyId != string.Empty)
+                            {
+                                RetriveDataToPlatform();
+                            }
+                            else
+                            {
+                                endoneM2MTC(tc.state);
+
+                                if (lbActionState.Text == states.onem2mtc020504.ToString())
+                                {
+                                    startoneM2MTC("tc020601");
+                                    lbActionState.Text = states.onem2mtc020601.ToString();
+                                }
+                            }
+                        }
                     }
                     break;
                 case "$OM_NOTI_IND=":
@@ -1623,7 +1847,10 @@ namespace WindowsFormsApp2
                     startoneM2MTC("tc020701");
                     // 플랫폼 서버에 data 수신 요청
                     this.sendDataOut(commands["getonem2mdata"] + str2);
-                    lbActionState.Text = states.getonem2mdata.ToString();
+                    if (lbActionState.Text == states.onem2mtc020601.ToString())
+                        lbActionState.Text = states.onem2mtc020701.ToString();
+                    else
+                        lbActionState.Text = states.getonem2mdata.ToString();
                     break;
                 case "$OM_R_INS_RSP=":
                     // 플랫폼 서버에 data 수신
@@ -1638,7 +1865,22 @@ namespace WindowsFormsApp2
                             if (tc.state == "tc020701")
                             {
                                 if (svr.enrmtKeyId == string.Empty)
-                                    endoneM2MTC(tc.state);
+                                {
+                                    if (lbActionState.Text == states.onem2mtc020701.ToString())
+                                    {
+                                        if (rcvdatas[2] == lbSendedData.Text)
+                                        {
+                                            endoneM2MTC(tc.state);
+
+                                            startoneM2MTC("tc021001");
+                                            this.sendDataOut(commands["getdeviceSvrVer"]);
+                                            lbActionState.Text = states.onem2mtc021001.ToString();
+                                        }
+                                    }
+                                    else
+                                        endoneM2MTC(tc.state);
+
+                                }
                                 else if(rcvdatas[2] == lbSvroneM2MData.Text)
                                     endoneM2MTC(tc.state);
                             }
@@ -1702,7 +1944,10 @@ namespace WindowsFormsApp2
                         logPrintInTextBox("수신한 MODEM의 버전은 " + modemverinfos[1] + "입니다. 업데이트를 시도합니다.", "");
 
                         this.sendDataOut(commands["modemFWUPstart"]);
-                        lbActionState.Text = states.modemFWUPstart.ToString();
+                        if (lbActionState.Text == states.onem2mtc021101.ToString())
+                            lbActionState.Text = states.onem2mtc021103.ToString();
+                        else
+                            lbActionState.Text = states.modemFWUPstart.ToString();
                     }
                     else if (modemverinfos[0] == "9001")
                     {
@@ -1725,7 +1970,11 @@ namespace WindowsFormsApp2
 
                     // 디바이스는 업데이트 작업 및 재부팅한 후에 신규 펌웨어 버전 등록을 위해 플랫폼 서버 MEF AUTH 요청
                     this.sendDataOut(commands["mfotamefauth"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + dev.imsi);
-                    lbActionState.Text = states.mfotamefauth.ToString();
+                    if (lbActionState.Text == states.onem2mtc021003.ToString())
+                        lbActionState.Text = states.onem2mtc021004.ToString();
+                    else
+                        lbActionState.Text = states.mfotamefauth.ToString();
+                    nextcommand = "skip";
                     break;
                 case "$OM_MODEM_FWUP_FINISH=":
                     if (tc.state == "tc021104" && str2 == "2004")
@@ -1746,7 +1995,16 @@ namespace WindowsFormsApp2
                             }
                         }
                         else
+                        {
                             endoneM2MTC(tc.state);
+
+                            if (lbActionState.Text == states.onem2mtc021004.ToString())
+                            {
+                                startoneM2MTC("tc021202");
+                                this.sendDataOut(commands["delsubscript"] + "StoD");
+                                lbActionState.Text = states.onem2mtc021202.ToString();
+                            }
+                        }
                     }
                     break;
                 case "$OM_DEV_FWUP_RSP=":
@@ -1768,7 +2026,11 @@ namespace WindowsFormsApp2
                         logPrintInTextBox("수신한 DEVICE의 버전은 " + deviceverinfos[1] + "입니다. 업데이트를 시도합니다.", "");
 
                         this.sendDataOut(commands["deviceFWUPstart"]);
-                        lbActionState.Text = states.deviceFWUPstart.ToString();
+
+                        if (lbActionState.Text == states.onem2mtc021001.ToString())
+                            lbActionState.Text = states.onem2mtc021003.ToString();
+                        else
+                            lbActionState.Text = states.deviceFWUPstart.ToString();
 
                         oneM2Mrcvsize = 0;
                         oneM2Mtotalsize = 0;
@@ -1797,7 +2059,11 @@ namespace WindowsFormsApp2
 
                     // 디바이스는 업데이트 작업 및 재부팅한 후에 신규 펌웨어 버전 등록을 위해 플랫폼 서버 MEF AUTH 요청
                     this.sendDataOut(commands["fotamefauthnt"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + dev.imsi);
-                    lbActionState.Text = states.fotamefauthnt.ToString();
+                    if (lbActionState.Text == states.onem2mtc021003.ToString())
+                        lbActionState.Text = states.onem2mtc021004.ToString();
+                    else
+                        lbActionState.Text = states.fotamefauthnt.ToString();
+                    nextcommand = "skip";
                     break;
                 case "$OM_DEV_FWUP_FINISH=":
                     if (tc.state == "tc021004" && str2 == "2004")
@@ -1811,7 +2077,16 @@ namespace WindowsFormsApp2
                                     endoneM2MTC(tc.state);
                         }
                         else
+                        {
                             endoneM2MTC(tc.state);
+
+                            if (lbActionState.Text == states.onem2mtc021004.ToString())
+                            {
+                                startoneM2MTC("tc021101");
+                                this.sendDataOut(commands["getmodemSvrVer"]);
+                                lbActionState.Text = states.onem2mtc021101.ToString();
+                            }
+                        }
                     }
                     break;
                 case "$$VER: ":
@@ -2035,14 +2310,20 @@ namespace WindowsFormsApp2
                             startoneM2MTC("tc020201");
                         }
                         // 플랫폼 서버 MEF AUTH 요청
-                        this.sendDataOut(commands["setmefauthnt"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + "," + tBoxDeviceSN.Text);
-                        lbActionState.Text = states.setmefauthnt.ToString();
+                        this.sendDataOut(commands["setmefauth"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + "," + tBoxDeviceSN.Text);
+                        if (lbActionState.Text == states.onem2mtc0201021.ToString() || lbActionState.Text == states.onem2mtc0201023.ToString())
+                            lbActionState.Text = states.onem2mtc020201.ToString();
+                        else
+                            lbActionState.Text = states.setmefauth.ToString();
                         nextcommand = "skip";
                     }
                     else
                     {
                         // 모듈 oneM2M 플랫폼 모드 요청
-                        nextcommand = "setonem2mmode";
+                        if (lbActionState.Text == states.onem2mtc0201021.ToString())
+                            nextcommand = states.onem2mtc0201022.ToString();
+                        else
+                            nextcommand = "setonem2mmode";
                     }
                     break;
                 case "+QCFG: ":
@@ -2195,9 +2476,22 @@ namespace WindowsFormsApp2
 
                     nextcommand = "skip";
                     break;
+                case states.onem2mtc0201011:
+                    //AT$OM_SVR_INFO=<svr>,<ip>,<port>
+                    this.sendDataOut(commands["sethttpserverinfo"] + oneM2MBRKIP + "," + oneM2MBRKPort);
+                    lbActionState.Text = states.onem2mtc0201012.ToString();
+
+                    nextcommand = "skip";
+                    break;
                 case states.sethttpserverinfo:
                     this.sendDataOut(commands["getserverinfo"]);
                     lbActionState.Text = states.getserverinfo.ToString();
+
+                    nextcommand = "skip";
+                    break;
+                case states.onem2mtc0201012:
+                    this.sendDataOut(commands["getserverinfo"]);
+                    lbActionState.Text = states.onem2mtc0201013.ToString();
 
                     nextcommand = "skip";
                     break;
@@ -2205,6 +2499,25 @@ namespace WindowsFormsApp2
                     this.sendDataOut(commands["getonem2mmode"]);
                     lbActionState.Text = states.getonem2mmode.ToString();
                     
+                    nextcommand = "skip";
+                    break;
+                case states.onem2mtc0201013:
+                    this.sendDataOut(commands["getonem2mmode"]);
+                    lbActionState.Text = states.onem2mtc0201021.ToString();
+
+                    nextcommand = "skip";
+                    break;
+                case states.onem2mtc020301:
+                case states.onem2mtc0205021:
+                case states.onem2mtc0205022:
+                case states.onem2mtc0205023:
+                case states.onem2mtc0205024:
+                case states.onem2mtc020505:
+                case states.onem2mtc020701:
+                case states.onem2mtc0212031:
+                case states.onem2mtc0212032:
+                case states.onem2mtc0212033:
+                case states.onem2mtc0212041:
                     nextcommand = "skip";
                     break;
                 case states.setserverinfo:
@@ -2345,6 +2658,9 @@ namespace WindowsFormsApp2
                     break;
                 case states.setonem2mmode:
                     nextcommand = states.getonem2mmode.ToString();
+                    break;
+                case states.onem2mtc0201022:
+                    nextcommand = states.onem2mtc0201023.ToString();
                     break;
                 case states.catm1set:
                     nextcommand = states.catm1apn1.ToString();
@@ -2602,7 +2918,7 @@ namespace WindowsFormsApp2
             }
             else if (dev.maker == "QUALCOMM INCORPORATED")        //텔라딘/oneM2M 모듈
             {
-                tbSvcCd.Text = "CATM";
+                tbSvcCd.Text = "SMCL";
                 tBoxDeviceModel.Text = "TM800L";
                 dev.type = "oneM2M";
             }
@@ -3680,6 +3996,18 @@ namespace WindowsFormsApp2
             catch (Exception ex)
             {
                 LogWrite(ex.ToString());
+            }
+        }
+
+        private void btnoneM2MFullTest_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo())
+            {
+                // oneM2M 플랫폼 인증 요청
+                startoneM2MTC("tc020101");
+                //AT$OM_SVR_INFO=<svr>,<ip>,<port>
+                this.sendDataOut(commands["setmefserverinfo"] + oneM2MMEFIP + "," + oneM2MMEFPort);
+                lbActionState.Text = states.onem2mtc0201011.ToString();
             }
         }
     }

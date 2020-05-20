@@ -10,3 +10,15 @@ D:\VisualStudio\workspace\oneM2M_PCT\WindowsFormsApp2\obj\Debug\LGUPCT.csproj.Ge
 D:\VisualStudio\workspace\oneM2M_PCT\WindowsFormsApp2\obj\Debug\LGUPCT.csproj.CopyComplete
 D:\VisualStudio\workspace\oneM2M_PCT\WindowsFormsApp2\obj\Debug\oneM2MDevicePCT.exe
 D:\VisualStudio\workspace\oneM2M_PCT\WindowsFormsApp2\obj\Debug\oneM2MDevicePCT.pdb
+D:\VisualStudio\workspace\oneM2M_LwM2M_PCT\WindowsFormsApp2\bin\Debug\oneM2MDevicePCT.exe.config
+D:\VisualStudio\workspace\oneM2M_LwM2M_PCT\WindowsFormsApp2\bin\Debug\oneM2MDevicePCT.exe
+D:\VisualStudio\workspace\oneM2M_LwM2M_PCT\WindowsFormsApp2\bin\Debug\oneM2MDevicePCT.pdb
+D:\VisualStudio\workspace\oneM2M_LwM2M_PCT\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.dll
+D:\VisualStudio\workspace\oneM2M_LwM2M_PCT\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.xml
+D:\VisualStudio\workspace\oneM2M_LwM2M_PCT\WindowsFormsApp2\obj\Debug\LGUPCT.csprojAssemblyReference.cache
+D:\VisualStudio\workspace\oneM2M_LwM2M_PCT\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.Form1.resources
+D:\VisualStudio\workspace\oneM2M_LwM2M_PCT\WindowsFormsApp2\obj\Debug\LGSERIALAPP.Properties.Resources.resources
+D:\VisualStudio\workspace\oneM2M_LwM2M_PCT\WindowsFormsApp2\obj\Debug\LGUPCT.csproj.GenerateResource.cache
+D:\VisualStudio\workspace\oneM2M_LwM2M_PCT\WindowsFormsApp2\obj\Debug\LGUPCT.csproj.CopyComplete
+D:\VisualStudio\workspace\oneM2M_LwM2M_PCT\WindowsFormsApp2\obj\Debug\oneM2MDevicePCT.exe
+D:\VisualStudio\workspace\oneM2M_LwM2M_PCT\WindowsFormsApp2\obj\Debug\oneM2MDevicePCT.pdb

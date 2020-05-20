@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.cBoxCOMPORT = new System.Windows.Forms.ComboBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
@@ -74,6 +75,7 @@
             this.btnSendtoDeviceoneM2M = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.gbOneM2MDevice = new System.Windows.Forms.GroupBox();
+            this.btnoneM2MFullTest = new System.Windows.Forms.Button();
             this.btnoneM2MModuleVer = new System.Windows.Forms.Button();
             this.btnDelSubscript = new System.Windows.Forms.Button();
             this.lbSendedData = new System.Windows.Forms.Label();
@@ -101,6 +103,7 @@
             this.cBoxATCMD = new System.Windows.Forms.ComboBox();
             this.btnATCMD = new System.Windows.Forms.Button();
             this.gbLwM2MDevice = new System.Windows.Forms.GroupBox();
+            this.btnLwM2MFullTest = new System.Windows.Forms.Button();
             this.label17 = new System.Windows.Forms.Label();
             this.lbLwM2MRcvData = new System.Windows.Forms.Label();
             this.lbDevLwM2MData = new System.Windows.Forms.Label();
@@ -610,6 +613,7 @@
             // 
             // gbOneM2MDevice
             // 
+            this.gbOneM2MDevice.Controls.Add(this.btnoneM2MFullTest);
             this.gbOneM2MDevice.Controls.Add(this.btnoneM2MModuleVer);
             this.gbOneM2MDevice.Controls.Add(this.btnDelSubscript);
             this.gbOneM2MDevice.Controls.Add(this.lbSendedData);
@@ -637,6 +641,16 @@
             this.gbOneM2MDevice.TabIndex = 25;
             this.gbOneM2MDevice.TabStop = false;
             this.gbOneM2MDevice.Text = "oneM2M";
+            // 
+            // btnoneM2MFullTest
+            // 
+            this.btnoneM2MFullTest.Location = new System.Drawing.Point(335, 137);
+            this.btnoneM2MFullTest.Name = "btnoneM2MFullTest";
+            this.btnoneM2MFullTest.Size = new System.Drawing.Size(63, 20);
+            this.btnoneM2MFullTest.TabIndex = 41;
+            this.btnoneM2MFullTest.Text = "TC전체";
+            this.btnoneM2MFullTest.UseVisualStyleBackColor = true;
+            this.btnoneM2MFullTest.Click += new System.EventHandler(this.btnoneM2MFullTest_Click);
             // 
             // btnoneM2MModuleVer
             // 
@@ -907,6 +921,7 @@
             // 
             // gbLwM2MDevice
             // 
+            this.gbLwM2MDevice.Controls.Add(this.btnLwM2MFullTest);
             this.gbLwM2MDevice.Controls.Add(this.label17);
             this.gbLwM2MDevice.Controls.Add(this.lbLwM2MRcvData);
             this.gbLwM2MDevice.Controls.Add(this.lbDevLwM2MData);
@@ -923,6 +938,15 @@
             this.gbLwM2MDevice.TabIndex = 15;
             this.gbLwM2MDevice.TabStop = false;
             this.gbLwM2MDevice.Text = "LwM2M";
+            // 
+            // btnLwM2MFullTest
+            // 
+            this.btnLwM2MFullTest.Location = new System.Drawing.Point(323, 74);
+            this.btnLwM2MFullTest.Name = "btnLwM2MFullTest";
+            this.btnLwM2MFullTest.Size = new System.Drawing.Size(63, 49);
+            this.btnLwM2MFullTest.TabIndex = 42;
+            this.btnLwM2MFullTest.Text = "TC전체";
+            this.btnLwM2MFullTest.UseVisualStyleBackColor = true;
             // 
             // label17
             // 
@@ -1319,6 +1343,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1395, 678);
             this.Controls.Add(this.panel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximumSize = new System.Drawing.Size(1920, 1076);
@@ -1469,6 +1494,8 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label lbLwM2MRcvData;
         private System.Windows.Forms.Button btnoneM2MModuleVer;
+        private System.Windows.Forms.Button btnoneM2MFullTest;
+        private System.Windows.Forms.Button btnLwM2MFullTest;
     }
 }
 
