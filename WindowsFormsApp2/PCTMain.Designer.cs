@@ -142,6 +142,8 @@
             this.gbDeviceLog = new System.Windows.Forms.GroupBox();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.tBoxDataIN = new System.Windows.Forms.TextBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.btnTCResultSave = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.gbTCResult.SuspendLayout();
             this.gbServerLog.SuspendLayout();
@@ -241,6 +243,7 @@
             // 
             // groupBox11
             // 
+            this.groupBox11.Controls.Add(this.btnTCResultSave);
             this.groupBox11.Controls.Add(this.groupBox9);
             this.groupBox11.Controls.Add(this.gbLwM2MServer);
             this.groupBox11.Controls.Add(this.gbServer);
@@ -944,9 +947,9 @@
             // 
             // btnLwM2MFullTest
             // 
-            this.btnLwM2MFullTest.Location = new System.Drawing.Point(323, 74);
+            this.btnLwM2MFullTest.Location = new System.Drawing.Point(335, 103);
             this.btnLwM2MFullTest.Name = "btnLwM2MFullTest";
-            this.btnLwM2MFullTest.Size = new System.Drawing.Size(63, 49);
+            this.btnLwM2MFullTest.Size = new System.Drawing.Size(63, 20);
             this.btnLwM2MFullTest.TabIndex = 42;
             this.btnLwM2MFullTest.Text = "TC전체";
             this.btnLwM2MFullTest.UseVisualStyleBackColor = true;
@@ -1340,6 +1343,21 @@
             this.tBoxDataIN.Size = new System.Drawing.Size(469, 162);
             this.tBoxDataIN.TabIndex = 22;
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 10000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // btnTCResultSave
+            // 
+            this.btnTCResultSave.Location = new System.Drawing.Point(15, 541);
+            this.btnTCResultSave.Name = "btnTCResultSave";
+            this.btnTCResultSave.Size = new System.Drawing.Size(121, 20);
+            this.btnTCResultSave.TabIndex = 43;
+            this.btnTCResultSave.Text = "TC결과 파일저장";
+            this.btnTCResultSave.UseVisualStyleBackColor = true;
+            this.btnTCResultSave.Click += new System.EventHandler(this.btnTCResultSave_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -1499,6 +1517,8 @@
         private System.Windows.Forms.Button btnoneM2MModuleVer;
         private System.Windows.Forms.Button btnoneM2MFullTest;
         private System.Windows.Forms.Button btnLwM2MFullTest;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button btnTCResultSave;
     }
 }
 
