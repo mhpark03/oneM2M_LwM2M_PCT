@@ -77,6 +77,10 @@ namespace WindowsFormsApp2
             setsubscript,
             delsubscript,
             getonem2mdata,
+            getACP,
+            setACP,
+            updateACP,
+            delACP,
 
             setcereg,
             setceregtpb23,
@@ -204,10 +208,13 @@ namespace WindowsFormsApp2
             onem2mtc0208011,        // 모듈 OFF
             onem2mtc0208012,        // 모듈 ON - POA 업데이트 이벤트 대기
 
-            onem2mtc020901,
-            onem2mtc020902,       
+            onem2mtc0209011,        // ACP 1회 생성
+            onem2mtc0209012,        // ACP 생성 오류(존재)/삭제후 생성
+            onem2mtc0209013,        // ACP 조회오류(미존재)/생성
+            onem2mtc020902,         // ACP 조회
             onem2mtc020903,
-            onem2mtc020904,
+            onem2mtc0209041,
+            onem2mtc0209042,
 
             onem2mtc021001,
             onem2mtc021002,         // push test는 별도 수동 진행
@@ -222,7 +229,7 @@ namespace WindowsFormsApp2
             onem2mtc0211043,        // module version 완료
             onem2mtc0211044,        // 결과 확인을 위해 module version read
 
-            onem2mtc021201,
+            //onem2mtc021201,         // 데이터 삭제 시험 불필요
             onem2mtc0212021,         // 구독 등록 존재하여 삭제 후 생성 요청
             onem2mtc0212022,         // 구독 삭제 - 폴더 삭제 시험
             onem2mtc0212031,        // 수신 폴더 존재하여 삭제 후 생성 요청
@@ -290,7 +297,7 @@ namespace WindowsFormsApp2
             tc021103,
             tc021104,
 
-            tc021201,
+            //tc021201,
             tc021202,
             tc021203,
             tc021204,
@@ -441,6 +448,10 @@ namespace WindowsFormsApp2
             commands.Add("setsubscript", "AT$OM_C_SUB_REQ=");
             commands.Add("delsubscript", "AT$OM_D_SUB_REQ=");
             commands.Add("getonem2mdata", "AT$OM_R_INS_REQ=");
+            commands.Add("getACP", "AT$OM_R_ACP_REQ");
+            commands.Add("setACP", "AT$OM_C_ACP_REQ=63,*");
+            commands.Add("updateACP", "AT$OM_U_ACP_REQ=47,*");
+            commands.Add("delACP", "AT$OM_D_ACP_REQ");
 
             commands.Add("setserverinfotpb23", "AT+NCDP=");
             commands.Add("setncdp", "AT+NCDP=");
@@ -543,7 +554,7 @@ namespace WindowsFormsApp2
             onem2mtclist.Add("tc021102", "2.11.2 Modem FW update Noti");
             onem2mtclist.Add("tc021103", "2.11.3 Modem FW update start");
             onem2mtclist.Add("tc021104", "2.11.4 Modem FW update Finish");
-            onem2mtclist.Add("tc021201", "2.12.1 데이터 삭제)");
+            //onem2mtclist.Add("tc021201", "2.12.1 데이터 삭제");
             onem2mtclist.Add("tc021202", "2.12.2 구독 등록 삭제");
             onem2mtclist.Add("tc021203", "2.12.3 데이터 폴더 삭제");
             onem2mtclist.Add("tc021204", "2.12.4 remoteCSE 삭제");
@@ -1325,6 +1336,10 @@ namespace WindowsFormsApp2
                 "$OM_D_SUB_RSP=",
                 "$OM_C_INS_RSP=",
                 "$OM_NOTI_IND=",
+                "$OM_R_ACP_RSP=",
+                "$OM_C_ACP_RSP=",
+                "$OM_U_ACP_RSP=",
+                "$OM_D_ACP_RSP=",
                 "$OM_R_INS_RSP=",
                 "$OM_C_MODEM_FWUP_RSP=",
                 "$OM_MODEM_FWUP_RSP=",
@@ -1529,6 +1544,8 @@ namespace WindowsFormsApp2
                                 nextcommand = states.setcereg.ToString();
                             }
                             logPrintInTextBox("LTE 연결을 요청이 필요합니다.", "");
+
+                            lbActionState.Text = states.idle.ToString();
                         }
                     }
                     else if ((ltestatus == "1") || (ltestatus == "3"))
@@ -1539,17 +1556,8 @@ namespace WindowsFormsApp2
 
                             if (lteregi == "0")
                             {
-                                /*
-                                network_chkcnt = 3;             // LTE attach disable일 경우 enable하고 getcereg 3회 확인
-                                if (dev.model == "TPB23")
-                                {
-                                    nextcommand = states.setceregtpb23.ToString();
-                                }
-                                else
-                                {
-                                    nextcommand = states.setcereg.ToString();
-                                }
-                                */
+                                if (lbActionState.Text != states.onem2mtc0208011.ToString())
+                                    lbActionState.Text = states.idle.ToString();
                                 logPrintInTextBox("LTE 상태 확인이 필요합니다.", "");
                             }
                             else if ((lteregi == "1") || (lteregi == "5"))
@@ -1565,8 +1573,6 @@ namespace WindowsFormsApp2
                             }
                         }
                     }
-
-                    lbActionState.Text = states.idle.ToString();
                     break;                    
                 case "$OM_SVR_INFO=":
                     // oneM2M server 정보 확인
@@ -1716,6 +1722,12 @@ namespace WindowsFormsApp2
                             this.sendDataOut(commands["setremoteCSE"]);
                             lbActionState.Text = states.onem2mtc0205011.ToString();     // remoteCSE 조회-업데이트-삭제 후 생성 요청
                         }
+                        else if (lbActionState.Text == states.onem2mtc0212042.ToString())
+                        {
+                            startoneM2MTC("tc020401");
+                            this.sendDataOut(commands["getCSEbase"]);
+                            lbActionState.Text = states.onem2mtc020401.ToString();
+                        }
                     }
                     else
                         logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
@@ -1749,9 +1761,15 @@ namespace WindowsFormsApp2
 
                         if(lbActionState.Text == states.onem2mtc0208012.ToString())
                         {
+                            startoneM2MTC("tc020901");
+                            this.sendDataOut(commands["setACP"]);
+                            lbActionState.Text = states.onem2mtc0209011.ToString();
+
+                            /*
                             startoneM2MTC("tc021001");
                             this.sendDataOut(commands["getdeviceSvrVer"]);
                             lbActionState.Text = states.onem2mtc021001.ToString();
+                            */
                         }
                     }
                     break;
@@ -1809,6 +1827,113 @@ namespace WindowsFormsApp2
                             startoneM2MTC("tc021204");
                             this.sendDataOut(commands["delremoteCSE"]);
                             lbActionState.Text = states.onem2mtc0212042.ToString();
+                        }
+                    }
+                    break;
+                case "$OM_C_ACP_RSP=":
+                    // oneM2M ACP 신청 결과
+                    if (str2 == "2001")
+                    {
+                        if (tc.state == "tc020901")
+                            endoneM2MTC(tc.state);
+
+                        if (lbActionState.Text == states.onem2mtc0209011.ToString() || lbActionState.Text == states.onem2mtc0209012.ToString() || lbActionState.Text == states.onem2mtc0209013.ToString())
+                        {
+                            startoneM2MTC("tc020902");
+                            this.sendDataOut(commands["getACP"]);
+                            lbActionState.Text = states.onem2mtc020902.ToString();
+                        }
+                    }
+                    else if (str2 == "4105")
+                    {
+                        if (lbActionState.Text == states.onem2mtc0209011.ToString())            // 1회 생성 오류 (기존재) - 삭제 후 재생성
+                        {
+                            startoneM2MTC("tc020904");
+                            this.sendDataOut(commands["delACP"]);
+                            lbActionState.Text = states.onem2mtc0209041.ToString();
+                        }
+                        else if (lbActionState.Text == states.onem2mtc0209012.ToString())       // 삭제후 생성 요청(2회) 에서도 오류
+                        {
+                            startoneM2MTC("tc020902");
+                            this.sendDataOut(commands["getACP"]);
+                            lbActionState.Text = states.onem2mtc020902.ToString();
+                        }
+                        else if (lbActionState.Text == states.onem2mtc0209013.ToString())       // 조회 오류(미존재)로 재생성 요청에서도 오류
+                        {
+                            startoneM2MTC("tc021001");
+                            this.sendDataOut(commands["getdeviceSvrVer"]);
+                            lbActionState.Text = states.onem2mtc021001.ToString();
+                        }
+                    }
+                    break;
+                case "$OM_R_ACP_RSP=":
+                    // oneM2M ACP 조회 결과 확인
+                    string[] acpdatas = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+
+                    if (acpdatas[0] == "4004")
+                    {
+                        if (tc.state == "tc020902")
+                        {
+                            endoneM2MTC(tc.state);
+                        }
+
+                        if (lbActionState.Text == states.onem2mtc020902.ToString())        // 1회 조회 오류(미존재) 생성 요청 시도
+                        {
+                            startoneM2MTC("tc020901");
+                            this.sendDataOut(commands["setACP"]);
+                            lbActionState.Text = states.onem2mtc0209013.ToString();
+                        }
+                    }
+                    else if (acpdatas[0] == "2000")
+                    {
+                        if (tc.state == "tc020902")
+                        {
+                            endoneM2MTC(tc.state);
+                        }
+
+                        if (lbActionState.Text == states.onem2mtc020902.ToString())
+                        {
+                            startoneM2MTC("tc020903");
+                            this.sendDataOut(commands["updateACP"]);
+                            lbActionState.Text = states.onem2mtc020903.ToString();
+                        }
+                    }
+                    break;
+                case "$OM_U_ACP_RSP=":
+                    // oneM2M ACP 업데이트 결과, 2004이면 업데이트 성공
+                    if (str2 == "2004")
+                    {
+                        if (tc.state == "tc020903")
+                            endoneM2MTC(tc.state);
+
+                        if (lbActionState.Text == states.onem2mtc020903.ToString())
+                        {
+                            startoneM2MTC("tc020904");
+                            this.sendDataOut(commands["delACP"]);
+                            lbActionState.Text = states.onem2mtc0209042.ToString();
+                        }
+                    }
+                    break;
+                case "$OM_D_ACP_RSP=":
+                    // oneM2M ACP 삭제 결과
+                    if (str2 == "2002")
+                    {
+                        if (tc.state == "tc020904")
+                        {
+                            endoneM2MTC(tc.state);
+
+                            if (lbActionState.Text == states.onem2mtc0209041.ToString())
+                            {
+                                startoneM2MTC("tc020901");
+                                this.sendDataOut(commands["setACP"]);
+                                lbActionState.Text = states.onem2mtc0209012.ToString();
+                            }
+                            else if (lbActionState.Text == states.onem2mtc0209042.ToString())
+                            {
+                                startoneM2MTC("tc021001");
+                                this.sendDataOut(commands["getdeviceSvrVer"]);
+                                lbActionState.Text = states.onem2mtc021001.ToString();
+                            }
                         }
                     }
                     break;
