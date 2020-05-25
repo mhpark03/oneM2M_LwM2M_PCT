@@ -1693,6 +1693,13 @@ namespace WindowsFormsApp2
                         if (tc.state == "tc020501")
                             endoneM2MTC(tc.state);
 
+                        if (svr.enrmtKey != string.Empty)
+                        {
+                            RetrivePoaToPlatform();
+                            RetriveDverToPlatform();
+                            RetriveMverToPlatform();
+                        }
+
                         if (lbActionState.Text == states.onem2mtc0205011.ToString())        // 조회-업데이트-삭제-생성 완료
                         {
                             startoneM2MTC("tc020502");
@@ -1739,6 +1746,9 @@ namespace WindowsFormsApp2
                         if (tc.state == "tc020505")
                             endoneM2MTC(tc.state);
 
+                        if(svr.enrmtKey != string.Empty)
+                            RetrivePoaToPlatform();
+
                         if (lbActionState.Text == states.onem2mtc0205051.ToString())
                         {
                             startoneM2MTC("tc021204");
@@ -1759,7 +1769,10 @@ namespace WindowsFormsApp2
                     {
                         endoneM2MTC("tc020801");
 
-                        if(lbActionState.Text == states.onem2mtc0208012.ToString())
+                        if (svr.enrmtKey != string.Empty)
+                            RetrivePoaToPlatform();
+
+                        if (lbActionState.Text == states.onem2mtc0208012.ToString())
                         {
                             startoneM2MTC("tc020901");
                             this.sendDataOut(commands["setACP"]);
@@ -2284,7 +2297,6 @@ namespace WindowsFormsApp2
                     {
                         if (svr.enrmtKeyId != string.Empty)
                         {
-                            RetrivePoaToPlatform();
                             RetriveDverToPlatform();
                             if (tBoxDeviceVer.Text == lbdevicever.Text)
                             {
@@ -4295,14 +4307,21 @@ namespace WindowsFormsApp2
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (!serialPort1.IsOpen && progressBar1.Value == 100)
+            if (!serialPort1.IsOpen)
             {
-                logPrintInTextBox("잠시 후 COM 포트 재오픈이 필요합니다.", "");
+                if (progressBar1.Value == 100)
+                {
+                    logPrintInTextBox("잠시 후 COM 포트 재오픈이 필요합니다.", "");
 
-                if (lbActionState.Text == states.idle.ToString())
-                    lbActionState.Text = states.closed.ToString();
-                progressBar1.Value = 0;
-                timer1.Stop();
+                    if (lbActionState.Text == states.idle.ToString())
+                    {
+                        lbActionState.Text = states.closed.ToString();
+                        timer1.Stop();
+                    }
+                    progressBar1.Value = 0;
+                }
+                else if (lbActionState.Text == states.onem2mtc021103.ToString())
+                    doOpenComPort();
             }
         }
 
