@@ -129,6 +129,7 @@ namespace WindowsFormsApp2
             catm1apn2,
             catm1psmode,
             rfoff,
+            rfofftld,
             rfon,
             rfreset,
 
@@ -486,6 +487,7 @@ namespace WindowsFormsApp2
             commands.Add("catm1apn2", "AT+CGDCONT=2");
             commands.Add("catm1psmode", "AT+QCFG=\"servicedomain\",1");
             commands.Add("rfoff", "AT+CFUN=0");
+            commands.Add("rfofftld", "AT+CFUN=4");
             commands.Add("rfon", "AT+CFUN=1");
             commands.Add("rfreset", "AT+CFUN=1,1");
 
@@ -1532,7 +1534,12 @@ namespace WindowsFormsApp2
                     if (ltestatus == "0")
                     {
                         if(lbActionState.Text == states.onem2mtc0208011.ToString())
+                        {
+                            this.sendDataOut(commands["rfon"]);
+                            lbActionState.Text = states.onem2mtc0208012.ToString();
+
                             nextcommand = "skip";
+                        }
                         else
                         {
                             if (dev.model == "TPB23")
@@ -1693,7 +1700,7 @@ namespace WindowsFormsApp2
                         if (tc.state == "tc020501")
                             endoneM2MTC(tc.state);
 
-                        if (svr.enrmtKey != string.Empty)
+                        if (svr.enrmtKeyId != string.Empty)
                         {
                             RetrivePoaToPlatform();
                             RetriveDverToPlatform();
@@ -1746,7 +1753,7 @@ namespace WindowsFormsApp2
                         if (tc.state == "tc020505")
                             endoneM2MTC(tc.state);
 
-                        if(svr.enrmtKey != string.Empty)
+                        if(svr.enrmtKeyId != string.Empty)
                             RetrivePoaToPlatform();
 
                         if (lbActionState.Text == states.onem2mtc0205051.ToString())
@@ -1769,7 +1776,7 @@ namespace WindowsFormsApp2
                     {
                         endoneM2MTC("tc020801");
 
-                        if (svr.enrmtKey != string.Empty)
+                        if (svr.enrmtKeyId != string.Empty)
                             RetrivePoaToPlatform();
 
                         if (lbActionState.Text == states.onem2mtc0208012.ToString())
@@ -2072,7 +2079,10 @@ namespace WindowsFormsApp2
                                         if (lbActionState.Text == states.onem2mtc020701.ToString())
                                         {
                                             startoneM2MTC("tc020801");
-                                            this.sendDataOut(commands["rfoff"]);
+                                            if (dev.maker == "QUALCOMM INCORPORATED")        //텔라딘/oneM2M 모듈
+                                                this.sendDataOut(commands["rfofftld"]);
+                                            else
+                                                this.sendDataOut(commands["rfoff"]);
                                             lbActionState.Text = states.onem2mtc0208011.ToString();
                                         }
                                     }
@@ -2086,7 +2096,10 @@ namespace WindowsFormsApp2
                                         if (lbActionState.Text == states.onem2mtc020701.ToString())
                                         {
                                             startoneM2MTC("tc020801");
-                                            this.sendDataOut(commands["rfoff"]);
+                                            if (dev.maker == "QUALCOMM INCORPORATED")        //텔라딘/oneM2M 모듈
+                                                this.sendDataOut(commands["rfofftld"]);
+                                            else
+                                                this.sendDataOut(commands["rfoff"]);
                                             lbActionState.Text = states.onem2mtc0208011.ToString();
                                         }
                                     }
@@ -2329,8 +2342,11 @@ namespace WindowsFormsApp2
                     {
                         if (lbActionState.Text == states.onem2mtc0208011.ToString())
                         {
-                            this.sendDataOut(commands["rfon"]);
-                            lbActionState.Text = states.onem2mtc0208012.ToString();
+                            if (dev.maker == "QUALCOMM INCORPORATED")        //텔라딘/oneM2M 모듈
+                            {
+                                this.sendDataOut(commands["rfon"]);
+                                lbActionState.Text = states.onem2mtc0208012.ToString();
+                            }
                             nextcommand = "skip";
                         }
                     }
@@ -4320,7 +4336,7 @@ namespace WindowsFormsApp2
                     }
                     progressBar1.Value = 0;
                 }
-                else if (lbActionState.Text == states.onem2mtc021103.ToString())
+                else if (lbActionState.Text == states.onem2mtc021103.ToString() || lbActionState.Text == states.onem2mtc0208011.ToString())
                     doOpenComPort();
             }
         }
