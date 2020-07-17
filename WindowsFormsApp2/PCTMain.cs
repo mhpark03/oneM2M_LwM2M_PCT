@@ -2903,6 +2903,7 @@ namespace WindowsFormsApp2
                     // (setncdp) - (setepnstpb23) - setmbspstpb23 - bootstrapmodetpb23 - bootstraptpb23
                     // End Point Name Parameter 설정
                     //AT+MLWEPNS="LWM2M 서버 entityID"
+                    setDeviceEntityID(lbIccid.Text);
                     this.sendDataOut(commands["setepnstpb23"] + dev.entityId);
                     lbActionState.Text = states.setepnstpb23.ToString();
 
@@ -3997,6 +3998,7 @@ namespace WindowsFormsApp2
             }
             else
             {
+                setDeviceEntityID(lbIccid.Text);
                 header.Url = brkUrlL + "/" + dev.entityId + "/10250/0/1";
                 //header.Url = brkUrlL + "/IN_CSE-BASE-1/cb-1/" + deviceEntityId + "/10250/0/1";
             }
@@ -4027,6 +4029,7 @@ namespace WindowsFormsApp2
         private void DeviceCheckToPlatform()
         {
             ReqHeader header = new ReqHeader();
+            setDeviceEntityID(lbIccid.Text);
             header.Url = brkUrlL + "/" + dev.entityId + "/10250/0/0";
             header.Method = "GET";
             header.X_M2M_Origin = svr.entityId;
