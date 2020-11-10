@@ -1446,7 +1446,7 @@ namespace WindowsFormsApp2
 
                     if (lbActionState.Text == states.autogeticcid.ToString())
                     {
-                        if (dev.model == "BG96" || dev.maker == "LIME-I Co., Ltd")
+                        if (dev.model == "BG96" || dev.maker == "LIME-I Co., Ltd" || dev.model == "EC21" || dev.model == "EC25")
                         {
                             nextcommand = states.autogetmodemver.ToString();       // 모듈 정보를 모두 읽고 LTE망 연결 상태 조회
                         }
@@ -2111,6 +2111,16 @@ namespace WindowsFormsApp2
                         else
                         {
                             logPrintInTextBox("수신한 데이터 사이즈를 확인하세요", "");
+
+                            if (tc.state == "tc020701")
+                            {
+                                startoneM2MTC("tc020801");
+                                if (dev.maker == "QUALCOMM INCORPORATED")        //텔라딘/oneM2M 모듈
+                                    this.sendDataOut(commands["rfofftld"]);
+                                else
+                                    this.sendDataOut(commands["rfoff"]);
+                                lbActionState.Text = states.onem2mtc0208011.ToString();
+                            }
                         }
                     }
                     else
@@ -3233,6 +3243,12 @@ namespace WindowsFormsApp2
                 tBoxDeviceModel.Text = "NTM_Simulator";
                 dev.type = "oneM2M";
             }
+            else if (model == "EC25" || model == "EC21")                                                 //쿼텔/oneM2M 모듈
+            {
+                tbSvcCd.Text = "CATO";
+                tBoxDeviceModel.Text = "EC25-E";
+                dev.type = "oneM2M";
+            }
             else if (model == "BG96")                                                                   //쿼텔/LwM2M 모듈
             {
                 tbSvcCd.Text = "CATM";
@@ -3870,7 +3886,7 @@ namespace WindowsFormsApp2
         {
             ReqHeader header = new ReqHeader();
             //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847";
-            if(dev.maker == "QUALCOMM INCORPORATED")
+            if(dev.maker == "QUALCOMM INCORPORATED" || dev.model == "EC21" || dev.model == "EC25")
                 header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + dev.imsi + "/nod-m2m_" + dev.imsi + "/fwr-m2m_D_" + dev.imsi;
             else
                 header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + dev.imsi + "/nod-m2m_" + dev.imsi + "/fwr-m2m_D" + dev.imsi;
@@ -3907,6 +3923,8 @@ namespace WindowsFormsApp2
             //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847";
             if (dev.maker == "QUALCOMM INCORPORATED")
                 header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + dev.imsi + "/nod-m2m_" + dev.imsi + "/fwr-m2m_" + dev.imsi;
+            else if (dev.model == "EC21" || dev.model == "EC25")
+                header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + dev.imsi + "/nod-m2m_" + dev.imsi + "/fwr-m2m_M_" + dev.imsi;
             else
                 header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + dev.imsi + "/nod-m2m_" + dev.imsi + "/fwr-m2m_M" + dev.imsi;
             header.Method = "GET";
