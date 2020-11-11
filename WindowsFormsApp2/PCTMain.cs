@@ -81,6 +81,8 @@ namespace WindowsFormsApp2
             setACP,
             updateACP,
             delACP,
+            setrcvauto,
+            setrcvmanu,
 
             setcereg,
             setceregtpb23,
@@ -202,7 +204,11 @@ namespace WindowsFormsApp2
             onem2mtc0205051,        // remote 업데이트 - 삭제/생성 후 폴더 생성
             onem2mtc0205052,        // remote 업데이트 - 폴더 생성
 
-            onem2mtc020601,
+            onem2mtc020601,         // data noti 이벤트 
+            onem2mtc020602,         // data 수신 모드 설정 (자동)
+            onem2mtc020603,         // data 자동 수신 
+            onem2mtc0206041,         // 구독신청 - data 수신 모드 설정 (수동)
+            onem2mtc0206042,         // 자동수신 - data 수신 모드 설정 (수동)
 
             onem2mtc020701,
 
@@ -278,6 +284,9 @@ namespace WindowsFormsApp2
             tc020505,
 
             tc020601,
+            tc020602,
+            tc020603,
+            tc020604,
 
             tc020701,
 
@@ -453,6 +462,8 @@ namespace WindowsFormsApp2
             commands.Add("setACP", "AT$OM_C_ACP_REQ=63,*");
             commands.Add("updateACP", "AT$OM_U_ACP_REQ=47,*");
             commands.Add("delACP", "AT$OM_D_ACP_REQ");
+            commands.Add("setrcvauto", "AT$OM_MODE=ON");
+            commands.Add("setrcvmanu", "AT$OM_MODE=OFF");
 
             commands.Add("setserverinfotpb23", "AT+NCDP=");
             commands.Add("setncdp", "AT+NCDP=");
@@ -541,7 +552,10 @@ namespace WindowsFormsApp2
             onem2mtclist.Add("tc020503", "2.5.3 구독 등록");
             onem2mtclist.Add("tc020504", "2.5.4 데이터 생성");
             onem2mtclist.Add("tc020505", "2.5.5 remoteCSE 업데이트요청");
-            onem2mtclist.Add("tc020601", "2.6.1 데이터 수신");
+            onem2mtclist.Add("tc020601", "2.6.1 데이터 수신 이벤트");
+            onem2mtclist.Add("tc020602", "2.6.2 데이터 자동 수신 모드 설정");
+            onem2mtclist.Add("tc020603", "2.6.3 데이터 자동 수신");
+            onem2mtclist.Add("tc020604", "2.6.4 데이터 수동 수신 모드 설정");
             onem2mtclist.Add("tc020701", "2.7.1 데이터 읽기");
             onem2mtclist.Add("tc020801", "2.8.1 M2MM(단말) IP 변경");
             onem2mtclist.Add("tc020901", "2.9.1 권한 관리 정보 생성");
@@ -1354,6 +1368,7 @@ namespace WindowsFormsApp2
                 "$OM_DEV_FWDL_FINISH",
                 "$OM_DEV_FWUP_FINISH=",
                 "$LGTMPF=",
+                "$OM_N_INS_RSP=",
 
                 "@NETSTI:",
 
@@ -2044,19 +2059,156 @@ namespace WindowsFormsApp2
                                 }
                             }
                         }
+                        else if (tc.state == "tc020601")
+                        {
+                            if (svr.enrmtKeyId != string.Empty)
+                            {
+                                RetriveDataToPlatform();
+                            }
+                        }
                     }
                     break;
                 case "$OM_NOTI_IND=":
                     // oneM2M subscription 설정에 의한 data 수신 이벤트
-                    endoneM2MTC("tc020601");
+                    if (dev.maker == "Quectel")
+                    {
+                        if (tc.state == "tc020601")
+                        {
+                            endoneM2MTC("tc020601");
 
-                    startoneM2MTC("tc020701");
-                    // 플랫폼 서버에 data 수신 요청
-                    this.sendDataOut(commands["getonem2mdata"] + str2);
-                    if (lbActionState.Text == states.onem2mtc020601.ToString())
-                        lbActionState.Text = states.onem2mtc020701.ToString();
+                            if (lbActionState.Text == states.onem2mtc020601.ToString())
+                            {
+                                startoneM2MTC("tc020602");
+                                // 플랫폼 서버에 data 수신 요청
+                                this.sendDataOut(commands["setrcvauto"]);
+                                lbActionState.Text = states.onem2mtc020602.ToString();
+                            }
+                            else
+                            {
+                                // 플랫폼 서버에 data 수신 요청
+                                this.sendDataOut(commands["getonem2mdata"] + str2);
+                                lbActionState.Text = states.getonem2mdata.ToString();
+                            }
+                        }
+                        else if (tc.state == "tc020604")
+                        {
+                            endoneM2MTC("tc020604");
+
+                            startoneM2MTC("tc020701");
+                            // 플랫폼 서버에 data 수신 요청
+                            this.sendDataOut(commands["getonem2mdata"] + str2);
+                            if (lbActionState.Text == states.onem2mtc0206042.ToString())
+                                lbActionState.Text = states.onem2mtc020701.ToString();
+                            else
+                                lbActionState.Text = states.getonem2mdata.ToString();
+                        }
+                        else
+                        {
+                            // 플랫폼 서버에 data 수신 요청
+                            this.sendDataOut(commands["getonem2mdata"] + str2);
+                            lbActionState.Text = states.getonem2mdata.ToString();
+                        }
+                    }
                     else
-                        lbActionState.Text = states.getonem2mdata.ToString();
+                    {
+                        if (tc.state == "tc020601")
+                            endoneM2MTC("tc020601");
+
+                        startoneM2MTC("tc020701");
+                        // 플랫폼 서버에 data 수신 요청
+                        this.sendDataOut(commands["getonem2mdata"] + str2);
+                        if (lbActionState.Text == states.onem2mtc020601.ToString())
+                            lbActionState.Text = states.onem2mtc020701.ToString();
+                        else
+                            lbActionState.Text = states.getonem2mdata.ToString();
+                    }
+                    break;
+                case "$OM_N_INS_RSP=":
+                    // oneM2M 데이터 자동 수신 결과
+                    string[] rx_datas = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+
+                    if (rx_datas[0] == "2000")
+                    {
+                        // 수신한 데이터 사이즈 확이
+                        int rxsize = Convert.ToInt32(rx_datas[1]);
+                        if (rxsize == rx_datas[2].Length)
+                        {
+                            if (tc.state == "tc020601")
+                            {
+                                if (svr.enrmtKeyId == string.Empty)
+                                {
+                                    if (rx_datas[2] == lbSendedData.Text)
+                                    {
+                                        endoneM2MTC(tc.state);
+                                        endoneM2MTC("tc020603");
+
+                                        if (lbActionState.Text == states.onem2mtc020601.ToString())
+                                        {
+                                            startoneM2MTC("tc020604");
+                                            this.sendDataOut(commands["setrcvmanu"]);
+                                            lbActionState.Text = states.onem2mtc0206041.ToString();
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (rx_datas[2] == lbSvroneM2MData.Text)
+                                    {
+                                        endoneM2MTC(tc.state);
+                                        endoneM2MTC("tc020603");
+
+                                        if (lbActionState.Text == states.onem2mtc020601.ToString())
+                                        {
+                                            startoneM2MTC("tc020604");
+                                            this.sendDataOut(commands["setrcvmanu"]);
+                                            lbActionState.Text = states.onem2mtc0206041.ToString();
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (tc.state == "tc020603")
+                                    endoneM2MTC(tc.state);
+
+                                if (svr.enrmtKeyId == string.Empty)
+                                {
+                                    if (rx_datas[2] == lbSendedData.Text)
+                                    {
+
+                                        if (lbActionState.Text == states.onem2mtc020601.ToString())
+                                        {
+                                            startoneM2MTC("tc020604");
+                                            this.sendDataOut(commands["setrcvmanu"]);
+                                            lbActionState.Text = states.onem2mtc0206042.ToString();
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (rx_datas[2] == lbSvroneM2MData.Text)
+                                    {
+                                        if (lbActionState.Text == states.onem2mtc020601.ToString())
+                                        {
+                                            startoneM2MTC("tc020604");
+                                            this.sendDataOut(commands["setrcvmanu"]);
+                                            lbActionState.Text = states.onem2mtc0206042.ToString();
+                                        }
+                                    }
+                                }
+                            }
+                            lboneM2MRcvData.Text = rx_datas[2];
+                            logPrintInTextBox(rx_datas[2] + "를 수신하였습니다.", "");
+                        }
+                        else
+                        {
+                            logPrintInTextBox("수신한 데이터 사이즈를 확인하세요", "");
+                        }
+                    }
+                    else
+                    {
+                        logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
+                    }
                     break;
                 case "$OM_R_INS_RSP=":
                     // 플랫폼 서버에 data 수신
@@ -2758,6 +2910,8 @@ namespace WindowsFormsApp2
 
         private void OKReceived()
         {
+            string txData = string.Empty;
+
             states state = (states)Enum.Parse(typeof(states), lbActionState.Text);
             switch (state)
             {
@@ -2809,6 +2963,49 @@ namespace WindowsFormsApp2
                 case states.onem2mtc0212031:
                 case states.onem2mtc0212032:
                 case states.onem2mtc0212041:
+                    nextcommand = "skip";
+                    break;
+                case states.onem2mtc020602:
+                    if (tc.state == "tc060202")
+                        endoneM2MTC(tc.state);
+
+                    startoneM2MTC("tc020603");
+                    lbActionState.Text = states.onem2mtc020603.ToString();
+
+                    // Data send to SERVER (string original)
+                    txData = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " oneM2M device";
+                    if (svr.enrmtKeyId != string.Empty)
+                        this.sendDataOut(commands["sendonemsgstr"] + "DtoS" + "," + txData.Length + "," + txData);
+                    else
+                        this.sendDataOut(commands["sendonemsgstr"] + "StoD" + "," + txData.Length + "," + txData);
+
+                    nextcommand = "skip";
+                    break;
+                case states.onem2mtc0206041:
+                    if (tc.state == "tc060204")
+                        endoneM2MTC(tc.state);
+
+                    startoneM2MTC("tc020601");
+                    lbActionState.Text = states.onem2mtc020601.ToString();
+
+                    // Data send to SERVER (string original)
+                    txData = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " oneM2M device";
+                    if (svr.enrmtKeyId != string.Empty)
+                        this.sendDataOut(commands["sendonemsgstr"] + "DtoS" + "," + txData.Length + "," + txData);
+                    else
+                        this.sendDataOut(commands["sendonemsgstr"] + "StoD" + "," + txData.Length + "," + txData);
+
+                    nextcommand = "skip";
+                    break;
+                case states.onem2mtc0206042:
+                    if (tc.state == "tc060204")
+                        endoneM2MTC(tc.state);
+
+                    startoneM2MTC("tc020701");
+                    // 플랫폼 서버에 data 수신 요청
+                    this.sendDataOut(commands["getonem2mdata"] + "StoD");
+                    lbActionState.Text = states.onem2mtc020701.ToString();
+
                     nextcommand = "skip";
                     break;
                 case states.onem2mtc0211041:
@@ -3992,7 +4189,7 @@ namespace WindowsFormsApp2
                 else
                     lboneM2MRxData.Text = value;
 
-                if (tc.state == "tc020504" && lboneM2MRxData.Text == lbSendedData.Text)
+                if ((tc.state == "tc020504" || tc.state == "tc020601") && lboneM2MRxData.Text == lbSendedData.Text)
                 {
                     endoneM2MTC(tc.state);
 
@@ -4001,6 +4198,10 @@ namespace WindowsFormsApp2
                         startoneM2MTC("tc020601");
                         lbSvroneM2MData.Text = SendDataToPlatform("oneM2M");
                         lbActionState.Text = states.onem2mtc020601.ToString();
+                    }
+                    else if (lbActionState.Text == states.onem2mtc020601.ToString())
+                    {
+                        lbSvroneM2MData.Text = SendDataToPlatform("oneM2M");
                     }
                 }
             }
@@ -4032,7 +4233,7 @@ namespace WindowsFormsApp2
             string packetStr = "<m2m:cin xmlns:m2m=\"http://www.onem2m.org/xml/protocols\">";
             packetStr += "<cnf>text/plain</cnf>";
             string txData = string.Empty;
-            if (lbActionState.Text == states.onem2mtc020504.ToString())
+            if (lbActionState.Text == states.onem2mtc020504.ToString() || lbActionState.Text == states.onem2mtc020601.ToString())
                 txData = lbSendedData.Text;
             else
                 txData = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " server";
