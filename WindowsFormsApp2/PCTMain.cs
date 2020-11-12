@@ -61,6 +61,8 @@ namespace WindowsFormsApp2
             setcdp_bg96,
 
             sendonemsgstr,
+            sendonemsgsvr,
+            responemsgsvr,
 
             getonem2mmode,
             setonem2mmode,
@@ -440,6 +442,8 @@ namespace WindowsFormsApp2
             commands.Add("setcdp_bg96", "AT+QLWM2M=\"cdp\",");
 
             commands.Add("sendonemsgstr", "AT$OM_C_INS_REQ=");
+            commands.Add("sendonemsgsvr", "AT$OM_C_RCIN_REQ=");
+            commands.Add("responemsgsvr", "AT$OM_S_RCIN_REQ=");
 
             commands.Add("getonem2mmode", "AT$LGTMPF?");
             commands.Add("onem2mtc0201023", "AT$LGTMPF?");
@@ -1369,6 +1373,7 @@ namespace WindowsFormsApp2
                 "$OM_DEV_FWUP_FINISH=",
                 "$LGTMPF=",
                 "$OM_N_INS_RSP=",
+                "$OM_S_RCIN_RSP=",
 
                 "@NETSTI:",
 
@@ -2208,6 +2213,16 @@ namespace WindowsFormsApp2
                         logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
                     }
                     break;
+                case "$OM_S_RCIN_RSP=":
+                    // 플랫폼 서버에 device status check 수신
+
+                    logPrintInTextBox(str2 + "에 대해 상태 요청을 수신하였습니다.", "");
+
+                    string txData2 = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " response";
+                    this.sendDataOut(commands["responemsgsvr"] + str2 + "," + txData2.Length + "," + txData2);
+
+                    nextcommand = "skip";
+                    break;
                 case "*ST*INFO:":
                     string[] modeminfos = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
                     lbModemVer.Text = modeminfos[1];
@@ -2388,6 +2403,7 @@ namespace WindowsFormsApp2
                             this.sendDataOut(commands["getmodemSvrVer"]);
                             lbActionState.Text = states.onem2mtc021101.ToString();
                         }
+
                     }
                     break;
                 case "$OM_DEV_FWDL_FINISH":
@@ -4143,10 +4159,49 @@ namespace WindowsFormsApp2
                         }
                     }
                 }
-                if ((tc.state == "tc020601") || (tc.state == "tc020603") || (tc.state == "tc020604"))
+                if ((lbActionState.Text == states.onem2mtc020601.ToString()) || (lbActionState.Text == states.onem2mtc020603.ToString()) || (lbActionState.Text == states.onem2mtc0206041.ToString()))
                 {
                     lbSvroneM2MData.Text = SendDataToPlatform("oneM2M");
                 }
+            }
+        }
+
+        private void RetriveDataToDevice()
+        {
+            ReqHeader header = new ReqHeader();
+            header.Url = brkUrl + "/" + dev.entityId  + "/TEST";
+            header.Method = "GET";
+            header.X_M2M_Origin = svr.entityId;
+            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "data_retrive";
+            header.X_MEF_TK = svr.token;
+            header.X_MEF_EKI = svr.enrmtKeyId;
+            header.X_M2M_NM = string.Empty;
+            header.Accept = "application/xml";
+            header.ContentType = string.Empty;
+
+            string retStr = SendHttpRequest(header, string.Empty);
+            if (retStr != string.Empty)
+            {
+                string format = string.Empty;
+                string value = string.Empty;
+
+                XmlDocument xDoc = new XmlDocument();
+                xDoc.LoadXml(retStr);
+                //LogWrite(xDoc.OuterXml.ToString());
+
+                XmlNodeList xnList = xDoc.SelectNodes("/*"); //접근할 노드
+                foreach (XmlNode xn in xnList)
+                {
+                    format = xn["cnf"].InnerText; // data format
+                    value = xn["con"].InnerText; // data value
+                }
+                //LogWrite("value = " + value);
+                //LogWrite("format = " + format);
+
+                if (format == "application/octet-stream")
+                    lbDirectRxData.Text = Encoding.UTF8.GetString(Convert.FromBase64String(value));
+                else
+                    lbDirectRxData.Text = value;
             }
         }
 
@@ -4157,6 +4212,10 @@ namespace WindowsFormsApp2
             {
                 //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847/cnt-TEMP";
                 header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + dev.imsi + "/cnt-StoD";
+            }
+            else if (target_comm == "oneDevice")
+            {
+                header.Url = brkUrl + "/" + dev.entityId + "/TEST";
             }
             else
             {
@@ -4176,7 +4235,7 @@ namespace WindowsFormsApp2
             string packetStr = "<m2m:cin xmlns:m2m=\"http://www.onem2m.org/xml/protocols\">";
             packetStr += "<cnf>text/plain</cnf>";
             string txData = string.Empty;
-            if (lbActionState.Text == states.onem2mtc020504.ToString() || (tc.state == "tc020601") || (tc.state == "tc020603") || (tc.state == "tc020604"))
+            if ((lbActionState.Text == states.onem2mtc020504.ToString()) || (lbActionState.Text == states.onem2mtc020601.ToString()) || (lbActionState.Text == states.onem2mtc020603.ToString()) || (lbActionState.Text == states.onem2mtc0206041.ToString()))
                 txData = lbSendedData.Text;
             else
                 txData = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " server";
@@ -4519,6 +4578,41 @@ namespace WindowsFormsApp2
                 filename = "TestResult_" + currenttime.ToString("MMdd_hhmmss") + ".csv";
                 resultFileWrite(pathname, filename);
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (isDeviceInfo() && svr.entityId != string.Empty)
+            {
+                startoneM2MTC("tc020504");
+                // Data send to SERVER (string original)
+                //AT$OM_C_INS_REQ=<server id>,<object>,<length>,<data>
+                string txData = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " oneM2M device";
+                this.sendDataOut(commands["sendonemsgsvr"] + svr.entityId + "," + "DtoS" + "," + txData.Length + "," + txData);
+                lbActionState.Text = states.sendonemsgsvr.ToString();
+                lbDirectTxData.Text = txData;
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            LogWrite("----------DATA SEND----------");
+            if (svr.enrmtKeyId != string.Empty)
+            {
+                startoneM2MTC("tc020601");
+                label13.Text = SendDataToPlatform("oneDevice");
+            }
+            else
+                LogWrite("서버인증파라미터 세팅하세요");
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            LogWrite("----------DATA RECIEVE----------");
+            if (svr.enrmtKeyId != string.Empty)
+                RetriveDataToDevice();
+            else
+                LogWrite("서버인증파라미터 세팅하세요");
         }
     }
 

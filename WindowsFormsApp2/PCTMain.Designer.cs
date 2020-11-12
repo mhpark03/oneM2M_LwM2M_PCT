@@ -39,6 +39,7 @@
             this.gbServerLog = new System.Windows.Forms.GroupBox();
             this.tbLog = new System.Windows.Forms.TextBox();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.btnTCResultSave = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.btnMEFAuthS = new System.Windows.Forms.Button();
             this.lbEnrmtKey = new System.Windows.Forms.Label();
@@ -143,7 +144,12 @@
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.tBoxDataIN = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.btnTCResultSave = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.lbDirectTxData = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
+            this.lbDirectRxData = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.gbTCResult.SuspendLayout();
             this.gbServerLog.SuspendLayout();
@@ -200,15 +206,15 @@
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1395, 678);
+            this.panel1.Size = new System.Drawing.Size(1395, 696);
             this.panel1.TabIndex = 10;
             // 
             // gbTCResult
             // 
             this.gbTCResult.Controls.Add(this.tbTCResult);
-            this.gbTCResult.Location = new System.Drawing.Point(475, 488);
+            this.gbTCResult.Location = new System.Drawing.Point(475, 518);
             this.gbTCResult.Name = "gbTCResult";
-            this.gbTCResult.Size = new System.Drawing.Size(472, 182);
+            this.gbTCResult.Size = new System.Drawing.Size(472, 176);
             this.gbTCResult.TabIndex = 37;
             this.gbTCResult.TabStop = false;
             this.gbTCResult.Text = "TestCase Message";
@@ -225,7 +231,7 @@
             // gbServerLog
             // 
             this.gbServerLog.Controls.Add(this.tbLog);
-            this.gbServerLog.Location = new System.Drawing.Point(475, 300);
+            this.gbServerLog.Location = new System.Drawing.Point(475, 320);
             this.gbServerLog.Name = "gbServerLog";
             this.gbServerLog.Size = new System.Drawing.Size(472, 182);
             this.gbServerLog.TabIndex = 36;
@@ -250,10 +256,20 @@
             this.groupBox11.Controls.Add(this.gbOneM2MServer);
             this.groupBox11.Location = new System.Drawing.Point(953, 103);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(435, 567);
+            this.groupBox11.Size = new System.Drawing.Size(435, 581);
             this.groupBox11.TabIndex = 34;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "SERVER 동작";
+            // 
+            // btnTCResultSave
+            // 
+            this.btnTCResultSave.Location = new System.Drawing.Point(15, 555);
+            this.btnTCResultSave.Name = "btnTCResultSave";
+            this.btnTCResultSave.Size = new System.Drawing.Size(121, 20);
+            this.btnTCResultSave.TabIndex = 43;
+            this.btnTCResultSave.Text = "TC결과 파일저장";
+            this.btnTCResultSave.UseVisualStyleBackColor = true;
+            this.btnTCResultSave.Click += new System.EventHandler(this.btnTCResultSave_Click);
             // 
             // groupBox9
             // 
@@ -342,7 +358,7 @@
             this.gbLwM2MServer.Controls.Add(this.btnDeviceStatusCheck);
             this.gbLwM2MServer.Controls.Add(this.btnLwM2MData);
             this.gbLwM2MServer.Enabled = false;
-            this.gbLwM2MServer.Location = new System.Drawing.Point(15, 420);
+            this.gbLwM2MServer.Location = new System.Drawing.Point(15, 441);
             this.gbLwM2MServer.Name = "gbLwM2MServer";
             this.gbLwM2MServer.Size = new System.Drawing.Size(403, 108);
             this.gbLwM2MServer.TabIndex = 33;
@@ -401,14 +417,14 @@
             this.gbServer.Enabled = false;
             this.gbServer.Location = new System.Drawing.Point(15, 120);
             this.gbServer.Name = "gbServer";
-            this.gbServer.Size = new System.Drawing.Size(403, 122);
+            this.gbServer.Size = new System.Drawing.Size(403, 107);
             this.gbServer.TabIndex = 31;
             this.gbServer.TabStop = false;
             this.gbServer.Text = "CSE";
             // 
             // tbSeverPort
             // 
-            this.tbSeverPort.Location = new System.Drawing.Point(114, 87);
+            this.tbSeverPort.Location = new System.Drawing.Point(114, 77);
             this.tbSeverPort.Name = "tbSeverPort";
             this.tbSeverPort.Size = new System.Drawing.Size(140, 21);
             this.tbSeverPort.TabIndex = 14;
@@ -416,7 +432,7 @@
             // 
             // label19
             // 
-            this.label19.Location = new System.Drawing.Point(13, 82);
+            this.label19.Location = new System.Drawing.Point(13, 72);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(94, 22);
             this.label19.TabIndex = 13;
@@ -425,7 +441,7 @@
             // 
             // tbSeverIP
             // 
-            this.tbSeverIP.Location = new System.Drawing.Point(113, 62);
+            this.tbSeverIP.Location = new System.Drawing.Point(113, 52);
             this.tbSeverIP.Name = "tbSeverIP";
             this.tbSeverIP.Size = new System.Drawing.Size(141, 21);
             this.tbSeverIP.TabIndex = 12;
@@ -433,7 +449,7 @@
             // 
             // label20
             // 
-            this.label20.Location = new System.Drawing.Point(7, 60);
+            this.label20.Location = new System.Drawing.Point(7, 50);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(94, 22);
             this.label20.TabIndex = 11;
@@ -442,7 +458,7 @@
             // 
             // btnDelRemoteCSE
             // 
-            this.btnDelRemoteCSE.Location = new System.Drawing.Point(273, 27);
+            this.btnDelRemoteCSE.Location = new System.Drawing.Point(273, 20);
             this.btnDelRemoteCSE.Name = "btnDelRemoteCSE";
             this.btnDelRemoteCSE.Size = new System.Drawing.Size(118, 23);
             this.btnDelRemoteCSE.TabIndex = 2;
@@ -452,7 +468,7 @@
             // 
             // btnGetCSEBase
             // 
-            this.btnGetCSEBase.Location = new System.Drawing.Point(9, 23);
+            this.btnGetCSEBase.Location = new System.Drawing.Point(9, 19);
             this.btnGetCSEBase.Name = "btnGetCSEBase";
             this.btnGetCSEBase.Size = new System.Drawing.Size(112, 23);
             this.btnGetCSEBase.TabIndex = 0;
@@ -462,7 +478,7 @@
             // 
             // btnSetRemoteCSE
             // 
-            this.btnSetRemoteCSE.Location = new System.Drawing.Point(273, 58);
+            this.btnSetRemoteCSE.Location = new System.Drawing.Point(273, 48);
             this.btnSetRemoteCSE.Name = "btnSetRemoteCSE";
             this.btnSetRemoteCSE.Size = new System.Drawing.Size(118, 50);
             this.btnSetRemoteCSE.TabIndex = 0;
@@ -472,7 +488,7 @@
             // 
             // btnGetRemoteCSE
             // 
-            this.btnGetRemoteCSE.Location = new System.Drawing.Point(143, 27);
+            this.btnGetRemoteCSE.Location = new System.Drawing.Point(143, 20);
             this.btnGetRemoteCSE.Name = "btnGetRemoteCSE";
             this.btnGetRemoteCSE.Size = new System.Drawing.Size(119, 23);
             this.btnGetRemoteCSE.TabIndex = 0;
@@ -482,6 +498,10 @@
             // 
             // gbOneM2MServer
             // 
+            this.gbOneM2MServer.Controls.Add(this.lbDirectRxData);
+            this.gbOneM2MServer.Controls.Add(this.label13);
+            this.gbOneM2MServer.Controls.Add(this.button3);
+            this.gbOneM2MServer.Controls.Add(this.button2);
             this.gbOneM2MServer.Controls.Add(this.lbdevicepoa);
             this.gbOneM2MServer.Controls.Add(this.label12);
             this.gbOneM2MServer.Controls.Add(this.lbmodemfwrver);
@@ -494,9 +514,9 @@
             this.gbOneM2MServer.Controls.Add(this.btnDataRetrive);
             this.gbOneM2MServer.Controls.Add(this.btnSendtoDeviceoneM2M);
             this.gbOneM2MServer.Enabled = false;
-            this.gbOneM2MServer.Location = new System.Drawing.Point(15, 265);
+            this.gbOneM2MServer.Location = new System.Drawing.Point(15, 233);
             this.gbOneM2MServer.Name = "gbOneM2MServer";
-            this.gbOneM2MServer.Size = new System.Drawing.Size(403, 140);
+            this.gbOneM2MServer.Size = new System.Drawing.Size(403, 198);
             this.gbOneM2MServer.TabIndex = 32;
             this.gbOneM2MServer.TabStop = false;
             this.gbOneM2MServer.Text = "oneM2M Device DATA";
@@ -559,7 +579,7 @@
             // 
             this.btnDeviceCheck.Location = new System.Drawing.Point(9, 16);
             this.btnDeviceCheck.Name = "btnDeviceCheck";
-            this.btnDeviceCheck.Size = new System.Drawing.Size(112, 50);
+            this.btnDeviceCheck.Size = new System.Drawing.Size(116, 50);
             this.btnDeviceCheck.TabIndex = 40;
             this.btnDeviceCheck.Text = "디바이스 리소스";
             this.btnDeviceCheck.UseVisualStyleBackColor = true;
@@ -568,7 +588,7 @@
             // lbSvroneM2MData
             // 
             this.lbSvroneM2MData.AutoSize = true;
-            this.lbSvroneM2MData.Location = new System.Drawing.Point(149, 110);
+            this.lbSvroneM2MData.Location = new System.Drawing.Point(149, 142);
             this.lbSvroneM2MData.Name = "lbSvroneM2MData";
             this.lbSvroneM2MData.Size = new System.Drawing.Size(49, 12);
             this.lbSvroneM2MData.TabIndex = 39;
@@ -588,7 +608,7 @@
             // 
             this.btnDataRetrive.Location = new System.Drawing.Point(9, 72);
             this.btnDataRetrive.Name = "btnDataRetrive";
-            this.btnDataRetrive.Size = new System.Drawing.Size(112, 23);
+            this.btnDataRetrive.Size = new System.Drawing.Size(116, 23);
             this.btnDataRetrive.TabIndex = 14;
             this.btnDataRetrive.Text = "데이터 확인 (DB)";
             this.btnDataRetrive.UseVisualStyleBackColor = true;
@@ -596,11 +616,11 @@
             // 
             // btnSendtoDeviceoneM2M
             // 
-            this.btnSendtoDeviceoneM2M.Location = new System.Drawing.Point(9, 104);
+            this.btnSendtoDeviceoneM2M.Location = new System.Drawing.Point(9, 135);
             this.btnSendtoDeviceoneM2M.Name = "btnSendtoDeviceoneM2M";
-            this.btnSendtoDeviceoneM2M.Size = new System.Drawing.Size(112, 23);
+            this.btnSendtoDeviceoneM2M.Size = new System.Drawing.Size(116, 23);
             this.btnSendtoDeviceoneM2M.TabIndex = 3;
-            this.btnSendtoDeviceoneM2M.Text = "데이터 보내기";
+            this.btnSendtoDeviceoneM2M.Text = "데이터 전송(DB)";
             this.btnSendtoDeviceoneM2M.UseVisualStyleBackColor = true;
             this.btnSendtoDeviceoneM2M.Click += new System.EventHandler(this.btnSendtoDeviceoneM2M_Click);
             // 
@@ -612,13 +632,15 @@
             this.groupBox7.Controls.Add(this.gbModule);
             this.groupBox7.Location = new System.Drawing.Point(28, 94);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(438, 576);
+            this.groupBox7.Size = new System.Drawing.Size(438, 590);
             this.groupBox7.TabIndex = 16;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "DEVICE 동작";
             // 
             // gbOneM2MDevice
             // 
+            this.gbOneM2MDevice.Controls.Add(this.lbDirectTxData);
+            this.gbOneM2MDevice.Controls.Add(this.button1);
             this.gbOneM2MDevice.Controls.Add(this.btnoneM2MFullTest);
             this.gbOneM2MDevice.Controls.Add(this.btnoneM2MModuleVer);
             this.gbOneM2MDevice.Controls.Add(this.btnDelSubscript);
@@ -643,7 +665,7 @@
             this.gbOneM2MDevice.Enabled = false;
             this.gbOneM2MDevice.Location = new System.Drawing.Point(14, 205);
             this.gbOneM2MDevice.Name = "gbOneM2MDevice";
-            this.gbOneM2MDevice.Size = new System.Drawing.Size(413, 218);
+            this.gbOneM2MDevice.Size = new System.Drawing.Size(413, 235);
             this.gbOneM2MDevice.TabIndex = 25;
             this.gbOneM2MDevice.TabStop = false;
             this.gbOneM2MDevice.Text = "oneM2M";
@@ -661,7 +683,7 @@
             // btnoneM2MModuleVer
             // 
             this.btnoneM2MModuleVer.Font = new System.Drawing.Font("굴림", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnoneM2MModuleVer.Location = new System.Drawing.Point(204, 189);
+            this.btnoneM2MModuleVer.Location = new System.Drawing.Point(204, 208);
             this.btnoneM2MModuleVer.Name = "btnoneM2MModuleVer";
             this.btnoneM2MModuleVer.Size = new System.Drawing.Size(101, 20);
             this.btnoneM2MModuleVer.TabIndex = 40;
@@ -712,7 +734,7 @@
             // btnoneM2MDeviceVer
             // 
             this.btnoneM2MDeviceVer.Font = new System.Drawing.Font("굴림", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnoneM2MDeviceVer.Location = new System.Drawing.Point(6, 189);
+            this.btnoneM2MDeviceVer.Location = new System.Drawing.Point(6, 208);
             this.btnoneM2MDeviceVer.Name = "btnoneM2MDeviceVer";
             this.btnoneM2MDeviceVer.Size = new System.Drawing.Size(98, 20);
             this.btnoneM2MDeviceVer.TabIndex = 35;
@@ -812,7 +834,7 @@
             // 
             // btnModemFOTA
             // 
-            this.btnModemFOTA.Location = new System.Drawing.Point(305, 189);
+            this.btnModemFOTA.Location = new System.Drawing.Point(305, 208);
             this.btnModemFOTA.Name = "btnModemFOTA";
             this.btnModemFOTA.Size = new System.Drawing.Size(106, 20);
             this.btnModemFOTA.TabIndex = 24;
@@ -823,7 +845,7 @@
             // btnDeviceFOTA
             // 
             this.btnDeviceFOTA.Font = new System.Drawing.Font("굴림", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnDeviceFOTA.Location = new System.Drawing.Point(104, 189);
+            this.btnDeviceFOTA.Location = new System.Drawing.Point(104, 208);
             this.btnDeviceFOTA.Name = "btnDeviceFOTA";
             this.btnDeviceFOTA.Size = new System.Drawing.Size(99, 20);
             this.btnDeviceFOTA.TabIndex = 23;
@@ -857,7 +879,7 @@
             this.btnSendDataOneM2M.Name = "btnSendDataOneM2M";
             this.btnSendDataOneM2M.Size = new System.Drawing.Size(121, 20);
             this.btnSendDataOneM2M.TabIndex = 19;
-            this.btnSendDataOneM2M.Text = "데이터전송";
+            this.btnSendDataOneM2M.Text = "데이터전송 (DB)";
             this.btnSendDataOneM2M.UseVisualStyleBackColor = true;
             this.btnSendDataOneM2M.Click += new System.EventHandler(this.btnSendDataOneM2M_Click);
             // 
@@ -938,7 +960,7 @@
             this.gbLwM2MDevice.Controls.Add(this.btnBootstrap);
             this.gbLwM2MDevice.Controls.Add(this.btnSendData);
             this.gbLwM2MDevice.Enabled = false;
-            this.gbLwM2MDevice.Location = new System.Drawing.Point(14, 429);
+            this.gbLwM2MDevice.Location = new System.Drawing.Point(14, 446);
             this.gbLwM2MDevice.Name = "gbLwM2MDevice";
             this.gbLwM2MDevice.Size = new System.Drawing.Size(413, 135);
             this.gbLwM2MDevice.TabIndex = 15;
@@ -1316,7 +1338,7 @@
             this.gbDeviceLog.Controls.Add(this.tBoxDataIN);
             this.gbDeviceLog.Location = new System.Drawing.Point(472, 103);
             this.gbDeviceLog.Name = "gbDeviceLog";
-            this.gbDeviceLog.Size = new System.Drawing.Size(475, 191);
+            this.gbDeviceLog.Size = new System.Drawing.Size(475, 211);
             this.gbDeviceLog.TabIndex = 12;
             this.gbDeviceLog.TabStop = false;
             this.gbDeviceLog.Text = "Device Message";
@@ -1334,13 +1356,13 @@
             // 
             this.tBoxDataIN.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBoxDataIN.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tBoxDataIN.Location = new System.Drawing.Point(3, 26);
+            this.tBoxDataIN.Location = new System.Drawing.Point(3, 20);
             this.tBoxDataIN.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.tBoxDataIN.Multiline = true;
             this.tBoxDataIN.Name = "tBoxDataIN";
             this.tBoxDataIN.ReadOnly = true;
             this.tBoxDataIN.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tBoxDataIN.Size = new System.Drawing.Size(469, 162);
+            this.tBoxDataIN.Size = new System.Drawing.Size(469, 188);
             this.tBoxDataIN.TabIndex = 22;
             // 
             // timer1
@@ -1348,21 +1370,70 @@
             this.timer1.Interval = 10000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // btnTCResultSave
+            // button1
             // 
-            this.btnTCResultSave.Location = new System.Drawing.Point(15, 541);
-            this.btnTCResultSave.Name = "btnTCResultSave";
-            this.btnTCResultSave.Size = new System.Drawing.Size(121, 20);
-            this.btnTCResultSave.TabIndex = 43;
-            this.btnTCResultSave.Text = "TC결과 파일저장";
-            this.btnTCResultSave.UseVisualStyleBackColor = true;
-            this.btnTCResultSave.Click += new System.EventHandler(this.btnTCResultSave_Click);
+            this.button1.Location = new System.Drawing.Point(11, 187);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(121, 20);
+            this.button1.TabIndex = 42;
+            this.button1.Text = "데이터전송 (서버)";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(7, 103);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(118, 23);
+            this.button2.TabIndex = 47;
+            this.button2.Text = "데이터 확인 (단말)";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // lbDirectTxData
+            // 
+            this.lbDirectTxData.AutoSize = true;
+            this.lbDirectTxData.Location = new System.Drawing.Point(150, 188);
+            this.lbDirectTxData.Name = "lbDirectTxData";
+            this.lbDirectTxData.Size = new System.Drawing.Size(49, 12);
+            this.lbDirectTxData.TabIndex = 43;
+            this.lbDirectTxData.Text = "No data";
+            this.lbDirectTxData.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(149, 170);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(49, 12);
+            this.label13.TabIndex = 49;
+            this.label13.Text = "No data";
+            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(9, 163);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(116, 23);
+            this.button3.TabIndex = 48;
+            this.button3.Text = "데이터 전송(단말)";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // lbDirectRxData
+            // 
+            this.lbDirectRxData.Location = new System.Drawing.Point(147, 100);
+            this.lbDirectRxData.Name = "lbDirectRxData";
+            this.lbDirectRxData.Size = new System.Drawing.Size(242, 22);
+            this.lbDirectRxData.TabIndex = 50;
+            this.lbDirectRxData.Text = "No received data";
+            this.lbDirectRxData.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1395, 678);
+            this.ClientSize = new System.Drawing.Size(1395, 696);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
@@ -1519,6 +1590,12 @@
         private System.Windows.Forms.Button btnLwM2MFullTest;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button btnTCResultSave;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label lbDirectTxData;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label lbDirectRxData;
     }
 }
 
