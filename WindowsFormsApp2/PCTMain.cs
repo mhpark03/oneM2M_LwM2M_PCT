@@ -1579,6 +1579,7 @@ namespace WindowsFormsApp2
                     // AT+ICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
                     // OK 응답이 따라온다
                     setDeviceEntityID(str2);
+                    logPrintInTextBox("ICCID가 저장되었습니다.", "");
 
                     if (lbActionState.Text == states.autogeticcid.ToString())
                     {
@@ -1600,6 +1601,7 @@ namespace WindowsFormsApp2
                     // AT+ICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
                     // OK 응답이 따라온다
                     setDeviceEntityID(str2);
+                    logPrintInTextBox("ICCID가 저장되었습니다.", "");
 
                     if (lbActionState.Text == states.autogeticcid.ToString())
                     {
@@ -1625,6 +1627,7 @@ namespace WindowsFormsApp2
                     // AT+MUICCID (NB TPB23모델)의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
                     // OK 응답이 따라온다
                     setDeviceEntityID(str2);
+                    logPrintInTextBox("ICCID가 저장되었습니다.", "");
 
                     if (lbActionState.Text == states.autogeticcidtpb23.ToString())
                     {
@@ -1640,6 +1643,7 @@ namespace WindowsFormsApp2
                     // AT@ICCID?의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
                     // OK 응답이 따라온다
                     setDeviceEntityID(str2);
+                    logPrintInTextBox("ICCID가 저장되었습니다.", "");
 
                     if (lbActionState.Text == states.autogeticcidamtel.ToString())
                     {
@@ -1650,6 +1654,7 @@ namespace WindowsFormsApp2
                     // AT%GICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
                     // OK 응답이 따라온다
                     setDeviceEntityID(str2);
+                    logPrintInTextBox("ICCID가 저장되었습니다.", "");
 
                     if (lbActionState.Text == states.autogeticcidgct.ToString())
                     {
@@ -1660,6 +1665,7 @@ namespace WindowsFormsApp2
                     // AT+NCCID (Quectel BC95모델)의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
                     // OK 응답이 따라온다
                     setDeviceEntityID(str2);
+                    logPrintInTextBox("ICCID가 저장되었습니다.", "");
 
                     if (lbActionState.Text == states.autogeticcidbc95.ToString())
                     {
@@ -2803,6 +2809,9 @@ namespace WindowsFormsApp2
                         //received hex data make to ascii code
                         string receiveDataIN = BcdToString(rxdatasbc95[1].ToCharArray());
                         logPrintInTextBox("\"" + receiveDataIN + "\"를 수신하였습니다.", "");
+                        lbLwM2MRcvData.Text = receiveDataIN;
+                        if (tc.state == "tc0502" && receiveDataIN == lbSvrLwM2MData.Text)
+                            endLwM2MTC(tc.state);
                     }
                     else
                     {
@@ -2994,7 +3003,6 @@ namespace WindowsFormsApp2
                 lbIccid.Text = str.Substring(str.Length - 20, 19);
             else
                 lbIccid.Text = str;
-            logPrintInTextBox("ICCID값이 저장되었습니다.", "");
 
             dev.iccid = lbIccid.Text;
             if(dev.imsi.Length == 11)
@@ -3003,9 +3011,13 @@ namespace WindowsFormsApp2
                 //logPrintInTextBox(md5value, "");
 
                 string epn = md5value.Substring(0, 5) + md5value.Substring(md5value.Length - 5, 5);
+                string entityid = "ASN_CSE-D-" + epn + "-" + tbSvcCd.Text;
 
-                dev.entityId = "ASN_CSE-D-" + epn + "-" + tbSvcCd.Text;
-                //logPrintInTextBox("EntityID = "+dev.entityId, "");
+                if(dev.entityId != entityid)
+                {
+                    dev.entityId = entityid;
+                    logPrintInTextBox("Device EntityID가 " + dev.entityId + "수정되었습니다.", "");
+                }
 
                 if (dev.type == "oneM2M")
                 {
@@ -4537,7 +4549,7 @@ namespace WindowsFormsApp2
             }
             else
             {
-                //setDeviceEntityID(lbIccid.Text);
+                setDeviceEntityID(lbIccid.Text);
                 header.Url = brkUrlL + "/" + dev.entityId + "/10250/0/1";
                 //header.Url = brkUrlL + "/IN_CSE-BASE-1/cb-1/" + deviceEntityId + "/10250/0/1";
             }
@@ -4568,7 +4580,7 @@ namespace WindowsFormsApp2
         private void DeviceCheckToPlatform()
         {
             ReqHeader header = new ReqHeader();
-            //setDeviceEntityID(lbIccid.Text);
+            setDeviceEntityID(lbIccid.Text);
             header.Url = brkUrlL + "/" + dev.entityId + "/10250/0/0";
             header.Method = "GET";
             header.X_M2M_Origin = svr.entityId;
@@ -4937,6 +4949,17 @@ namespace WindowsFormsApp2
         private void btnLwM2MFullTest_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void tbSvcCd_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (dev.entityId != string.Empty)
+                    setDeviceEntityID(lbIccid.Text);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
         }
     }
 

@@ -1383,6 +1383,7 @@
             this.tbSvcCd.TabIndex = 17;
             this.tbSvcCd.Text = "CATM";
             this.tbSvcCd.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSvcCd.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbSvcCd_KeyDown);
             // 
             // label23
             // 
