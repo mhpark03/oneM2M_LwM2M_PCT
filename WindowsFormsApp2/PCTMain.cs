@@ -4499,6 +4499,7 @@ namespace WindowsFormsApp2
         private void RetriveDataToDevice()
         {
             ReqHeader header = new ReqHeader();
+            setDeviceEntityID(lbIccid.Text);
             header.Url = brkUrl + "/" + dev.entityId  + "/TEST";
             header.Method = "GET";
             header.X_M2M_Origin = svr.entityId;
@@ -4545,6 +4546,7 @@ namespace WindowsFormsApp2
             }
             else if (target_comm == "oneDevice")
             {
+                setDeviceEntityID(lbIccid.Text);
                 header.Url = brkUrl + "/" + dev.entityId + "/TEST";
             }
             else
