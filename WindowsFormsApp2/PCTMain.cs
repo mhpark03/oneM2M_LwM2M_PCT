@@ -3020,13 +3020,16 @@ namespace WindowsFormsApp2
                     logPrintInTextBox("Device EntityID가 " + dev.entityId + "수정되었습니다.", "");
                 }
 
-                if (dev.type == "oneM2M")
+                if (tc.state == "tc0201")
                 {
-                    tbTCResult.Text = string.Empty;
-                    tc.state = string.Empty;
+                    if (dev.type == "oneM2M")
+                    {
+                        tbTCResult.Text = string.Empty;
+                        tc.state = string.Empty;
+                    }
+                    else
+                        endLwM2MTC(tc.state);
                 }
-                else if (tc.state == "tc0201")
-                    endLwM2MTC(tc.state);
             }
         }
 
