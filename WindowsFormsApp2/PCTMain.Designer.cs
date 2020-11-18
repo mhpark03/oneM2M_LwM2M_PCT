@@ -153,6 +153,8 @@
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.tBoxDataIN = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.label18 = new System.Windows.Forms.Label();
+            this.lbDevEntityId = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.gbTCResult.SuspendLayout();
             this.gbServerLog.SuspendLayout();
@@ -1165,6 +1167,8 @@
             // 
             // gbModule
             // 
+            this.gbModule.Controls.Add(this.lbDevEntityId);
+            this.gbModule.Controls.Add(this.label18);
             this.gbModule.Controls.Add(this.lbIccid);
             this.gbModule.Controls.Add(this.label11);
             this.gbModule.Controls.Add(this.lbIMSI);
@@ -1468,6 +1472,24 @@
             this.timer1.Interval = 10000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // label18
+            // 
+            this.label18.Location = new System.Drawing.Point(49, 82);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(78, 16);
+            this.label18.TabIndex = 34;
+            this.label18.Text = "entityId =";
+            this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lbDevEntityId
+            // 
+            this.lbDevEntityId.Location = new System.Drawing.Point(130, 81);
+            this.lbDevEntityId.Name = "lbDevEntityId";
+            this.lbDevEntityId.Size = new System.Drawing.Size(189, 16);
+            this.lbDevEntityId.TabIndex = 35;
+            this.lbDevEntityId.Text = "dev.entityId";
+            this.lbDevEntityId.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -1638,6 +1660,8 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ProgressBar progressBar2;
+        private System.Windows.Forms.Label lbDevEntityId;
+        private System.Windows.Forms.Label label18;
     }
 }
 

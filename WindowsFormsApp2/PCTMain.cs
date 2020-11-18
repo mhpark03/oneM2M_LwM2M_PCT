@@ -3016,6 +3016,7 @@ namespace WindowsFormsApp2
                 if(dev.entityId != entityid)
                 {
                     dev.entityId = entityid;
+                    lbDevEntityId.Text = dev.entityId;
                     logPrintInTextBox("Device EntityID가 " + dev.entityId + "수정되었습니다.", "");
                 }
 
