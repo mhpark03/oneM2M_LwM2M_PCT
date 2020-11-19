@@ -1494,6 +1494,7 @@ namespace WindowsFormsApp2
                 "$LGTMPF=",
                 "$OM_N_INS_RSP=",
                 "$OM_S_RCIN_RSP=",
+                "$OM_R_RCIN_RSP=",
 
                 "@NETSTI:",
 
@@ -2224,6 +2225,12 @@ namespace WindowsFormsApp2
                             this.sendDataOut(commands["setrcvauto"]);
                             lbActionState.Text = states.onem2mtc020602.ToString();
                         }
+                        if (lbActionState.Text == states.onem2mtc020504.ToString() || lbActionState.Text == states.onem2mtc020602.ToString())
+                        {
+                            // 플랫폼 서버에 data 수신 요청
+                            this.sendDataOut(commands["getonem2mdata"] + str2);
+                            //lbActionState.Text = states.onem2mtc020504.ToString();
+                        }
                         else
                         {
                             // 플랫폼 서버에 data 수신 요청
@@ -2354,12 +2361,29 @@ namespace WindowsFormsApp2
                         logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
                     }
                     break;
+                case "$OM_R_RCIN_RSP=":
+                    // oneM2M 서비스 서버 데이터 수신
+                    string[] rx_svrdatas = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+
+                    // 수신한 데이터 사이즈 확이
+                    int rxsvrsize = Convert.ToInt32(rx_svrdatas[1]);
+                    if (rxsvrsize == rx_svrdatas[2].Length)
+                    {
+                        lboneM2MRcvData.Text = rx_svrdatas[2];
+                        logPrintInTextBox("TOPIC = " + rx_svrdatas[0] + "으로 " + rx_svrdatas[2] + "를 수신하였습니다.", "");
+                    }
+                    else
+                    {
+                        logPrintInTextBox("수신한 데이터 사이즈를 확인하세요", "");
+                    }
+                    break;
                 case "$OM_S_RCIN_RSP=":
                     // 플랫폼 서버에 device status check 수신
 
-                    logPrintInTextBox(str2 + "에 대해 상태 요청을 수신하였습니다.", "");
+                    logPrintInTextBox("TOPIC = " + str2 + "에 대해 상태 요청을 수신하였습니다.", "");
 
                     string txData2 = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " response";
+                    lbDirectTxData.Text = txData2;
                     this.sendDataOut(commands["responemsgsvr"] + str2 + "," + txData2.Length + "," + txData2);
 
                     nextcommand = "skip";
@@ -2471,6 +2495,18 @@ namespace WindowsFormsApp2
                     else if (modemverinfos[0] == "9001")
                     {
                         logPrintInTextBox("현재 MODEM 버전이 최신버전입니다.", "");
+
+                        if (tc.state == "tc021101")
+                        {
+                            endoneM2MTC(tc.state);
+
+                            if (lbActionState.Text == states.onem2mtc021101.ToString())
+                            {
+                                startoneM2MTC("tc021202");
+                                this.sendDataOut(commands["delsubscript"] + "StoD");
+                                lbActionState.Text = states.onem2mtc0212022.ToString();
+                            }
+                        }
                     }
                     else
                     {
@@ -3158,6 +3194,7 @@ namespace WindowsFormsApp2
                         this.sendDataOut(commands["sendonemsgstr"] + "DtoS" + "," + txData.Length + "," + txData);
                     else
                         this.sendDataOut(commands["sendonemsgstr"] + "StoD" + "," + txData.Length + "," + txData);
+                    lbSendedData.Text = txData;
 
                     nextcommand = "skip";
                     break;
@@ -3171,11 +3208,13 @@ namespace WindowsFormsApp2
                         this.sendDataOut(commands["sendonemsgstr"] + "DtoS" + "," + txData.Length + "," + txData);
                     else
                         this.sendDataOut(commands["sendonemsgstr"] + "StoD" + "," + txData.Length + "," + txData);
+                    lbSendedData.Text = txData;
 
                     nextcommand = "skip";
                     break;
                 case states.onem2mtc0206042:
-                    endoneM2MTC(tc.state);
+                    if (tc.state == "tc0206042")
+                        endoneM2MTC(tc.state);
 
                     startoneM2MTC("tc020701");
                     // 플랫폼 서버에 data 수신 요청
@@ -4497,17 +4536,18 @@ namespace WindowsFormsApp2
                         if (lbActionState.Text == states.onem2mtc020504.ToString())
                         {
                             startoneM2MTC("tc020601");
+                            lbActionState.Text = states.onem2mtc020601.ToString();
                             string[] param = { "oneM2M", "tc020601" };
                             rTh = new Thread(new ParameterizedThreadStart(SendDataToPlatform));
                             rTh.Start(param);
                         }
                     }
-                }
-                if ((lbActionState.Text == states.onem2mtc020601.ToString()) || (lbActionState.Text == states.onem2mtc020603.ToString()) || (lbActionState.Text == states.onem2mtc0206041.ToString()))
-                {
-                    string[] param = { "oneM2M", "tc020601" };
-                    rTh = new Thread(new ParameterizedThreadStart(SendDataToPlatform));
-                    rTh.Start(param);
+                    else if ((lbActionState.Text == states.onem2mtc020601.ToString()) || (lbActionState.Text == states.onem2mtc020603.ToString()) || (lbActionState.Text == states.onem2mtc0206041.ToString()))
+                    {
+                        string[] param = { "oneM2M", "tc020601" };
+                        rTh = new Thread(new ParameterizedThreadStart(SendDataToPlatform));
+                        rTh.Start(param);
+                    }
                 }
             }
         }
@@ -4551,9 +4591,24 @@ namespace WindowsFormsApp2
                 //LogWrite("format = " + format);
 
                 if (format == "application/octet-stream")
-                    lbDirectRxData.Text = Encoding.UTF8.GetString(Convert.FromBase64String(value));
+                {
+                    if (value.Length % 4 == 1)
+                    {
+                        value += "===";
+                    }
+                    else if (value.Length % 4 == 2)
+                    {
+                        value += "==";
+                    }
+                    else if (value.Length % 4 == 3)
+                    {
+                        value += "=";
+                    }
+                    LogWrite("value = " + value);
+                    SetText(lbDirectRxData, Encoding.UTF8.GetString(Convert.FromBase64String(value)));
+                }
                 else
-                    lbDirectRxData.Text = value;
+                    SetText(lbDirectRxData, value);
             }
         }
 
@@ -4596,15 +4651,17 @@ namespace WindowsFormsApp2
                 txData = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " server";
             packetStr += "<con>" + txData + "</con>";
             packetStr += "</m2m:cin>";
-            string retStr = SendHttpRequest(header, packetStr);
-            //if (retStr != string.Empty)
-            //    LogWrite(retStr);
+
             if (data[1] == "oneDevice")
                 SetText(label13, txData);
             else if (data[1] == "tc020601")
                 SetText(lbSvroneM2MData, txData);
             else if (data[1] == "tc0502")
                 SetText(lbSvrLwM2MData, txData);
+
+            string retStr = SendHttpRequest(header, packetStr);
+            //if (retStr != string.Empty)
+            //    LogWrite(retStr);
         }
 
         delegate void Ctr_Involk(Control ctr, string text);
@@ -4681,7 +4738,6 @@ namespace WindowsFormsApp2
                     LogWriteNoTime(resResult);
                     LogWriteNoTime("");
                 }
-                return resResult;
             }
             catch (WebException ex)
             {
@@ -4705,8 +4761,8 @@ namespace WindowsFormsApp2
                 {
                     LogWrite(ex.ToString());
                 }
-                return resResult;
             }
+            return resResult;
         }
 
         private void LogWrite(string data)
