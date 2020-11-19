@@ -13,11 +13,15 @@ using System.Security.Cryptography;
 using System.Net;
 using System.Xml;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Threading;
 
 namespace WindowsFormsApp2
 {
     public partial class Form1 : Form
     {
+        private Thread rTh;
+
         private enum states
         {
             closed,
@@ -1159,7 +1163,9 @@ namespace WindowsFormsApp2
             if (svr.enrmtKeyId != string.Empty)
             {
                 startoneM2MTC("tc020601");
-                lbSvroneM2MData.Text = SendDataToPlatform("oneM2M");
+                string[] param = { "oneM2M", "tc020601" };
+                rTh = new Thread(new ParameterizedThreadStart(SendDataToPlatform));
+                rTh.Start(param);
             }
             else
                 LogWrite("서버인증파라미터 세팅하세요");
@@ -1172,8 +1178,9 @@ namespace WindowsFormsApp2
             if (svr.enrmtKeyId != string.Empty)
             {
                 startLwM2MTC("tc0502");
-
-                lbSvrLwM2MData.Text = SendDataToPlatform("LwM2M");
+                string[] param = { "LwM2M", "tc0502" };
+                rTh = new Thread(new ParameterizedThreadStart(SendDataToPlatform));
+                rTh.Start(param);
             }
             else
                 LogWrite("서버인증파라미터 세팅하세요");
@@ -1185,7 +1192,9 @@ namespace WindowsFormsApp2
             LogWrite("----------DEVICE STATUS CHECK----------");
             if (svr.enrmtKeyId != string.Empty)
             {
-                DeviceCheckToPlatform();
+                string[] param = { "LwM2M" };
+                rTh = new Thread(new ParameterizedThreadStart(RetriveDataToDevice));
+                rTh.Start(param);
             }
             else
                 LogWrite("서버인증파라미터 세팅하세요");
@@ -4488,23 +4497,31 @@ namespace WindowsFormsApp2
                         if (lbActionState.Text == states.onem2mtc020504.ToString())
                         {
                             startoneM2MTC("tc020601");
-                            lbSvroneM2MData.Text = SendDataToPlatform("oneM2M");
-                            lbActionState.Text = states.onem2mtc020601.ToString();
+                            string[] param = { "oneM2M", "tc020601" };
+                            rTh = new Thread(new ParameterizedThreadStart(SendDataToPlatform));
+                            rTh.Start(param);
                         }
                     }
                 }
                 if ((lbActionState.Text == states.onem2mtc020601.ToString()) || (lbActionState.Text == states.onem2mtc020603.ToString()) || (lbActionState.Text == states.onem2mtc0206041.ToString()))
                 {
-                    lbSvroneM2MData.Text = SendDataToPlatform("oneM2M");
+                    string[] param = { "oneM2M", "tc020601" };
+                    rTh = new Thread(new ParameterizedThreadStart(SendDataToPlatform));
+                    rTh.Start(param);
                 }
             }
         }
 
-        private void RetriveDataToDevice()
+        private void RetriveDataToDevice(object  param)
         {
+            string[] data = param as string[];
+
             ReqHeader header = new ReqHeader();
             setDeviceEntityID(lbIccid.Text);
-            header.Url = brkUrl + "/" + dev.entityId  + "/TEST";
+            if (data[0] == "oneM2M")
+                header.Url = brkUrl + "/" + dev.entityId + "/TEST";
+            else
+                header.Url = brkUrlL + "/" + dev.entityId + "/10250/0/0";
             header.Method = "GET";
             header.X_M2M_Origin = svr.entityId;
             header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "data_retrive";
@@ -4540,15 +4557,17 @@ namespace WindowsFormsApp2
             }
         }
 
-        private string SendDataToPlatform(string target_comm)
+        private void SendDataToPlatform(object param)
         {
+            string[] data = param as string[];
+
             ReqHeader header = new ReqHeader();
-            if (target_comm == "oneM2M")
+            if (data[0] == "oneM2M")
             {
                 //header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_01222990847/cnt-TEMP";
                 header.Url = brkUrl + "/IN_CSE-BASE-1/cb-1/csr-m2m_" + dev.imsi + "/cnt-StoD";
             }
-            else if (target_comm == "oneDevice")
+            else if (data[0] == "oneDevice")
             {
                 setDeviceEntityID(lbIccid.Text);
                 header.Url = brkUrl + "/" + dev.entityId + "/TEST";
@@ -4580,46 +4599,29 @@ namespace WindowsFormsApp2
             string retStr = SendHttpRequest(header, packetStr);
             //if (retStr != string.Empty)
             //    LogWrite(retStr);
-            return txData;
+            if (data[1] == "oneDevice")
+                SetText(label13, txData);
+            else if (data[1] == "tc020601")
+                SetText(lbSvroneM2MData, txData);
+            else if (data[1] == "tc0502")
+                SetText(lbSvrLwM2MData, txData);
         }
 
-        private void DeviceCheckToPlatform()
+        delegate void Ctr_Involk(Control ctr, string text);
+
+        private void SetText(Control ctr, string txtValue)
         {
-            ReqHeader header = new ReqHeader();
-            setDeviceEntityID(lbIccid.Text);
-            header.Url = brkUrlL + "/" + dev.entityId + "/10250/0/0";
-            header.Method = "GET";
-            header.X_M2M_Origin = svr.entityId;
-            header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "device_status";
-            header.X_MEF_TK = svr.token;
-            header.X_MEF_EKI = svr.enrmtKeyId;
-            header.X_M2M_NM = string.Empty;
-            header.Accept = "application/vnd.onem2m-res+xml";
-            header.ContentType = "application/vnd.onem2m-res+xml;ty=4";
-
-            string retStr = SendHttpRequest(header, string.Empty);
-            if (retStr != string.Empty)
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (ctr.InvokeRequired)
             {
-                string format = string.Empty;
-                string value = string.Empty;
-
-                XmlDocument xDoc = new XmlDocument();
-                xDoc.LoadXml(retStr);
-                //LogWrite(xDoc.OuterXml.ToString());
-
-                XmlNodeList xnList = xDoc.SelectNodes("/*"); //접근할 노드
-                foreach (XmlNode xn in xnList)
-                {
-                    format = xn["cnf"].InnerText; // data format
-                    value = xn["con"].InnerText; // data value
-                }
-                //LogWrite("value = " + value);
-                //LogWrite("format = " + format);
-
-                if (format == "application/octet-stream")
-                    lbLwM2MRxData.Text = Encoding.UTF8.GetString(Convert.FromBase64String(value));
-                else
-                    lbLwM2MRxData.Text = value;
+                Ctr_Involk CI = new Ctr_Involk(SetText);
+                ctr.Invoke(CI, ctr, txtValue);
+            }
+            else
+            {
+                ctr.Text = txtValue;
             }
         }
 
@@ -4936,8 +4938,9 @@ namespace WindowsFormsApp2
             LogWrite("----------DATA SEND----------");
             if (svr.enrmtKeyId != string.Empty)
             {
-                startoneM2MTC("tc020601");
-                label13.Text = SendDataToPlatform("oneDevice");
+                string[] param = { "oneDevice", "oneDevice" };
+                rTh = new Thread(new ParameterizedThreadStart(SendDataToPlatform));
+                rTh.Start(param);
             }
             else
                 LogWrite("서버인증파라미터 세팅하세요");
@@ -4945,9 +4948,13 @@ namespace WindowsFormsApp2
 
         private void button2_Click(object sender, EventArgs e)
         {
-            LogWrite("----------DATA RECIEVE----------");
+            LogWrite("----------DEVICE CHECK STATUS----------");
             if (svr.enrmtKeyId != string.Empty)
-                RetriveDataToDevice();
+            {
+                string[] param = { "oneM2M" };
+                rTh = new Thread(new ParameterizedThreadStart(RetriveDataToDevice));
+                rTh.Start(param);
+            }
             else
                 LogWrite("서버인증파라미터 세팅하세요");
         }
