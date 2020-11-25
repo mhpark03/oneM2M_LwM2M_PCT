@@ -89,6 +89,7 @@ namespace WindowsFormsApp2
 
             getonem2mmode,
             setonem2mmode,
+            setonem2mmodeq,
             setmefauth,
             fotamefauthnt,
             mfotamefauth,
@@ -161,8 +162,11 @@ namespace WindowsFormsApp2
             deviceFWUPstart,
             deviceFWList,
             deviceFWOpen,
+            deviceFWOpened,
             deviceFWRead,
+            deviceFWReading,
             deviceFWClose,
+            deviceFWClosed,
 
             catm1check,
             catm1set,
@@ -271,12 +275,16 @@ namespace WindowsFormsApp2
             onem2mtc0210032,        // 쿼텔 FW DATA FILE 읽기 요청 (open)
             onem2mtc0210033,        // 쿼텔 FW DATA 읽기 요청
             onem2mtc0210034,        // 쿼텔 FW DATA 읽기
-            onem2mtc0210035,        // 쿼텔 FW DATA FILE 읽기 완료 (close)
+            onem2mtc0210035,        // 쿼텔 FW DATA 읽기 중
+            onem2mtc0210036,        // 쿼텔 FW DATA FILE close
+            onem2mtc0210037,        // 쿼텔 FW DATA FILE 읽기 완료 (close)
             onem2mtc021004,
 
             onem2mtc021101,
             onem2mtc021102,         //  push test는 별도 수동 진행
-            onem2mtc021103,
+            onem2mtc0211031,
+            onem2mtc0211032,        // EC21/EC25 upgrade 이후 oneM2M 모드 설정
+            onem2mtc0211033,        // EC21/EC25 upgrade 이후 oneM2M 모드 report
             onem2mtc0211041,        // module version finsh를 위해 MEF인증 요청
             onem2mtc0211042,        // module version report 요청
             onem2mtc0211043,        // module version 완료
@@ -411,6 +419,9 @@ namespace WindowsFormsApp2
         Device dev = new Device();
         TCResult tc = new TCResult();
 
+        string filecode = string.Empty;
+        int timer1_count = 0;
+
         public Form1()
         {
             InitializeComponent();
@@ -509,7 +520,9 @@ namespace WindowsFormsApp2
             commands.Add("getonem2mmode", "AT$LGTMPF?");
             commands.Add("onem2mtc0201023", "AT$LGTMPF?");
             commands.Add("setonem2mmode", "AT$LGTMPF=5");
+            commands.Add("setonem2mmodeq", "AT$LGTMPF=5");
             commands.Add("onem2mtc0201022", "AT$LGTMPF=5");
+            commands.Add("onem2mtc0211032", "AT$LGTMPF=5");
             commands.Add("setmefauth", "AT$OM_AUTH_REQ=");
             commands.Add("fotamefauthnt", "AT$OM_AUTH_REQ=");
             commands.Add("mfotamefauth", "AT$OM_AUTH_REQ=");
@@ -576,7 +589,7 @@ namespace WindowsFormsApp2
             commands.Add("setdeviceSrvver", "AT$OM_C_DEV_FWUP_REQ");
             commands.Add("deviceFWUPfinish", "AT$OM_DEV_FWUP_FINISH");
             commands.Add("deviceFWUPstart", "AT$OM_DEV_FWUP_START");
-            commands.Add("deviceFWList", "AT+QFLIST=\"*\"");
+            commands.Add("deviceFWList", "AT+QFLST=\"*\"");
             commands.Add("deviceFWOpen", "AT+QFOPEN=\"");
             commands.Add("deviceFWRead", "AT+QFREAD=");
             commands.Add("deviceFWClose", "AT+QFCLOSE=");
@@ -1288,7 +1301,8 @@ namespace WindowsFormsApp2
             progressBar2.Value = 0;
             gbModule.Enabled = false;
             logPrintInTextBox("COM PORT가 해제 되었습니다.","");
-            lbActionState.Text = states.closed.ToString();
+            if (lbActionState.Text != states.onem2mtc0211031.ToString() && lbActionState.Text != states.onem2mtc0211032.ToString())
+                lbActionState.Text = states.closed.ToString();
         }
 
 
@@ -1555,6 +1569,11 @@ namespace WindowsFormsApp2
                 "+QLWSERVERIP:LWM2M,",
                 "+QLWEPNS: ",
                 "+QLWMBSPS: ",
+                "+QFLST: \"",
+                "+QFOPEN: ",
+                "CONNECT ",
+                "+QIND: \"FOTA\",\"END\",0",
+                "+QIND: PB DONE",
             };
 
             /* Debug를 위해 Hex로 문자열 표시*/
@@ -1615,14 +1634,35 @@ namespace WindowsFormsApp2
         // 응답을 받고 후 작업이 필요한지 확인한다. 
         void parseReceiveData(string s, string str2)
         {
+            string[] str3;
             switch (s)
             {
                 case "OK":
                     OKReceived();
                     break;
                 case "ERROR":
-                    lbActionState.Text = states.idle.ToString();
-                    nextcommand = "";
+                    if (lbActionState.Text == states.setonem2mmodeq.ToString())
+                    {
+                        this.sendDataOut(commands["getonem2mmode"]);
+                        nextcommand = "skip";
+                    }
+                    else if (lbActionState.Text == states.onem2mtc0201021.ToString() || lbActionState.Text == states.onem2mtc0201022.ToString())
+                    {
+                        this.sendDataOut(commands["getonem2mmode"]);
+                        lbActionState.Text = states.onem2mtc0201021.ToString();
+                        nextcommand = "skip";
+                    }
+                    else if (lbActionState.Text == states.onem2mtc0211032.ToString() || lbActionState.Text == states.onem2mtc0211033.ToString())
+                    {
+                        this.sendDataOut(commands["getonem2mmode"]);
+                        lbActionState.Text = states.onem2mtc0211033.ToString();
+                        nextcommand = "skip";
+                    }
+                    else
+                    {
+                        lbActionState.Text = states.idle.ToString();
+                        nextcommand = "";
+                    }
                     break;
                 case "+ICCID:":
                     // AT+ICCID의 응답으로 ICCID 값 화면 표시/bootstrap 정보 생성를 위해 저장,
@@ -1741,7 +1781,7 @@ namespace WindowsFormsApp2
 
                             nextcommand = "skip";
                         }
-                        else
+                        else if (lbActionState.Text != states.onem2mtc0211031.ToString() && lbActionState.Text != states.onem2mtc0211032.ToString())
                         {
                             if (dev.model == "TPB23" || dev.model.StartsWith("BC95", System.StringComparison.CurrentCultureIgnoreCase))
                             {
@@ -2314,38 +2354,31 @@ namespace WindowsFormsApp2
                     // oneM2M 데이터 자동 수신 결과
                     string[] rx_datas = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
 
-                    if (rx_datas[0] == "2000")
+                    // 수신한 데이터 사이즈 확이
+                    int rxsize = Convert.ToInt32(rx_datas[1]);
+                    if (rxsize == rx_datas[2].Length)
                     {
-                        // 수신한 데이터 사이즈 확이
-                        int rxsize = Convert.ToInt32(rx_datas[1]);
-                        if (rxsize == rx_datas[2].Length)
+                        if (tc.state == "tc020601")
                         {
-                            if (tc.state == "tc020601")
-                            {
-                                startoneM2MTC("tc020604");
-                                this.sendDataOut(commands["setrcvmanu"]);
-                                lbActionState.Text = states.onem2mtc0206041.ToString();
-                            }
-                            else
-                            {
-                                if (tc.state == "tc020603")
-                                    endoneM2MTC(tc.state);
-
-                                startoneM2MTC("tc020604");
-                                this.sendDataOut(commands["setrcvmanu"]);
-                                lbActionState.Text = states.onem2mtc0206042.ToString();
-                            }
-                            lboneM2MRcvData.Text = rx_datas[2];
-                            logPrintInTextBox(rx_datas[2] + "를 수신하였습니다.", "");
+                            startoneM2MTC("tc020604");
+                            this.sendDataOut(commands["setrcvmanu"]);
+                            lbActionState.Text = states.onem2mtc0206041.ToString();
                         }
                         else
                         {
-                            logPrintInTextBox("수신한 데이터 사이즈를 확인하세요", "");
+                            if (tc.state == "tc020603")
+                                endoneM2MTC(tc.state);
+
+                            startoneM2MTC("tc020604");
+                            this.sendDataOut(commands["setrcvmanu"]);
+                            lbActionState.Text = states.onem2mtc0206042.ToString();
                         }
+                        lboneM2MRcvData.Text = rx_datas[2];
+                        logPrintInTextBox("TOPIC = " + rx_datas[0] + "으로 " + rx_datas[2] + "를 수신하였습니다.", "");
                     }
                     else
                     {
-                        logPrintInTextBox("oneM2M서버 동작 확인이 필요합니다.", "");
+                        logPrintInTextBox("수신한 데이터 사이즈를 확인하세요", "");
                     }
                     break;
                 case "$OM_R_INS_RSP=":
@@ -2355,8 +2388,8 @@ namespace WindowsFormsApp2
                     if (rcvdatas[0] == "2000")
                     {
                         // 수신한 데이터 사이즈 확이
-                        int rxsize = Convert.ToInt32(rcvdatas[1]);
-                        if (rxsize == rcvdatas[2].Length)
+                        int rxdatasize = Convert.ToInt32(rcvdatas[1]);
+                        if (rxdatasize == rcvdatas[2].Length)
                         {
                             if (tc.state == "tc020701")
                             {
@@ -2539,6 +2572,71 @@ namespace WindowsFormsApp2
                     oneM2Mtotalsize = Convert.ToUInt32(str2);
                     logPrintInTextBox("FOTA 이미지 크기는 " + str2 + "입니다.", "");
                     break;
+                case "+QFLST: \"":
+                    str3 = str2.Split(',');    // 수신한 데이터를 한 문장씩 나누어 array에 저장
+                    
+                    if (oneM2Mtotalsize == Convert.ToUInt32(str3[1]))
+                    {
+                        string filename = str3[0].Substring(0, str3[0].Length - 1);
+                        nextcommand = commands["deviceFWOpen"] + filename + "\"";
+                        if (lbActionState.Text == states.onem2mtc0210031.ToString())
+                            lbActionState.Text = states.onem2mtc0210032.ToString();
+                        else
+                            lbActionState.Text = states.deviceFWOpen.ToString();
+                    }
+                    break;
+                case "+QFOPEN: ":
+                    filecode = str2;
+                    nextcommand = commands["deviceFWRead"] + filecode + ",512";
+                    if (lbActionState.Text == states.onem2mtc0210033.ToString())
+                        lbActionState.Text = states.onem2mtc0210034.ToString();
+                    else
+                        lbActionState.Text = states.deviceFWRead.ToString();
+                    break;
+                case "CONNECT ":
+                    oneM2Mrcvsize += Convert.ToUInt32(str2);
+                    logPrintInTextBox("index= " + oneM2Mrcvsize + "/" + oneM2Mtotalsize + "를 수신하였습니다.", "");
+                    if (str2 != "512" || oneM2Mrcvsize >= oneM2Mtotalsize)
+                    {
+                        if (tc.state == "tc021003" && oneM2Mrcvsize == oneM2Mtotalsize)
+                            endoneM2MTC(tc.state);
+
+                        nextcommand = commands["deviceFWClose"] + filecode;
+                        if(lbActionState.Text == states.onem2mtc0210035.ToString())
+                            lbActionState.Text = states.onem2mtc0210036.ToString();
+                        else
+                            lbActionState.Text = states.deviceFWClose.ToString();
+                    }
+                    else
+                    {
+                        nextcommand = commands["deviceFWRead"] + filecode + ",512";
+                        if (lbActionState.Text == states.onem2mtc0210035.ToString())
+                            lbActionState.Text = states.onem2mtc0210034.ToString();
+                        else
+                            lbActionState.Text = states.deviceFWReading.ToString();
+                    }
+                    break;
+                case "+QIND: \"FOTA\",\"END\",0":
+                    if (tc.state == "tc021103")
+                    {
+                        endoneM2MTC(tc.state);
+
+                        startoneM2MTC("tc021104");
+                        lbActionState.Text = states.onem2mtc0211032.ToString();
+                    }
+                    break;
+                    
+                case "+QIND: PB DONE":
+                    if (tc.state == "tc021104")
+                    {
+                        this.sendDataOut(commands["getonem2mmode"]);
+                        if (lbActionState.Text == states.onem2mtc0211032.ToString())
+                            lbActionState.Text = states.onem2mtc0211033.ToString();
+                        else
+                            lbActionState.Text = states.setonem2mmodeq.ToString();
+                        nextcommand = "skip";
+                    }
+                    break;
                 case "$BIN_DATA=":
                     if (dev.maker == "AM Telecom")        //AMTEL 모듈은 OK가 오지 않음
                     {
@@ -2577,7 +2675,7 @@ namespace WindowsFormsApp2
 
                         this.sendDataOut(commands["modemFWUPstart"]);
                         if (lbActionState.Text == states.onem2mtc021101.ToString())
-                            lbActionState.Text = states.onem2mtc021103.ToString();
+                            lbActionState.Text = states.onem2mtc0211031.ToString();
                         else
                             lbActionState.Text = states.modemFWUPstart.ToString();
                     }
@@ -2616,10 +2714,10 @@ namespace WindowsFormsApp2
 
 
                     // 디바이스는 업데이트 작업 및 재부팅한 후에 신규 펌웨어 버전 등록을 위해 플랫폼 서버 MEF AUTH 요청
-                    if (lbActionState.Text == states.onem2mtc021103.ToString())
+                    if (lbActionState.Text == states.onem2mtc0211031.ToString())
                     {
                         this.sendDataOut(commands["setonem2mmode"]);
-                        lbActionState.Text = states.onem2mtc0211041.ToString();
+                        lbActionState.Text = states.onem2mtc0211032.ToString();
                     }
                     else if (lbActionState.Text == states.getcereg.ToString())
                     {
@@ -2731,7 +2829,10 @@ namespace WindowsFormsApp2
                         logPrintInTextBox("수신한 데이터를 읽기 시작합다.", "");
 
                         this.sendDataOut(commands["deviceFWList"]);
-                        lbActionState.Text = states.onem2mtc0210031.ToString();
+                        if (lbActionState.Text == states.onem2mtc021003.ToString())
+                            lbActionState.Text = states.onem2mtc0210031.ToString();
+                        else
+                            lbActionState.Text = states.deviceFWList.ToString();
                         nextcommand = "skip";
                     }
                     else
@@ -3055,20 +3156,38 @@ namespace WindowsFormsApp2
                             startoneM2MTC("tc020201");
                         }
                         // 플랫폼 서버 MEF AUTH 요청
-                        this.sendDataOut(commands["setmefauth"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + "," + tBoxDeviceSN.Text);
                         if (lbActionState.Text == states.onem2mtc0201021.ToString() || lbActionState.Text == states.onem2mtc0201023.ToString())
+                        {
+                            this.sendDataOut(commands["setmefauth"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + "," + tBoxDeviceSN.Text);
                             lbActionState.Text = states.onem2mtc020201.ToString();
+                        }
+                        else if (lbActionState.Text == states.onem2mtc0211031.ToString() || lbActionState.Text == states.onem2mtc0211033.ToString())
+                        {
+                            this.sendDataOut(commands["mfotamefauth"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + dev.imsi);
+                            lbActionState.Text = states.onem2mtc0211042.ToString();
+                            nextcommand = "skip";
+                        }
                         else
+                        {
+                            this.sendDataOut(commands["setmefauth"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + "," + tBoxDeviceSN.Text);
                             lbActionState.Text = states.setmefauth.ToString();
+                        }
                         nextcommand = "skip";
                     }
                     else
                     {
                         // 모듈 oneM2M 플랫폼 모드 요청
-                        if (lbActionState.Text == states.onem2mtc0201021.ToString())
+                        if (lbActionState.Text == states.onem2mtc0201021.ToString() || lbActionState.Text == states.onem2mtc0201023.ToString())
                             nextcommand = states.onem2mtc0201022.ToString();
+                        else if (lbActionState.Text == states.onem2mtc0211031.ToString() || lbActionState.Text == states.onem2mtc0211033.ToString())
+                        {
+                            nextcommand = states.onem2mtc0211032.ToString();
+                            lbActionState.Text = states.onem2mtc0211032.ToString();
+                        }
+                        else if (dev.model == "EC25" || dev.model == "EC21")
+                            nextcommand = states.setonem2mmodeq.ToString();
                         else
-                            nextcommand = "setonem2mmode";
+                            nextcommand = states.setonem2mmode.ToString();
                     }
                     break;
                 case "+QCFG: ":
@@ -3257,6 +3376,22 @@ namespace WindowsFormsApp2
                     lbActionState.Text = states.onem2mtc0201021.ToString();
 
                     nextcommand = "skip";
+                    break;
+                case states.onem2mtc0201021:
+                    if (nextcommand == "")
+                    {
+                        this.sendDataOut(commands["getonem2mmode"]);
+                        nextcommand = "skip";
+                    }
+                    break;
+                case states.onem2mtc0211032:
+                    if (nextcommand == "")
+                    {
+                        this.sendDataOut(commands["getonem2mmode"]);
+                        lbActionState.Text = states.onem2mtc0211033.ToString();
+
+                        nextcommand = "skip";
+                    }
                     break;
                 case states.onem2mtc020301:
                 case states.onem2mtc0205021:
@@ -3508,6 +3643,50 @@ namespace WindowsFormsApp2
                 case states.disablebc95:
                     nextcommand = states.rebootbc95.ToString();
                     break;
+                case states.deviceFWOpen:
+                    this.sendDataOut(nextcommand);
+                    lbActionState.Text = states.deviceFWOpened.ToString();
+                    nextcommand = "skip";
+                    break;
+                case states.onem2mtc0210032:
+                    this.sendDataOut(nextcommand);
+                    lbActionState.Text = states.onem2mtc0210033.ToString();
+                    nextcommand = "skip";
+                    break;
+                case states.deviceFWRead:
+                case states.deviceFWReading:
+                    this.sendDataOut(nextcommand);
+                    lbActionState.Text = states.idle.ToString();
+                    nextcommand = "skip";
+                    break;
+                case states.onem2mtc0210034:
+                    this.sendDataOut(nextcommand);
+                    lbActionState.Text = states.onem2mtc0210035.ToString();
+                    nextcommand = "skip";
+                    break;
+                case states.deviceFWClose:
+                    this.sendDataOut(nextcommand);
+                    lbActionState.Text = states.deviceFWClosed.ToString();
+                    nextcommand = "skip";
+                    break;
+                case states.onem2mtc0210036:
+                    this.sendDataOut(nextcommand);
+                    lbActionState.Text = states.onem2mtc0210037.ToString();
+                    nextcommand = "skip";
+                    break;
+                case states.onem2mtc0210037:
+                case states.deviceFWClosed:
+                    startoneM2MTC("tc021004");
+
+                    // 디바이스는 업데이트 작업 및 재부팅한 후에 신규 펌웨어 버전 등록을 위해 플랫폼 서버 MEF AUTH 요청
+                    this.sendDataOut(commands["fotamefauthnt"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + dev.imsi);
+                    if (lbActionState.Text == states.onem2mtc0210037.ToString())
+                        lbActionState.Text = states.onem2mtc021004.ToString();
+                    else
+                        lbActionState.Text = states.fotamefauthnt.ToString();
+
+                    nextcommand = "skip";
+                    break;
                 case states.autogetmodemver:
                 case states.autogetmodemvertpb23:
                 case states.autogetmodemvernt:
@@ -3567,6 +3746,7 @@ namespace WindowsFormsApp2
                     //  AT+MLWGOBOOTSTRAP=1
                     nextcommand = states.bootstraptpb23.ToString();
                     break;
+                case states.setonem2mmodeq:
                 case states.setonem2mmode:
                     nextcommand = states.getonem2mmode.ToString();
                     break;
@@ -5071,7 +5251,9 @@ namespace WindowsFormsApp2
         {
             if (!serialPort1.IsOpen)
             {
-                if (progressBar1.Value == 100 || progressBar2.Value == 100)
+                if (lbActionState.Text == states.onem2mtc0211031.ToString() || lbActionState.Text == states.onem2mtc0208011.ToString() || lbActionState.Text == states.onem2mtc0211032.ToString())
+                    doOpenComPort();
+                else if (progressBar1.Value == 100 || progressBar2.Value == 100)
                 {
                     logPrintInTextBox("잠시 후 COM 포트 재오픈이 필요합니다.", "");
 
@@ -5083,8 +5265,23 @@ namespace WindowsFormsApp2
                     progressBar1.Value = 0;
                     progressBar2.Value = 0;
                 }
-                else if (lbActionState.Text == states.onem2mtc021103.ToString() || lbActionState.Text == states.onem2mtc0208011.ToString())
-                    doOpenComPort();
+            }
+            else
+            {
+                if (lbActionState.Text == states.onem2mtc0211031.ToString() || lbActionState.Text == states.onem2mtc0211032.ToString())
+                {
+                    timer1_count++;
+                    if (timer1_count >= 10)
+                    {
+                        timer1_count = 0;
+
+                        doCloseComPort();
+                        Thread.Sleep(500);
+                        doOpenComPort();
+                    }
+                }
+                else
+                    timer1_count = 0;
             }
         }
 
