@@ -304,7 +304,8 @@ namespace WindowsFormsApp2
             onem2mtc0213032,         // Response Device Status Check
 
             onem2mtc0214011,         // 원격 재부팅 수신
-            onem2mtc0214012,         // 
+            onem2mtc0214012,         // oneM2M Client 구동 요청
+            onem2mtc0214013,         // MEF 인증 요청
         }
 
         private enum lwm2mtc
@@ -690,6 +691,7 @@ namespace WindowsFormsApp2
 
             /////   서버 초기값 설정
             svr.enrmtKeyId = string.Empty;
+            svr.entityId = string.Empty;
 
             tc.state = string.Empty;
             tc.lwm2m = new string[(int)lwm2mtc.tc0603+1];
@@ -929,7 +931,11 @@ namespace WindowsFormsApp2
                 // Data send to SERVER (string original)
                 //AT$OM_C_INS_REQ=<object>,<length>,<data>
                 string txData = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " oneM2M device";
-                this.sendDataOut(commands["sendonemsgstr"] + "DtoS" + "," + txData.Length + "," + txData);
+                if (svr.entityId == string.Empty)
+                    this.sendDataOut(commands["sendonemsgstr"] + "StoD" + "," + txData.Length + "," + txData);
+                else
+                    this.sendDataOut(commands["sendonemsgstr"] + "DtoS" + "," + txData.Length + "," + txData);
+
                 lbActionState.Text = states.sendonemsgstr.ToString();
                 lbSendedData.Text = txData;
             }
@@ -1547,6 +1553,7 @@ namespace WindowsFormsApp2
                 "$OM_N_INS_RSP=",
                 "$OM_S_RCIN_RSP=",
                 "$OM_R_RCIN_RSP=",
+                "$OM_RESET_FINISH",
                 "$OM_RESET",
 
                 "@NETSTI:",
@@ -1641,19 +1648,22 @@ namespace WindowsFormsApp2
                     OKReceived();
                     break;
                 case "ERROR":
-                    if (lbActionState.Text == states.setonem2mmodeq.ToString())
+                    if (lbActionState.Text == states.setonem2mmodeq.ToString() || lbActionState.Text == states.onem2mtc0214012.ToString())
                     {
+                        Thread.Sleep(1000);
                         this.sendDataOut(commands["getonem2mmode"]);
                         nextcommand = "skip";
                     }
                     else if (lbActionState.Text == states.onem2mtc0201021.ToString() || lbActionState.Text == states.onem2mtc0201022.ToString())
                     {
+                        Thread.Sleep(1000);
                         this.sendDataOut(commands["getonem2mmode"]);
                         lbActionState.Text = states.onem2mtc0201021.ToString();
                         nextcommand = "skip";
                     }
                     else if (lbActionState.Text == states.onem2mtc0211032.ToString() || lbActionState.Text == states.onem2mtc0211033.ToString())
                     {
+                        Thread.Sleep(1000);
                         this.sendDataOut(commands["getonem2mmode"]);
                         lbActionState.Text = states.onem2mtc0211033.ToString();
                         nextcommand = "skip";
@@ -1781,7 +1791,9 @@ namespace WindowsFormsApp2
 
                             nextcommand = "skip";
                         }
-                        else if (lbActionState.Text != states.onem2mtc0211031.ToString() && lbActionState.Text != states.onem2mtc0211032.ToString())
+                        else if (lbActionState.Text == states.onem2mtc0211031.ToString() || lbActionState.Text == states.onem2mtc0211032.ToString() || lbActionState.Text == states.onem2mtc0214012.ToString())
+                            nextcommand = "skip";
+                        else
                         {
                             if (dev.model == "TPB23" || dev.model.StartsWith("BC95", System.StringComparison.CurrentCultureIgnoreCase))
                             {
@@ -1849,7 +1861,7 @@ namespace WindowsFormsApp2
                     {
                         logPrintInTextBox("oneM2M서버 인증 성공하였습니다.", "");
 
-                        if (tc.state == "tc020201" || tc.state == "tc021004" || tc.state == "tc021104")
+                        if (tc.state == "tc020201" || tc.state == "tc021004" || tc.state == "tc021104" || tc.state == "tc021401")
                             endoneM2MTC(tc.state);
 
                         if (lbActionState.Text == states.fotamefauthnt.ToString())         // Device FW 완료 보고
@@ -1890,6 +1902,11 @@ namespace WindowsFormsApp2
                             startoneM2MTC("tc020301");
                             this.sendDataOut(commands["getremoteCSE"]);
                             lbActionState.Text = states.onem2mtc020301.ToString();
+                        }
+                        else if (lbActionState.Text == states.onem2mtc0214013.ToString() || lbActionState.Text == states.resetmefauth.ToString())
+                        {
+                            this.sendDataOut(commands["resetreport"]);
+                            lbActionState.Text = states.resetreport.ToString();
                         }
                     }
                     else
@@ -2501,6 +2518,9 @@ namespace WindowsFormsApp2
 
                     nextcommand = "skip";
                     break;
+                case "$OM_RESET_FINISH":
+                    lbActionState.Text = states.idle.ToString();
+                    break;
                 case "$OM_RESET":
                     // 플랫폼 서버에서 device reset 수신
                     if (tc.state == string.Empty)
@@ -2622,16 +2642,19 @@ namespace WindowsFormsApp2
                         endoneM2MTC(tc.state);
 
                         startoneM2MTC("tc021104");
-                        lbActionState.Text = states.onem2mtc0211032.ToString();
+                        if (lbActionState.Text == states.onem2mtc0211031.ToString())
+                            lbActionState.Text = states.onem2mtc0211032.ToString();
                     }
                     break;
                     
                 case "+QIND: PB DONE":
-                    if (tc.state == "tc021104")
+                    if (tc.state == "tc021104" || tc.state == "tc021401")
                     {
                         this.sendDataOut(commands["getonem2mmode"]);
                         if (lbActionState.Text == states.onem2mtc0211032.ToString())
                             lbActionState.Text = states.onem2mtc0211033.ToString();
+                        else if (lbActionState.Text == states.onem2mtc0214011.ToString())
+                            lbActionState.Text = states.onem2mtc0214012.ToString();
                         else
                             lbActionState.Text = states.setonem2mmodeq.ToString();
                         nextcommand = "skip";
@@ -3167,6 +3190,12 @@ namespace WindowsFormsApp2
                             lbActionState.Text = states.onem2mtc0211042.ToString();
                             nextcommand = "skip";
                         }
+                        else if (lbActionState.Text == states.onem2mtc0214012.ToString())
+                        {
+                            this.sendDataOut(commands["resetmefauth"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + ",D-" + dev.imsi);
+                            lbActionState.Text = states.onem2mtc0214013.ToString();
+                            nextcommand = "skip";
+                        }
                         else
                         {
                             this.sendDataOut(commands["setmefauth"] + tbSvcCd.Text + "," + tBoxDeviceModel.Text + "," + tBoxDeviceVer.Text + "," + tBoxDeviceSN.Text);
@@ -3183,6 +3212,10 @@ namespace WindowsFormsApp2
                         {
                             nextcommand = states.onem2mtc0211032.ToString();
                             lbActionState.Text = states.onem2mtc0211032.ToString();
+                        }
+                        else if (lbActionState.Text == states.onem2mtc0214012.ToString())
+                        {
+                            nextcommand = states.setonem2mmode.ToString();
                         }
                         else if (dev.model == "EC25" || dev.model == "EC21")
                             nextcommand = states.setonem2mmodeq.ToString();
@@ -3378,9 +3411,15 @@ namespace WindowsFormsApp2
                     nextcommand = "skip";
                     break;
                 case states.onem2mtc0201021:
+                case states.onem2mtc0214012:
                     if (nextcommand == "")
                     {
                         this.sendDataOut(commands["getonem2mmode"]);
+                        nextcommand = "skip";
+                    }
+                    else
+                    {
+                        this.sendDataOut(commands[nextcommand]);
                         nextcommand = "skip";
                     }
                     break;
@@ -3390,6 +3429,11 @@ namespace WindowsFormsApp2
                         this.sendDataOut(commands["getonem2mmode"]);
                         lbActionState.Text = states.onem2mtc0211033.ToString();
 
+                        nextcommand = "skip";
+                    }
+                    else
+                    {
+                        this.sendDataOut(commands[nextcommand]);
                         nextcommand = "skip";
                     }
                     break;
@@ -3654,9 +3698,13 @@ namespace WindowsFormsApp2
                     nextcommand = "skip";
                     break;
                 case states.deviceFWRead:
+                    this.sendDataOut(nextcommand);
+                    lbActionState.Text = states.deviceFWReading.ToString();
+                    nextcommand = "skip";
+                    break;
                 case states.deviceFWReading:
                     this.sendDataOut(nextcommand);
-                    lbActionState.Text = states.idle.ToString();
+                    lbActionState.Text = states.deviceFWRead.ToString();
                     nextcommand = "skip";
                     break;
                 case states.onem2mtc0210034:
@@ -5251,7 +5299,7 @@ namespace WindowsFormsApp2
         {
             if (!serialPort1.IsOpen)
             {
-                if (lbActionState.Text == states.onem2mtc0211031.ToString() || lbActionState.Text == states.onem2mtc0208011.ToString() || lbActionState.Text == states.onem2mtc0211032.ToString())
+                if (lbActionState.Text == states.onem2mtc0211031.ToString() || lbActionState.Text == states.onem2mtc0208011.ToString() || lbActionState.Text == states.onem2mtc0211032.ToString() || lbActionState.Text == states.onem2mtc0214011.ToString())
                     doOpenComPort();
                 else if (progressBar1.Value == 100 || progressBar2.Value == 100)
                 {
@@ -5276,7 +5324,7 @@ namespace WindowsFormsApp2
                         timer1_count = 0;
 
                         doCloseComPort();
-                        Thread.Sleep(500);
+                        Thread.Sleep(1000);
                         doOpenComPort();
                     }
                 }
@@ -5302,16 +5350,21 @@ namespace WindowsFormsApp2
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (isDeviceInfo() && svr.entityId != string.Empty)
+            if (svr.entityId != string.Empty)
             {
-                startoneM2MTC("tc021301");
-                // Data send to SERVER (string original)
-                //AT$OM_C_INS_REQ=<server id>,<object>,<length>,<data>
-                string txData = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " oneM2M device";
-                this.sendDataOut(commands["sendonemsgsvr"] + svr.entityId + "," + "TEST" + "," + txData.Length + "," + txData);
-                lbActionState.Text = states.sendonemsgsvr.ToString();
-                lbDirectTxData.Text = txData;
+                if (isDeviceInfo())
+                {
+                    startoneM2MTC("tc021301");
+                    // Data send to SERVER (string original)
+                    //AT$OM_C_INS_REQ=<server id>,<object>,<length>,<data>
+                    string txData = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + " oneM2M device";
+                    this.sendDataOut(commands["sendonemsgsvr"] + svr.entityId + "," + "TEST" + "," + txData.Length + "," + txData);
+                    lbActionState.Text = states.sendonemsgsvr.ToString();
+                    lbDirectTxData.Text = txData;
+                }
             }
+            else
+                LogWrite("서버 연결 상태 확인하세요.");
         }
 
         private void button3_Click(object sender, EventArgs e)
