@@ -4483,7 +4483,7 @@ namespace WindowsFormsApp2
                     text += "|fwIn=" + Convert.ToString(index);
                 }
 
-                if (dev.model != "TPB23" || dev.model.StartsWith("BC95", System.StringComparison.CurrentCultureIgnoreCase))
+                if (dev.model != "TPB23" && !dev.model.StartsWith("BC95", System.StringComparison.CurrentCultureIgnoreCase))
                 {
                     text += "|szx=6";       // FOTA buffer size set 1024bytes.
                 }
@@ -4918,7 +4918,7 @@ namespace WindowsFormsApp2
             if (data[0] == "oneM2M")
                 header.Url = brkUrl + "/" + dev.entityId + "/TEST";
             else
-                header.Url = brkUrlL + "/" + dev.entityId + "/10250/0/0";
+                header.Url = brkUrlL + "/" + dev.entityId + "/10250/0/1";
             header.Method = "GET";
             header.X_M2M_Origin = svr.entityId;
             header.X_M2M_RI = DateTime.Now.ToString("yyyyMMddHHmmss") + "data_retrive";
